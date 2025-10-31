@@ -148,7 +148,7 @@ function wrapTextForHeader(headerWidth, fullCols, text){
 }
 function formatLineStrict(title,num,fortune,text){
   const gap='　　';
-  const header=${title}：${String(num).padStart(2,' ')}（${fortune}）${gap};
+  const header=`${title}：${String(num).padStart(2,' ')}（${fortune}）${gap}`;
   const headerWidth=displayWidth(header);
   const cols=getPreColumns();
   const wrapped=wrapTextForHeader(headerWidth,cols,text);
@@ -187,11 +187,11 @@ function calculate(){
   lines.push(formatLineStrict('地格',chi,kikkou(chi),getDiagnosis('chi',chi))+'\n\n');
   lines.push(formatLineStrict('外格',gai,kikkou(gai),getDiagnosis('gai',gai))+'\n\n');
   lines.push('【三才五行配列】\n');
-  lines.push(天格：${tenG}　人格：${jinG}　地格：${chiG}\n\n);
+  lines.push(`天格：${tenG}　人格：${jinG}　地格：${chiG}\n\n`);
   lines.push('【三才相性診断】\n');
-  lines.push(${tenG} → ${jinG} → ${chiG}\n);
+  lines.push(`${tenG} → ${jinG} → ${chiG}\n`);
   const msg=(gAtt==='◎')?'非常に良好で安定した運勢です。':(gAtt==='△')?'やや不調和。人間関係や環境の変化に注意。':'概ね良好で調和が取れています。';
-  lines.push(相性：${gAtt}　${msg});
+  lines.push(`相性：${gAtt}　${msg}`);
   if(missingInfo.length){lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));}
   document.getElementById('result').textContent=lines.join('');
   document.getElementById('debug').textContent=missingInfo.length?('未登録:'+missingInfo.join(',')):'未登録文字：なし';
