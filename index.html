@@ -8,41 +8,37 @@
   :root{--bg:#fbfbfb;--card:#fff;--muted:#666}
   body{font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,monospace;background:var(--bg);margin:0;padding:24px;color:#222;line-height:1.8}
   .wrap{max-width:920px;margin:0 auto}
-  header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-  h1{font-size:20px;margin:0}
+  h1{font-size:20px;margin:0 0 12px 0;text-align:center}
   .card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04)}
-  label{display:block;margin:8px 0 4px;font-weight:600}
-  input[type="text"]{width:100%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  input[type="text"]{padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px}
   button{background:#1f8ef1;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
   button:disabled{opacity:0.5;cursor:not-allowed}
   pre{white-space:pre-wrap;word-break:break-word;background:#fafafa;padding:12px;border-radius:8px;border:1px dashed #eee;font-family:monospace;line-height:1.8;overflow-wrap:break-word}
-  .meta{font-size:13px;color:var(--muted);margin-top:8px}
   .small{font-size:13px;color:var(--muted)}
-  .btns{display:flex;gap:10px;margin-top:12px}
   #measure{position:fixed;left:-9999px;top:-9999px;visibility:hidden;white-space:nowrap;font-family:monospace;font-size:16px;}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>熊﨑式姓名判断</h1>
-  </header>
+
+  <h1>熊﨑式姓名判断</h1>
 
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
-      <div class="grid">
-        <div>
-          <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：永" autocomplete="off" />
-        </div>
-        <div>
-          <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：太郎" autocomplete="off" />
-        </div>
-      </div>
-      <div class="btns">
+      <table width="100%">
+        <tr>
+          <td align="right" width="48%">
+            <label for="sei">姓（苗字）</label><br>
+            <input id="sei" type="text" placeholder="例：永" autocomplete="off" size="12">
+          </td>
+          <td width="4%">&nbsp;</td>
+          <td align="left" width="48%">
+            <label for="mei">名（名前）</label><br>
+            <input id="mei" type="text" placeholder="例：太郎" autocomplete="off" size="12">
+          </td>
+        </tr>
+      </table>
+      <div style="text-align:center;margin-top:12px;">
         <button id="runBtn" type="submit">診断する</button>
         <button type="button" onclick="clearForm()">クリア</button>
       </div>
@@ -58,6 +54,7 @@
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
   </section>
+
 </div>
 
 <div id="measure"></div>
@@ -111,7 +108,7 @@ function getDiagnosis(type, num){
   return diagnosis[type][String(num)] || '該当する診断文がありません。';
 }
 
-/* 折返し・整形関連 */
+/* 折返し整形 */
 function displayWidth(str){
   let w=0;
   for(const ch of str){ w+=(ch.charCodeAt(0)<=0x7F)?1:2; }
@@ -132,7 +129,7 @@ function getPreColumns(){
   return Math.max(20,Math.floor(preWidth/charPixel));
 }
 function wrapTextForHeader(headerWidth, fullCols, text){
-  const available=Math.max(10,fullCols-headerWidth-6); // ← 改行を6文字早める！
+  const available=Math.max(10,fullCols-headerWidth-6);
   const lines=[]; let cur='',curW=0,idx=0;
   while(idx<text.length){
     const ch=text[idx++]; const w=(ch.charCodeAt(0)<=0x7F)?1:2;
@@ -155,7 +152,7 @@ function formatLineStrict(title,num,fortune,text){
   return header+wrapped;
 }
 
-/* ===== 計算 ===== */
+/* 計算処理 */
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
