@@ -30,7 +30,6 @@
     border-radius:6px;
   }
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  /* ▼スマホ表示調整 */
   @media(max-width:640px){
     .grid{grid-template-columns:1fr}
     pre{
@@ -68,9 +67,7 @@
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>熊﨑式姓名判断</h1>
-  </header>
+  <header><h1>熊﨑式姓名判断</h1></header>
 
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
@@ -81,7 +78,7 @@
         </div>
         <div>
           <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：太郎" autocomplete="off" style="width:96%;" />
+          <input id="mei" type="text" placeholder="例：友昭" autocomplete="off" style="width:96%;" />
         </div>
       </div>
       <div class="btns">
@@ -105,18 +102,20 @@
 <div id="measure"></div>
 
 <script>
-let strokes = null, diagnosis = null, missingInfo = [];
+let strokes = null, diagnosis = null, compatibility = null, missingInfo = [];
 
+// === データ読込 ===
 async function loadData(){
   try{
-    const [r1, r2] = await Promise.all([
+    const [r1, r2, r3] = await Promise.all([
       fetch("strokes_kumazaki_full.json"),
-      fetch("diagnosis_data.json")
+      fetch("diagnosis_data.json"),
+      fetch("diagnosis_compatibility.json")
     ]);
-    if(!r1.ok) throw new Error("画数辞書読み込み失敗");
-    if(!r2.ok) throw new Error("診断データ読み込み失敗");
+    if(!r1.ok || !r2.ok || !r3.ok) throw new Error("ファイル読込失敗");
     strokes = await r1.json();
     diagnosis = await r2.json();
+    compatibility = await r3.json();
     document.getElementById('debug').textContent = 'データ読み込みOK。';
   }catch(e){
     document.getElementById('debug').textContent = '読み込みエラー：' + e.message;
@@ -124,6 +123,7 @@ async function loadData(){
   }
 }
 
+// === 基本処理 ===
 function splitChars(str){ return Array.from(String(str).trim()); }
 function charVal(ch){
   if(!strokes) return 0;
@@ -144,49 +144,31 @@ function toGogyo(n){
 function gogyouMatch(a,b,c){
   const rel={'木火土':'◎','火土金':'◎','土金水':'◎','金水木':'◎','水木火':'◎',
              '木土金':'△','火金水':'△','土水木':'△','金木火':'△','水火土':'△'};
-  const key=a+b+c; return rel[key]||'○';
+  return rel[a+b+c]||'○';
 }
 function getDiagnosis(type, num){
   if(!diagnosis || !diagnosis[type]) return '診断データなし';
   return diagnosis[type][String(num)] || '該当する診断文がありません。';
 }
 
-function displayWidth(str){
-  let w=0;
-  for(const ch of str){ w+=(ch.charCodeAt(0)<=0x7F)?1:2; }
-  return w;
-}
-function getCharPixelWidth(){
-  const meas=document.getElementById('measure');
-  meas.style.fontFamily=window.getComputedStyle(document.getElementById('result')).fontFamily;
-  meas.style.fontSize=window.getComputedStyle(document.getElementById('result')).fontSize;
-  meas.textContent='M'; const halfW=meas.getBoundingClientRect().width;
-  meas.textContent='あ'; const fullW=meas.getBoundingClientRect().width;
-  return (halfW+fullW/2)/2;
-}
-function getPreColumns(){
-  const pre=document.getElementById('result');
-  const preWidth=pre.clientWidth-24;
-  const charPixel=getCharPixelWidth()||8;
-  return Math.max(20,Math.floor(preWidth/charPixel));
-}
-function wrapTextForHeader(headerWidth, fullCols, text){
-  const available=Math.max(10,fullCols-headerWidth);
-  const lines=[]; let cur='',curW=0,idx=0;
-  while(idx<text.length){
-    const ch=text[idx++]; const w=(ch.charCodeAt(0)<=0x7F)?1:2;
-    if(curW+w>available){ lines.push(cur); cur=ch; curW=w; }
-    else{ cur+=ch; curW+=w; }
-  }
-  if(cur.length) lines.push(cur);
-  const full=Math.floor(headerWidth/2); const half=headerWidth%2;
-  const indent='　'.repeat(full)+' '.repeat(half);
-  let out=lines[0];
-  for(let i=1;i<lines.length;i++) out+='\n'+indent+lines[i];
-  return out;
+// === 相性診断 ===
+function getRelation(from,to){
+  const rel={
+    "木":{ "火":"◎","土":"△","金":"×","水":"○" },
+    "火":{ "土":"◎","金":"△","水":"×","木":"○" },
+    "土":{ "金":"◎","水":"△","木":"×","火":"○" },
+    "金":{ "水":"◎","木":"△","火":"×","土":"○" },
+    "水":{ "木":"◎","火":"△","土":"×","金":"○" }
+  };
+  return rel[from]?.[to] || "×";
 }
 
-/* === PC/スマホ両対応の表示制御 === */
+function getCompatibilityText(cat, key){
+  if(!compatibility || !compatibility[cat]) return '';
+  return compatibility[cat][key] || '該当なし';
+}
+
+// === 表示整形 ===
 function formatLineStrict(title,num,fortune,text){
   const isMobile = window.innerWidth <= 640;
   if(isMobile){
@@ -194,13 +176,11 @@ function formatLineStrict(title,num,fortune,text){
   } else {
     const gap='　　';
     const header=`${title}：${String(num).padStart(2,' ')}（${fortune}）${gap}`;
-    const headerWidth=displayWidth(header);
-    const cols=getPreColumns();
-    const wrapped=wrapTextForHeader(headerWidth,cols,text);
-    return header+wrapped;
+    return header + text;
   }
 }
 
+// === メイン診断 ===
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
@@ -211,17 +191,12 @@ function calculate(){
   const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
   let reiTen=0, reiChi=0, reiGai=0;
-
   if(sei.length===1 && mei.length===1){ reiChi=1; reiGai=2; }
   else if(sei.length===1){ reiTen=1; reiGai=1; }
   else if(mei.length===1){ reiChi=1; reiGai=1; }
 
-  const ten=s1+reiTen;
-  const chi=s2+reiChi;
-  const gai=(s1+s2)-jin+reiGai;
-  const sou=s1+s2;
-
-  const tenG=toGogyo(ten), jinG=toGogyo(jin), chiG=toGogyo(chi);
+  const ten=s1+reiTen, chi=s2+reiChi, gai=(s1+s2)-jin+reiGai, sou=s1+s2;
+  const tenG=toGogyo(ten), jinG=toGogyo(jin), chiG=toGogyo(chi), gaiG=toGogyo(gai);
   const gAtt=gogyouMatch(tenG,jinG,chiG);
 
   const lines=[];
@@ -236,15 +211,30 @@ function calculate(){
   lines.push('【三才相性診断】\n');
   lines.push(`${tenG} → ${jinG} → ${chiG}\n`);
   const msg=(gAtt==='◎')?'非常に良好で安定した運勢です。':(gAtt==='△')?'やや不調和。人間関係や環境の変化に注意。':'概ね良好で調和が取れています。';
-  lines.push(`相性：${gAtt}　${msg}`);
-  if(missingInfo.length){lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));}
+  lines.push(`相性：${gAtt}　${msg}\n\n`);
+
+  // ★ 主格相性診断
+  const success = getCompatibilityText('success', tenG+jinG);
+  const foundation = getCompatibilityText('foundation', chiG+jinG);
+  const relation = getCompatibilityText('relation', gaiG+jinG);
+  const overall = getCompatibilityText('overall', getRelation(tenG, jinG));
+
+  lines.push('【主格相性診断】\n');
+  lines.push(`成功運（主格↔天格）：${getRelation(tenG,jinG)}　${success}\n`);
+  lines.push(`基礎運（主格↔地格）：${getRelation(jinG,chiG)}　${foundation}\n`);
+  lines.push(`対人運（主格↔外格）：${getRelation(jinG,gaiG)}　${relation}\n`);
+  lines.push(`総合運：${getRelation(tenG,jinG)}　${overall}\n`);
+
+  if(missingInfo.length){lines.push('\n【未登録】\n'+missingInfo.join(' / '));}
   document.getElementById('result').textContent=lines.join('');
 }
+
 function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
 }
+
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
 </body>
