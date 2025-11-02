@@ -118,13 +118,13 @@ function toGogyo(n){const m={1:"木",2:"木",3:"火",4:"火",5:"土",6:"土",7:"
 function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'';return diagnosis[t][String(n)]||'';}
 function getComp(cat,key){return compatibility?.[cat]?.[key]||null;}
 
-// 30文字で折り返し
+// ★ 日本語基準「全角30文字」で折り返し
 function wrapText(text){
-  let out='',count=0;
+  let out='', count=0;
   for(const ch of text){
-    count+=(ch.charCodeAt(0)<=0x7F)?1:2;
+    count++; // 全角1文字＝1カウント
     out+=ch;
-    if(count>=30){out+='\n';count=0;}
+    if(count>=30){ out+='\n'; count=0; }
   }
   return out;
 }
