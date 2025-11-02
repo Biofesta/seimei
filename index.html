@@ -4,206 +4,97 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>熊﨑式姓名判断（霊数補正式）</title>
-<style>
-  :root{--bg:#fbfbfb;--card:#fff;--muted:#666}
-  body{
-    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,monospace;
-    background:var(--bg);
-    margin:0;padding:24px;
-    color:#222;line-height:1.8;
-  }
-  .wrap{max-width:920px;margin:0 auto}
-  header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-  h1{font-size:20px;margin:0}
-  .card{
-    background:var(--card);
-    padding:18px;
-    border-radius:10px;
-    box-shadow:0 6px 18px rgba(20,20,20,0.04);
-  }
-  label{display:block;margin:8px 0 4px;font-weight:600}
-  input[type="text"]{
-    width:100%;
-    padding:10px;
-    font-size:16px;
-    border:1px solid #ddd;
-    border-radius:6px;
-  }
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:640px){
-    .grid{grid-template-columns:1fr}
-    pre{
-      white-space:pre-wrap;
-      word-break:break-word;
-      font-size:15px;
-      line-height:1.9;
-    }
-  }
-  button{
-    background:#1f8ef1;
-    color:#fff;
-    border:0;
-    padding:10px 14px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:700;
-  }
-  button:disabled{opacity:0.5;cursor:not-allowed}
-  pre{
-    white-space:pre-wrap;
-    word-break:break-word;
-    background:#fafafa;
-    padding:12px;
-    border-radius:8px;
-    border:1px dashed #eee;
-    font-family:monospace;
-    line-height:1.8;
-    overflow-wrap:break-word;
-  }
-  .meta{font-size:13px;color:var(--muted);margin-top:8px}
-  .btns{display:flex;gap:10px;margin-top:12px}
-  .fortune-block{margin-bottom:1.6em;}
-  .fortune-title{font-weight:600;margin-bottom:0.4em;white-space:nowrap;}
-  .fortune-text{max-width:48em;line-height:1.9;word-break:break-all;text-indent:0;}
-  @media(max-width:640px){.fortune-text{max-width:100%;line-height:1.9;}}
-</style>
 </head>
-<body>
-<div class="wrap">
-  <header><h1>熊﨑式姓名判断</h1></header>
+<body style="font-family:'Yu Gothic','Hiragino Kaku Gothic ProN',Meiryo,monospace;background:#fbfbfb;color:#222;line-height:1.8;margin:0;padding:24px;">
+<div style="max-width:920px;margin:0 auto;">
+  <h1 style="font-size:18px;margin-bottom:16px;">熊﨑式姓名判断</h1>
 
-  <section class="card">
+  <div style="background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04);">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
-      <div class="grid">
-        <div>
-          <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：木村" autocomplete="off" style="width:96%;margin-right:0.5em;" />
-        </div>
-        <div>
-          <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：友昭" autocomplete="off" style="width:96%;" />
-        </div>
-      </div>
-      <div class="btns">
-        <button id="runBtn" type="submit">診断する</button>
-        <button type="button" onclick="clearForm()">クリア</button>
-      </div>
+      <label>姓（苗字）<br><input id="sei" type="text" style="width:100%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;"></label><br>
+      <label>名（名前）<br><input id="mei" type="text" style="width:100%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;"></label><br>
+      <button type="submit" style="background:#1f8ef1;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;">診断する</button>
+      <button type="button" onclick="clearForm()" style="margin-left:8px;padding:10px 14px;border-radius:8px;">クリア</button>
     </form>
-  </section>
+  </div>
 
-  <section style="margin-top:16px" class="card">
-    <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
-    <pre id="result">まだ診断されていません。</pre>
-  </section>
-
-  <section style="margin-top:16px" class="card" hidden>
-    <div>デバッグ情報</div>
-    <pre id="debug">-</pre>
-  </section>
+  <div style="margin-top:16px;background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04);">
+    <pre id="result" style="white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.9;">まだ診断されていません。</pre>
+  </div>
 </div>
 
 <script>
-let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
+let strokes=null,diagnosis=null,compatibility=null,missingInfo=[];
 
-// === データ読込 ===
 async function loadData(){
   try{
-    const [r1, r2, r3] = await Promise.all([
+    const [r1,r2,r3]=await Promise.all([
       fetch("strokes_kumazaki_full.json"),
       fetch("diagnosis_data.json"),
       fetch("diagnosis_compatibility.json")
     ]);
-    if(!r1.ok||!r2.ok||!r3.ok) throw new Error("ファイル読込失敗");
-    strokes=await r1.json();
-    diagnosis=await r2.json();
-    compatibility=await r3.json();
-    document.getElementById('debug').textContent='データ読み込みOK。';
+    strokes=await r1.json(); diagnosis=await r2.json(); compatibility=await r3.json();
   }catch(e){
-    document.getElementById('debug').textContent='読み込みエラー：'+e.message;
-    document.getElementById('runBtn').disabled=true;
+    document.getElementById('result').textContent='データ読み込みエラー：'+e.message;
   }
 }
 
-// === 基本処理 ===
-function splitChars(str){return Array.from(String(str).trim());}
-function charVal(ch){if(!strokes)return 0;if(ch in strokes)return strokes[ch]||0;missingInfo.push(ch+"：未登録");return 0;}
-function kikkou(num){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,39,41,45,47,48,52]);if(good.has(num))return'吉';if(num===0)return'不明';return'凶';}
-function toGogyo(n){const map={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return map[n%10];}
-function gogyouMatch(a,b,c){const rel={'木火土':'◎','火土金':'◎','土金水':'◎','金水木':'◎','水木火':'◎','木土金':'△','火金水':'△','土水木':'△','金木火':'△','水火土':'△'};return rel[a+b+c]||'○';}
-function getDiagnosis(type,num){if(!diagnosis||!diagnosis[type])return'診断データなし';return diagnosis[type][String(num)]||'該当する診断文がありません。';}
+function splitChars(s){return Array.from(String(s).trim());}
+function charVal(ch){if(!strokes)return 0;if(ch in strokes)return strokes[ch];missingInfo.push(ch+"：未登録");return 0;}
+function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,39,41,45,47,48,52]);if(good.has(n))return"吉";if(n===0)return"不明";return"凶";}
+function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
+function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'';return diagnosis[t][String(n)]||'';}
 
-// === 主格相性診断HTML生成 ===
-function makeCompatibilitySection(tenG,jinG,chiG,gaiG,souG){
-  const s=compatibility?.success?.[tenG+jinG];
-  const f=compatibility?.foundation?.[chiG+jinG];
-  const r=compatibility?.relation?.[gaiG+jinG];
-  const t=compatibility?.total?.[souG+jinG];
-  const build=(title,pair,data)=>{
-    if(!data)return'';
-    return `<div class="fortune-block">
-      <div class="fortune-title">${title}（${pair}）${data.symbol||''}</div>
-      <div class="fortune-text">${data.text}<br>${data.advice?data.advice:''}</div>
-    </div>`;
-  };
-  return `<h2 style="font-size:16px;margin:0 0 8px;">主格相性診断</h2>
-    ${build('成功・発展運','主格⇔天格',s)}
-    ${build('基礎運','主格⇔地格',f)}
-    ${build('対人・職業運','主格⇔外格',r)}
-    ${build('総合バランス','主格⇔総画',t)}`;
+function formatSection(title){return`【${title}】\n`;}
+function formatItem(name,num,fortune,text){
+  return `${name}：${num}（${fortune}）\n${wrap30(text)}\n`;
 }
-
-// === 五格診断（整形） ===
-function formatLineStrict(title,num,fortune,text){
-  const isMobile=window.innerWidth<=640;
-  if(isMobile){return`${title}：${num}（${fortune}）\n${text}`;}
-  else{
-    const gap='　　';
-    const header=`${title}：${String(num).padStart(2,' ')}（${fortune}）${gap}`;
-    const headerWidth=header.length*2;
-    const cols=60;
-    const available=Math.max(10,cols-headerWidth-6);
-    const lines=[],chars=Array.from(text);
-    let cur='',count=0;
-    for(const c of chars){
-      count+=(c.charCodeAt(0)<=0x7F)?1:2;
-      if(count>available){lines.push(cur);cur=c;count=2;}else cur+=c;
-    }
-    if(cur)lines.push(cur);
-    const indent='　'.repeat(Math.floor(headerWidth/2));
-    return header+lines.join('\n'+indent);
+function wrap30(text){
+  let out='',line='',count=0;
+  for(const ch of text){
+    count += (ch.charCodeAt(0)<=0x7F)?1:2;
+    if(count>30){out+='\n';count=2;}
+    out+=ch;
   }
+  return out;
 }
 
-// === 診断処理 ===
+function getComp(cat,key){return compatibility?.[cat]?.[key]||null;}
+
 function calculate(){
   missingInfo=[];
-  const sei=splitChars(document.getElementById('sei').value||'');
-  const mei=splitChars(document.getElementById('mei').value||'');
-  if(sei.length===0||mei.length===0){alert('姓と名を入力してください。');return;}
-
-  const s1=sei.map(charVal).reduce((a,b)=>a+b,0);
-  const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
+  const sei=splitChars(document.getElementById('sei').value);
+  const mei=splitChars(document.getElementById('mei').value);
+  if(!sei.length||!mei.length){alert("姓と名を入力してください。");return;}
+  const s1=sei.map(charVal).reduce((a,b)=>a+b,0),s2=mei.map(charVal).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
   let reiTen=0,reiChi=0,reiGai=0;
   if(sei.length===1&&mei.length===1){reiChi=1;reiGai=2;}
   else if(sei.length===1){reiTen=1;reiGai=1;}
   else if(mei.length===1){reiChi=1;reiGai=1;}
-
   const ten=s1+reiTen,chi=s2+reiChi,gai=(s1+s2)-jin+reiGai,sou=s1+s2;
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
 
-  const lines=[];
-  lines.push('【五格診断結果】\n');
-  lines.push(formatLineStrict('総格',sou,kikkou(sou),getDiagnosis('sou',sou))+'\n\n');
-  lines.push(formatLineStrict('天格',ten,'－','単独での吉凶判断はできません。')+'\n\n');
-  lines.push(formatLineStrict('人格',jin,kikkou(jin),getDiagnosis('jin',jin))+'\n\n');
-  lines.push(formatLineStrict('地格',chi,kikkou(chi),getDiagnosis('chi',chi))+'\n\n');
-  lines.push(formatLineStrict('外格',gai,kikkou(gai),getDiagnosis('gai',gai))+'\n\n');
+  let out='';
+  out+=formatSection('五格診断結果');
+  out+=formatItem('総格',sou,kikkou(sou),getDiagnosis('sou',sou))+'\n';
+  out+=formatItem('天格',ten,'－','単独での吉凶判断はできません。')+'\n';
+  out+=formatItem('人格',jin,kikkou(jin),getDiagnosis('jin',jin))+'\n';
+  out+=formatItem('地格',chi,kikkou(chi),getDiagnosis('chi',chi))+'\n';
+  out+=formatItem('外格',gai,kikkou(gai),getDiagnosis('gai',gai))+'\n\n';
 
-  const compatibilityHTML=makeCompatibilitySection(tenG,jinG,chiG,gaiG,souG);
-  document.getElementById('result').innerHTML=lines.join('<br>')+'<br><br>'+compatibilityHTML;
+  out+=formatSection('主格相性診断');
+  const s=getComp('success',tenG+jinG);
+  const f=getComp('foundation',chiG+jinG);
+  const r=getComp('relation',gaiG+jinG);
+  const t=getComp('total',souG+jinG);
+  if(s)out+=`成功・発展運（主格⇔天格）${s.symbol}\n${wrap30(s.text)}\n${wrap30(s.advice)}\n\n`;
+  if(f)out+=`基礎運（主格⇔地格）${f.symbol}\n${wrap30(f.text)}\n${wrap30(f.advice)}\n\n`;
+  if(r)out+=`対人・職業運（主格⇔外格）${r.symbol}\n${wrap30(r.text)}\n${wrap30(r.advice)}\n\n`;
+  if(t)out+=`総合バランス（主格⇔総画）${t.symbol}\n${wrap30(t.text)}\n${wrap30(t.advice)}\n`;
 
-  if(missingInfo.length){document.getElementById('result').innerHTML+='<br><br><b>【未登録】</b><br>'+missingInfo.join(' / ');}
+  if(missingInfo.length)out+='\n【未登録】\n'+missingInfo.join(' / ');
+  document.getElementById('result').textContent=out;
 }
 
 function clearForm(){
