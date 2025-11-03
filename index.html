@@ -9,23 +9,26 @@
 <div style="max-width:920px;margin:0 auto;padding:24px;font-family:'Yu Gothic','Hiragino Kaku Gothic ProN',Meiryo,monospace;line-height:1.8;color:#222;background:#fbfbfb;">
   <h1 style="font-size:20px;margin:0 0 16px;">熊﨑式姓名判断</h1>
 
+  <!-- 入力カード -->
   <div style="background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04);">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
-      <!-- 入力フォーム -->
-      <div style="display:flex;flex-wrap:wrap;gap:0;">
-        <div style="flex:1 1 300px;">
+      <!-- ✅ PC横並び・スマホ縦並び -->
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:flex-start;">
+        <div style="flex:1 1 300px;min-width:180px;">
           <label for="sei" style="display:block;font-weight:600;margin-bottom:4px;">姓（苗字）</label>
           <input id="sei" type="text" placeholder="例：木村" autocomplete="off"
                  style="width:96%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;margin-right:1em;">
         </div>
-        <div style="flex:1 1 300px;">
+        <!-- ★ 全角1文字ぶんの見た目空白 -->
+        <div style="width:1em;height:1px;visibility:hidden;">　</div>
+        <div style="flex:1 1 300px;min-width:180px;">
           <label for="mei" style="display:block;font-weight:600;margin-bottom:4px;">名（名前）</label>
           <input id="mei" type="text" placeholder="例：友昭" autocomplete="off"
                  style="width:96%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;">
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:12px;">
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
         <button id="runBtn" type="submit"
                 style="background:#1f8ef1;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;">診断する</button>
         <button type="button" onclick="clearForm()"
@@ -34,6 +37,7 @@
     </form>
   </div>
 
+  <!-- 診断結果表示 -->
   <div style="margin-top:16px;background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04);">
     <h2 style="font-size:17px;margin:0 0 8px;">診断結果</h2>
     <pre id="result" style="white-space:pre-wrap;word-break:break-word;background:#fafafa;padding:12px;border-radius:8px;border:1px dashed #eee;font-family:monospace;line-height:1.8;">まだ診断されていません。</pre>
@@ -90,12 +94,6 @@ function calculate(){
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai);
   const gAtt=gogyouMatch(tenG,jinG,chiG);
 
-  const doubleKe=[["水","木","火"],["火","金","水"],["金","土","木"]];
-  let specialNote="";
-  if(doubleKe.some(([a,b,c])=>a===tenG&&b===jinG&&c===chiG)){
-    specialNote="\n相性：×　二重剋配置（凶）\n天格が主格を弱め、地格が主格を攻める不安定な配列です。\n<span style='color:red;'>注：</span>生活リズムを整え、無理を避けることが開運の鍵です。\n";
-  }
-
   let result="【五格診断結果】\n";
   result+=`総格：${sou}（${kikkou(sou)}）\n${wrapText(getDiagnosis('sou',sou))}\n\n`;
   result+=`天格：${ten}（－）\n単独での吉凶判断はできません。\n\n`;
@@ -105,7 +103,7 @@ function calculate(){
 
   result+=`【三才五行配列】\n天格：${tenG}　主格：${jinG}　地格：${chiG}\n\n【三才相性診断】\n${tenG} → ${jinG} → ${chiG}\n`;
   const msg=(gAtt==='◎')?'非常に良好で安定した運勢です。':(gAtt==='△')?'やや不調和。人間関係や環境の変化に注意。':'概ね良好で調和が取れています。';
-  result+=`相性：${gAtt}　${msg}${specialNote}\n\n`;
+  result+=`相性：${gAtt}　${msg}\n\n`;
 
   result+=`【主格相性診断】\n`;
   const success=getComp('success',tenG+jinG);
