@@ -284,36 +284,33 @@ document.addEventListener('DOMContentLoaded',()=>{
     const header = document.getElementById("print-header");
     const logo = header.querySelector("img");
 
-    // 一時的にUI調整
     buttons.style.display = "none";
     header.style.display = "block";
 
-    // ロゴ読み込み待機
     if (logo && !logo.complete) {
       await new Promise(resolve => { logo.onload = resolve; });
     }
 
-    // 画像化
     const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
     const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
-    // A4 PDF化（縦比率補正 + 上詰め）
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = 210;
     const imgWidth = pageWidth;
     let imgHeight = canvas.height * imgWidth / canvas.width;
-    imgHeight *= 0.83; // ← 縦方向20%縮小補正
-    const yOffset = -5; // ← 上方向に5mm詰める
+
+    /* ▼ 修正版：5%縮小＋上に10mm下げ */
+    imgHeight *= 0.78;  // 約5%縮小
+    const yOffset = 10; // 10mm下げ
+
     pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
 
-    // 保存名
     const sei=document.getElementById("sei").value.trim();
     const mei=document.getElementById("mei").value.trim();
     const now=new Date();
     const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
     pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
 
-    // 後片付け
     buttons.style.display = "flex";
     header.style.display = "none";
   });
