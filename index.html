@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>熊﨑式姓名判断（霊数補正式）</title>
+<title>熊﨑式姓名判断（五格診断と主格相性診断）簡易版 by Biofesta</title>
 <style>
   :root{--bg:#fbfbfb;--card:#fff;--muted:#666}
   body{
@@ -67,33 +67,40 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ▼ 印刷設定修正版（左余白20mm／10％拡大） */
+  /* ▼ 印刷設定：左余白20mm＋10％拡大 */
   @page {
     size: A4;
     margin-top: 8mm;
     margin-right: 8mm;
     margin-bottom: 8mm;
-    margin-left: 20mm;  /* ← 左余白を20mm確保 */
+    margin-left: 20mm;
   }
   @media print {
     header, form, .print-area button {display:none !important;}
-    body {
-      background:#fff !important;
-      color:#000 !important;
-      margin:0;
-      padding:0;
-    }
-    .wrap {
-      zoom:0.86;                  /* ← 0.78 → 0.86 に拡大 */
-      overflow:hidden;
-      page-break-inside: avoid;
-    }
-    pre {
-      background:#fff !important;
-      border:none !important;
-    }
+    body {background:#fff !important;color:#000 !important;margin:0;padding:0;}
+    .wrap {zoom:0.86;overflow:hidden;page-break-inside: avoid;}
+    pre {background:#fff !important;border:none !important;}
+    #print-header {display:block !important;}
   }
-  /* ▲ 修正版ここまで */
+
+  /* ▼ 印刷／PDFヘッダー（ロゴ＋タイトル） */
+  #print-header {
+    display:none;
+    text-align:center;
+    margin-bottom:14px;
+  }
+  #print-header img {
+    height:36mm;
+    max-width:70mm;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 4mm;
+  }
+  #print-header span {
+    display:block;
+    font-size:16px;
+    font-weight:bold;
+  }
 
   .print-buttons {
     margin-top:48px;
@@ -119,9 +126,7 @@
     cursor:pointer;
     transition:background 0.2s;
   }
-  .pdf-btn:hover {
-    background:#409eff;
-  }
+  .pdf-btn:hover {background:#409eff;}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -130,7 +135,7 @@
 
 <body>
 <div class="wrap">
-  <header><h1>熊﨑式姓名判断</h1></header>
+  <header><h1>熊﨑式姓名判断（五格診断と主格相性診断）簡易版</h1></header>
 
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
@@ -152,6 +157,13 @@
   </section>
 
   <section style="margin-top:16px" class="card print-area">
+    <!-- ▼ 印刷・PDFヘッダー -->
+    <div id="print-header">
+      <img src="logo_biofesta.jpg" alt="Biofestaロゴ">
+      <span>姓名判断（五格診断と主格相性診断）簡易版　by Biofesta</span>
+    </div>
+    <!-- ▲ -->
+
     <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
     <pre id="result">まだ診断されていません。</pre>
 
@@ -297,7 +309,9 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const { jsPDF } = window.jspdf;
   const element = document.querySelector(".print-area");
   const buttons = element.querySelector(".print-buttons");
-  buttons.style.display = "none";  // 一時的に非表示
+  const header = document.getElementById("print-header");
+  buttons.style.display = "none";
+  header.style.display = "block";
 
   const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
   const imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -307,7 +321,6 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const pageHeight = 297;
   const imgWidth = pageWidth;
   const imgHeight = canvas.height * imgWidth / canvas.width;
-
   const fitRatio = Math.min(pageHeight / imgHeight, 1);
   const drawHeight = imgHeight * fitRatio;
   pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, drawHeight);
@@ -318,7 +331,8 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
   pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
 
-  buttons.style.display = "flex"; // 元に戻す
+  buttons.style.display = "flex";
+  header.style.display = "none";
 });
 </script>
 </body>
