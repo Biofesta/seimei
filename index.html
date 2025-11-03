@@ -67,18 +67,33 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ▼ 印刷設定修正版（5%拡大） */
-  @page { size: A4; margin: 8mm; }
+  /* ▼ 印刷設定修正版（左余白20mm／10％拡大） */
+  @page {
+    size: A4;
+    margin-top: 8mm;
+    margin-right: 8mm;
+    margin-bottom: 8mm;
+    margin-left: 20mm;  /* ← 左余白を20mm確保 */
+  }
   @media print {
     header, form, .print-area button {display:none !important;}
-    body {background:#fff !important;color:#000 !important;margin:0;padding:0;}
+    body {
+      background:#fff !important;
+      color:#000 !important;
+      margin:0;
+      padding:0;
+    }
     .wrap {
-      zoom:0.78;                  /* ← 0.74 → 0.78 に変更 */
+      zoom:0.86;                  /* ← 0.78 → 0.86 に拡大 */
       overflow:hidden;
       page-break-inside: avoid;
     }
-    pre {background:#fff !important; border:none !important;}
+    pre {
+      background:#fff !important;
+      border:none !important;
+    }
   }
+  /* ▲ 修正版ここまで */
 
   .print-buttons {
     margin-top:48px;
