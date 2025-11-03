@@ -61,6 +61,7 @@
     overflow-wrap:break-word;
   }
   .btns{display:flex;gap:10px;margin-top:12px}
+  .brown{color:#8B4513;}
 </style>
 </head>
 <body>
@@ -100,7 +101,6 @@
 <script>
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
 
-// ==== データ読込 ====
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
@@ -119,7 +119,6 @@ async function loadData(){
   }
 }
 
-// ==== 基本ユーティリティ ====
 function splitChars(str){ return Array.from(String(str).trim()); }
 function charVal(ch){
   if(!strokes) return 0;
@@ -127,33 +126,18 @@ function charVal(ch){
   missingInfo.push(ch+"：未登録");
   return 0;
 }
+
+// ★数値型統一済み・吉数セット維持
 function kikkou(num){
-  const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,39,41,45,47,48,52]);
-  if(good.has(num)) return '吉';
-  if(num===0) return '不明';
+  const n = Number(num);
+  const good = new Set([
+    1,3,5,6,7,8,11,13,15,16,17,18,
+    21,23,24,25,31,32,33,35,37,38,39,
+    41,45,47,48,52
+  ]);
+  if(good.has(n)) return '吉';
+  if(n===0) return '不明';
   return '凶';
-}
-function toGogyo(n){
-  const map={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};
-  return map[n%10];
-}
-
-// ==== 改良版・三才五行相性判定 ====
-function gogyouMatch(ten, jin, chi){
-  const 生={木:'火',火:'土',土:'金',金:'水',水:'木'};
-  const 剋={木:'土',火:'金',土:'水',金:'木',水:'火'};
-
-  let score=0;
-  if(生[ten]===jin) score+=2;
-  else if(剋[ten]===jin) score-=2;
-
-  if(生[jin]===chi) score+=2;
-  else if(剋[jin]===chi) score-=2;
-
-  if(score>=3) return '◎';
-  if(score>=1) return '○';
-  if(score<=-1 && score>-3) return '△';
-  return '×';
 }
 
 function getDiagnosis(type,num){
@@ -161,40 +145,13 @@ function getDiagnosis(type,num){
   return diagnosis[type][String(num)]||'該当する診断文がありません。';
 }
 
-// ==== 全角30文字折り返し ====
-function wrapZenkaku(text,cols=30){
-  let out=[],cur='',w=0;
-  for(const ch of text){
-    const add=(ch.charCodeAt(0)<=0x7F)?1:2;
-    if(w+add>cols*2){ out.push(cur); cur=ch; w=add; }
-    else{ cur+=ch; w+=add; }
-  }
-  if(cur) out.push(cur);
-  return out.join('\n');
+// === 各文字と画数を茶色で表示する関数 ===
+function calcExpr(chars, addRei=false){
+  const parts = chars.map(c=>`${c}(${charVal(c)})`);
+  if(addRei) parts.push('霊数1');
+  return `<span class="brown">[ ${parts.join('＋')} ]</span>`;
 }
 
-// ==== 相性データ取得 ====
-function pickCompat(cat,mainEl,otherEl){
-  if(!compatibility||!compatibility[cat]) return {symbol:'',text:'（相性データ未読込）'};
-  const key=mainEl+otherEl;
-  const obj=compatibility[cat][key];
-  if(!obj) return {symbol:'',text:'（該当組合せなし）'};
-  let text=obj.text||'';
-  text=text.replace(/<span[^>]*>注：<\/span>/gi,'【要注意】');
-  return {symbol:obj.symbol||'',text:text};
-}
-
-// ==== 表示整形 ====
-function renderFiveKaku(title,num,fortune,text){
-  const head=`${title}：${num}（${fortune}）`;
-  return `${head}\n${wrapZenkaku(text,30)}`;
-}
-function renderBlock(label,symbol,body){
-  const head=symbol?`${label} ${symbol}`:label;
-  return `${head}\n${wrapZenkaku(body,30)}`;
-}
-
-// ==== メイン計算 ====
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
@@ -211,29 +168,23 @@ function calculate(){
   else if(mei.length===1){reiChi=1;reiGai=1;}
 
   const ten=s1+reiTen,chi=s2+reiChi,gai=(s1+s2)-jin+reiGai,sou=s1+s2;
-  const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
 
-  const sSucc=pickCompat('success',jinG,tenG);
-  const sFoun=pickCompat('foundation',jinG,chiG);
-  const sRela=pickCompat('relation',jinG,gaiG);
-  const sOver=pickCompat('overall',jinG,souG);
+  const tenExpr=calcExpr(sei, reiTen===1);
+  const jinExpr=calcExpr([sei[sei.length-1], mei[0]]);
+  const chiExpr=calcExpr(mei, reiChi===1);
+  const gaiExpr=calcExpr([sei[0], mei[mei.length-1]], reiGai>0);
+  const souExpr=calcExpr([...sei,...mei]);
 
   const lines=[];
   lines.push('【五格診断結果】\n');
-  lines.push(renderFiveKaku('総格',sou,kikkou(sou),getDiagnosis('sou',sou))+'\n');
-  lines.push(renderFiveKaku('天格',ten,'－','単独での吉凶判断はできません。')+'\n');
-  lines.push(renderFiveKaku('人格',jin,kikkou(jin),getDiagnosis('jin',jin))+'\n');
-  lines.push(renderFiveKaku('地格',chi,kikkou(chi),getDiagnosis('chi',chi))+'\n');
-  lines.push(renderFiveKaku('外格',gai,kikkou(gai),getDiagnosis('gai',gai))+'\n');
+  lines.push(`総格：${sou}（${kikkou(sou)}）　${souExpr}\n${getDiagnosis('sou',sou)}\n`);
+  lines.push(`\n天格：${ten}（${kikkou(ten)}）　${tenExpr}\n単独での吉凶判断はできません。${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`\n人格：${jin}（${kikkou(jin)}）　${jinExpr}\n${getDiagnosis('jin',jin)}\n`);
+  lines.push(`\n地格：${chi}（${kikkou(chi)}）　${chiExpr}\n${getDiagnosis('chi',chi)}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`\n外格：${gai}（${kikkou(gai)}）　${gaiExpr}\n${getDiagnosis('gai',gai)}${reiGai>0?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
 
-  lines.push('\n【主格相性診断】\n');
-  lines.push(renderBlock('成功・発展運（主格⇔天格）', sSucc.symbol, sSucc.text)+'\n');
-  lines.push(renderBlock('基礎運（主格⇔地格）',       sFoun.symbol, sFoun.text)+'\n');
-  lines.push(renderBlock('対人・職業運（主格⇔外格）', sRela.symbol, sRela.text)+'\n');
-  lines.push(renderBlock('総合バランス（主格⇔総画）', sOver.symbol, sOver.text));
-
-  if(missingInfo.length){lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));}
-  document.getElementById('result').textContent=lines.join('\n');
+  if(missingInfo.length){lines.push('\n【未登録】\n'+missingInfo.join(' / '));}
+  document.getElementById('result').innerHTML=lines.join('');
 }
 
 function clearForm(){
