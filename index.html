@@ -11,18 +11,20 @@
 
   <div style="background:#fff;padding:18px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.04);">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-        <div>
-          <label for="sei" style="font-weight:600;">姓（苗字）</label>
+      <!-- 入力フォーム -->
+      <div style="display:flex;flex-wrap:wrap;gap:0;">
+        <div style="flex:1 1 300px;">
+          <label for="sei" style="display:block;font-weight:600;margin-bottom:4px;">姓（苗字）</label>
           <input id="sei" type="text" placeholder="例：木村" autocomplete="off"
-                 style="width:96%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;margin-right:0.5em;">
+                 style="width:96%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;margin-right:1em;">
         </div>
-        <div>
-          <label for="mei" style="font-weight:600;">名（名前）</label>
+        <div style="flex:1 1 300px;">
+          <label for="mei" style="display:block;font-weight:600;margin-bottom:4px;">名（名前）</label>
           <input id="mei" type="text" placeholder="例：友昭" autocomplete="off"
                  style="width:96%;padding:10px;font-size:16px;border:1px solid #ddd;border-radius:6px;">
         </div>
       </div>
+
       <div style="display:flex;gap:10px;margin-top:12px;">
         <button id="runBtn" type="submit"
                 style="background:#1f8ef1;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;">診断する</button>
@@ -63,7 +65,6 @@ function gogyouMatch(a,b,c){const rel={'木火土':'◎','火土金':'◎','土�
 function getDiagnosis(type,num){if(!diagnosis||!diagnosis[type])return'診断データなし';return diagnosis[type][String(num)]||'該当する診断文がありません。';}
 function getComp(cat,key){if(!compatibility||!compatibility[cat])return null;return compatibility[cat][key]||null;}
 
-// 全角30文字で自動折返し
 function wrapText(text,maxWidth=30){
   let line='',count=0,out='';
   for(let i=0;i<text.length;i++){
@@ -89,7 +90,6 @@ function calculate(){
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai);
   const gAtt=gogyouMatch(tenG,jinG,chiG);
 
-  // 二重剋判定
   const doubleKe=[["水","木","火"],["火","金","水"],["金","土","木"]];
   let specialNote="";
   if(doubleKe.some(([a,b,c])=>a===tenG&&b===jinG&&c===chiG)){
