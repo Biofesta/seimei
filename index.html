@@ -201,12 +201,12 @@ function calculate(){
   const lines=[];
   lines.push('<span class="section-title">【五格診断結果】</span>\n');
   lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>　${calcExpr([...sei,...mei])}\n${wrapZenkaku(getDiagnosis('sou',sou))}\n`);
-  lines.push(`\n<span class="kaku-title">天格：${ten}（${kikkou(ten)}）</span>　${calcExpr(sei, reiTen===1)}\n${wrapZenkaku('単独での吉凶判断はできません。')}${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`\n<span class="kaku-title">天格：${ten}（${kikkou(ten)}）</span>　${calcExpr(sei, reiTen===1)}\n${wrapZenkaku('単独での吉凶判断はありません。')}${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
   lines.push(`\n<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>　${calcExpr([sei[sei.length-1], mei[0]])}\n${wrapZenkaku(getDiagnosis('jin',jin))}\n`);
   lines.push(`\n<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>　${calcExpr(mei, reiChi===1)}\n${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
   lines.push(`\n<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>　${calcExpr([sei[0], mei[mei.length-1]], reiGai>0)}\n${wrapZenkaku(getDiagnosis('gai',gai))}${reiGai>0?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
 
-  lines.push('\n\n<span class="section-title" style="color:#1a237e;">【主格相性診断】</span>\n');
+  lines.push('\n\n<span class="section-title" style="color:#000;">【主格相性診断】</span>\n');
   lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}\n${wrapZenkaku(sSucc.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}\n${wrapZenkaku(sFoun.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}\n${wrapZenkaku(sRela.text)}\n`);
