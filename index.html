@@ -67,12 +67,16 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ▼ 追加部分：印刷設定とボタン */
+  /* ▼ 印刷設定修正版 */
   @page { size: A4; margin: 10mm; }
   @media print {
     header, form, .print-area button {display:none !important;}
     body {background:#fff !important;color:#000 !important;}
-    .wrap {transform:scale(0.85); transform-origin:top left; width:117.65%;}
+    .wrap {
+      transform:scale(0.75);      /* A4一枚に収まるよう調整 */
+      transform-origin:top left;
+      width:133%;
+    }
     pre {background:#fff !important; border:none !important;}
   }
   .print-buttons {
@@ -98,9 +102,14 @@
     font-weight:700;
     cursor:pointer;
   }
-  /* ▲ 追加ここまで */
 </style>
+
+<!-- ▼ PDF生成ライブラリ追加 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- ▲ 追加ここまで -->
 </head>
+
 <body>
 <div class="wrap">
   <header><h1>熊﨑式姓名判断</h1></header>
@@ -128,12 +137,10 @@
     <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
     <pre id="result">まだ診断されていません。</pre>
 
-    <!-- ▼ 追加：印刷／PDFボタン -->
     <div class="print-buttons">
       <button class="print-btn" id="printBtn">印刷</button>
       <button class="pdf-btn" id="pdfBtn">PDF保存</button>
     </div>
-    <!-- ▲ 追加ここまで -->
   </section>
 
   <section style="margin-top:16px" class="card" hidden>
@@ -253,7 +260,7 @@ function clearForm(){
 }
 document.addEventListener('DOMContentLoaded',loadData);
 
-/* ▼ 印刷／PDF保存ボタン動作 */
+/* ▼ 印刷／PDF保存ボタン動作修正版 */
 function setPrintTitle(){
   const sei=document.getElementById("sei").value.trim();
   const mei=document.getElementById("mei").value.trim();
@@ -261,9 +268,38 @@ function setPrintTitle(){
   const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
   document.title=`姓名判断_${sei}${mei}_${dateStr}`;
 }
-document.getElementById("printBtn").addEventListener("click",()=>{setPrintTitle();window.print();});
-document.getElementById("pdfBtn").addEventListener("click",()=>{setPrintTitle();window.print();});
-/* ▲ 追加ここまで */
+
+document.getElementById("printBtn").addEventListener("click",()=>{
+  setPrintTitle();
+  window.print();
+});
+
+document.getElementById("pdfBtn").addEventListener("click",async()=>{
+  setPrintTitle();
+  const { jsPDF } = window.jspdf;
+  const element = document.querySelector(".print-area");
+
+  const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
+  const imgData = canvas.toDataURL("image/jpeg", 1.0);
+  const pdf = new jsPDF("p", "mm", "a4");
+
+  const pageWidth = 210;
+  const pageHeight = 297;
+  const imgWidth = pageWidth;
+  const imgHeight = canvas.height * imgWidth / canvas.width;
+
+  // A4一枚に収めるために縮小率調整
+  const fitRatio = Math.min(pageHeight / imgHeight, 1);
+  const drawHeight = imgHeight * fitRatio;
+  pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, drawHeight);
+
+  const sei=document.getElementById("sei").value.trim();
+  const mei=document.getElementById("mei").value.trim();
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+  pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
+});
+/* ▲ 修正版ここまで */
 </script>
 </body>
 </html>
