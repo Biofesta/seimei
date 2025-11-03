@@ -90,9 +90,9 @@
     margin-bottom:14px;
   }
   #print-header img {
-    height:36mm;
-    max-width:70mm;
-    object-fit:contain;
+    width:30mm;          /* 横幅を30mmに固定 */
+    height:10mm;         /* 高さを10mmに固定 */
+    object-fit:contain;  /* 縦横比を保持 */
     display:block;
     margin:0 auto 4mm;
   }
@@ -310,13 +310,18 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const element = document.querySelector(".print-area");
   const buttons = element.querySelector(".print-buttons");
   const header = document.getElementById("print-header");
+  const logo = header.querySelector("img");
   buttons.style.display = "none";
   header.style.display = "block";
+
+  // 画像読み込み完了を待つ
+  if (logo && !logo.complete) {
+    await new Promise(resolve => { logo.onload = resolve; });
+  }
 
   const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
   const imgData = canvas.toDataURL("image/jpeg", 1.0);
   const pdf = new jsPDF("p", "mm", "a4");
-
   const pageWidth = 210;
   const pageHeight = 297;
   const imgWidth = pageWidth;
@@ -331,9 +336,4 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
   pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
 
-  buttons.style.display = "flex";
-  header.style.display = "none";
-});
-</script>
-</body>
-</html>
+  buttons
