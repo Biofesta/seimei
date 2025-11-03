@@ -180,7 +180,6 @@ function pickCompat(cat,mainEl,otherEl){
   const obj=compatibility[cat][key];
   if(!obj) return {symbol:'',text:'（該当組合せなし）'};
   let text=obj.text||'';
-  // ★ HTMLタグの「注：」を置き換え
   text=text.replace(/<span[^>]*>注：<\/span>/gi,'【要注意】');
   return {symbol:obj.symbol||'',text:text};
 }
@@ -212,10 +211,7 @@ function calculate(){
   else if(mei.length===1){reiChi=1;reiGai=1;}
 
   const ten=s1+reiTen,chi=s2+reiChi,gai=(s1+s2)-jin+reiGai,sou=s1+s2;
-
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
-  const gAtt=gogyouMatch(tenG,jinG,chiG);
-  const sanSaiMsg=(gAtt==='◎')?'非常に良好で安定した運勢です。':(gAtt==='△')?'やや不調和。人間関係や環境の変化に注意。':(gAtt==='×')?'相剋が強く注意が必要な配置です。':'概ね良好で調和が取れています。';
 
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
@@ -229,12 +225,6 @@ function calculate(){
   lines.push(renderFiveKaku('人格',jin,kikkou(jin),getDiagnosis('jin',jin))+'\n');
   lines.push(renderFiveKaku('地格',chi,kikkou(chi),getDiagnosis('chi',chi))+'\n');
   lines.push(renderFiveKaku('外格',gai,kikkou(gai),getDiagnosis('gai',gai))+'\n');
-
-  lines.push('【三才五行配列】\n');
-  lines.push(wrapZenkaku(`天格：${tenG}　人格：${jinG}　地格：${chiG}`,30)+'\n');
-  lines.push('【三才相性診断】\n');
-  lines.push(wrapZenkaku(`${tenG} → ${jinG} → ${chiG}`,30)+'\n');
-  lines.push(wrapZenkaku(`相性：${gAtt}　${sanSaiMsg}`,30)+'\n');
 
   lines.push('\n【主格相性診断】\n');
   lines.push(renderBlock('成功・発展運（主格⇔天格）', sSucc.symbol, sSucc.text)+'\n');
