@@ -23,7 +23,7 @@
   }
   label{display:block;margin:8px 0 4px;font-weight:600}
   input[type="text"]{
-    width:100%;
+    width:96%;
     padding:10px;
     font-size:16px;
     border:1px solid #ddd;
@@ -66,6 +66,12 @@
   .section-title{font-size:20px;font-weight:bold;margin:20px 0 8px;}
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
+
+  /* 印刷ボタン */
+  .print-area{
+    margin-top:48px; /* ←診断結果から3行分下げる */
+    text-align:right;
+  }
   .print-btn{
     background:#4caf50;
     color:white;
@@ -74,11 +80,14 @@
     border-radius:8px;
     font-weight:bold;
     cursor:pointer;
-    margin-top:16px;
-    float:right;
+    margin-left:10px;
   }
 
-  /* ★ 印刷時は入力やボタン等を非表示に */
+  /* 印刷時設定 */
+  @page {
+    size: A4 portrait;
+    margin: 20mm;
+  }
   @media print {
     form, header, button:not(.hidden-print), .btns {display:none !important;}
     body {background:white !important; color:black !important;}
@@ -112,7 +121,12 @@
   <section style="margin-top:16px" class="card">
     <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
     <pre id="result">まだ診断されていません。</pre>
-    <button id="printBtn" class="print-btn">印刷・記録する</button>
+
+    <!-- 印刷と保存ボタン -->
+    <div class="print-area">
+      <button id="printBtn" class="print-btn">印刷する</button>
+      <button id="savePdfBtn" class="print-btn" style="background:#1f8ef1;">PDFとして保存</button>
+    </div>
   </section>
 
   <section style="margin-top:16px" class="card" hidden>
@@ -135,9 +149,7 @@ async function loadData(){
     strokes=await r1.json();
     diagnosis=await r2.json();
     compatibility=await r3.json();
-    document.getElementById('debug').textContent='データ読み込みOK。';
   }catch(e){
-    document.getElementById('debug').textContent='読み込みエラー：'+e.message;
     document.getElementById('runBtn').disabled=true;
   }
 }
@@ -188,11 +200,13 @@ function calcExpr(chars, addRei=false){
   if(addRei) parts.push('霊数1');
   return `<span class="brown">[ ${parts.join('＋')} ]</span>`;
 }
+
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
   const mei=splitChars(document.getElementById('mei').value||'');
   if(sei.length===0||mei.length===0){ alert('姓と名を入力してください。'); return; }
+
   const s1=sei.map(charVal).reduce((a,b)=>a+b,0);
   const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
@@ -200,6 +214,7 @@ function calculate(){
   if(sei.length===1&&mei.length===1){reiChi=1;reiGai=2;}
   else if(sei.length===1){reiTen=1;reiGai=1;}
   else if(mei.length===1){reiChi=1;reiGai=1;}
+
   const ten=s1+reiTen,chi=s2+reiChi,gai=(s1+s2)-jin+reiGai,sou=s1+s2;
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
   const sSucc=pickCompat('success',jinG,tenG);
@@ -219,26 +234,28 @@ function calculate(){
   lines.push(`\n<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}\n${wrapZenkaku(sFoun.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}\n${wrapZenkaku(sRela.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">総合バランス（主格⇔総画）</span> ${sOver.symbol}\n${wrapZenkaku(sOver.text)}\n`);
-
   document.getElementById('result').innerHTML=lines.join('');
 }
 
-document.getElementById("printBtn").addEventListener("click", () => {
-  const sei = document.getElementById("sei").value.trim();
-  const mei = document.getElementById("mei").value.trim();
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = String(today.getMonth()+1).padStart(2,"0");
-  const d = String(today.getDate()).padStart(2,"0");
-  const dateStr = `${y}-${m}-${d}`;
-  const footer = document.createElement("div");
-  footer.id = "print-footer";
-  footer.innerHTML = `<hr><div style="font-size:14px;color:#555;text-align:right;">診断日：${dateStr}</div>`;
+function addFooterAndPrint(isPdf){
+  const sei=document.getElementById("sei").value.trim();
+  const mei=document.getElementById("mei").value.trim();
+  const today=new Date();
+  const y=today.getFullYear();
+  const m=String(today.getMonth()+1).padStart(2,"0");
+  const d=String(today.getDate()).padStart(2,"0");
+  const dateStr=`${y}-${m}-${d}`;
+  const footer=document.createElement("div");
+  footer.id="print-footer";
+  footer.innerHTML=`<hr><div style="font-size:14px;color:#555;text-align:right;">診断日：${dateStr}</div>`;
   document.body.appendChild(footer);
-  document.title = `姓名判断_${sei}${mei}_${dateStr}`;
+  document.title=`姓名判断_${sei}${mei}_${dateStr}${isPdf?"_保存用":""}`;
   window.print();
-  setTimeout(()=>{const f=document.getElementById("print-footer");if(f)f.remove();},2000);
-});
+  setTimeout(()=>{const f=document.getElementById("print-footer");if(f)f.remove();},1500);
+}
+
+document.getElementById("printBtn").addEventListener("click",()=>addFooterAndPrint(false));
+document.getElementById("savePdfBtn").addEventListener("click",()=>addFooterAndPrint(true));
 
 function clearForm(){
   document.getElementById('sei').value='';
