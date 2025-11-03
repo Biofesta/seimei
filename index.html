@@ -67,10 +67,10 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ▼ 印刷設定：左余白20mm＋10％拡大 */
+  /* ▼ 印刷設定：左余白20mm＋上部10mm詰め */
   @page {
     size: A4;
-    margin-top: 8mm;
+    margin-top: -2mm;
     margin-right: 8mm;
     margin-bottom: 8mm;
     margin-left: 20mm;
@@ -78,7 +78,12 @@
   @media print {
     header, form, .print-area button {display:none !important;}
     body {background:#fff !important;color:#000 !important;margin:0;padding:0;}
-    .wrap {zoom:0.86;overflow:hidden;page-break-inside: avoid;}
+    .wrap {
+      zoom:0.86;
+      overflow:hidden;
+      page-break-inside: avoid;
+      margin-top:-10mm; /* ← 印刷位置を上へ10mm移動 */
+    }
     pre {background:#fff !important;border:none !important;}
     #print-header {display:block !important;}
   }
@@ -314,7 +319,7 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   buttons.style.display = "none";
   header.style.display = "block";
 
-  // 画像読み込み完了を待つ
+  // ロゴ画像読み込みを待機
   if (logo && !logo.complete) {
     await new Promise(resolve => { logo.onload = resolve; });
   }
@@ -322,18 +327,16 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
   const imgData = canvas.toDataURL("image/jpeg", 1.0);
   const pdf = new jsPDF("p", "mm", "a4");
+
   const pageWidth = 210;
   const pageHeight = 297;
   const imgWidth = pageWidth;
-  const imgHeight = canvas.height * imgWidth / canvas.width;
-  const fitRatio = Math.min(pageHeight / imgHeight, 1);
-  const drawHeight = imgHeight * fitRatio;
-  pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, drawHeight);
+  let imgHeight = canvas.height * imgWidth / canvas.width;
 
-  const sei=document.getElementById("sei").value.trim();
-  const mei=document.getElementById("mei").value.trim();
-  const now=new Date();
-  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
+  // ▼ 縦方向補正（20％縮小）
+  imgHeight *= 0.83;
 
-  buttons
+  // ▼ 上方向に少し詰める（印刷と統一）
+  const yOffset = -5;
+
+  pdf.addImage(imgData, "JPEG", 0, yOffset,
