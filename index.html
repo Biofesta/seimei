@@ -32,34 +32,17 @@
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(max-width:640px){
     .grid{grid-template-columns:1fr}
-    pre{
-      white-space:pre-wrap;
-      word-break:break-word;
-      font-size:15px;
-      line-height:1.9;
-    }
+    pre{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.9;}
   }
   button{
-    background:#1f8ef1;
-    color:#fff;
-    border:0;
-    padding:10px 14px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:700;
+    background:#1f8ef1;color:#fff;border:0;
+    padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;
   }
   button:disabled{opacity:0.5;cursor:not-allowed}
   pre{
-    white-space:pre-wrap;
-    word-break:break-word;
-    background:#fafafa;
-    padding:12px;
-    border-radius:8px;
-    border:1px dashed #eee;
-    font-family:monospace;
-    line-height:1.8;
-    overflow-wrap:break-word;
-    font-size:16px;
+    white-space:pre-wrap;word-break:break-word;background:#fafafa;
+    padding:12px;border-radius:8px;border:1px dashed #eee;font-family:monospace;
+    line-height:1.8;overflow-wrap:break-word;font-size:16px;
   }
   .btns{display:flex;gap:10px;margin-top:12px}
   .brown{color:#8B4513;}
@@ -67,7 +50,7 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ▼ 印刷設定：左余白20mm＋上部10mm詰め */
+  /* 印刷設定：左20mm + 上10mm詰め相当 */
   @page {
     size: A4;
     margin-top: -2mm;
@@ -78,62 +61,29 @@
   @media print {
     header, form, .print-area button {display:none !important;}
     body {background:#fff !important;color:#000 !important;margin:0;padding:0;}
-    .wrap {
-      zoom:0.86;
-      overflow:hidden;
-      page-break-inside: avoid;
-      margin-top:-10mm; /* ← 印刷位置を上へ10mm移動 */
-    }
+    .wrap {zoom:0.86;overflow:hidden;page-break-inside: avoid;margin-top:-10mm;}
     pre {background:#fff !important;border:none !important;}
     #print-header {display:block !important;}
   }
 
-  /* ▼ 印刷／PDFヘッダー（ロゴ＋タイトル） */
+  /* 印刷／PDFヘッダー（ロゴ＋タイトル） */
   #print-header {
-    display:none;
-    text-align:center;
-    margin-bottom:14px;
+    display:none;text-align:center;margin-bottom:14px;
   }
   #print-header img {
-    width:30mm;          /* 横幅を30mmに固定 */
-    height:10mm;         /* 高さを10mmに固定 */
-    object-fit:contain;  /* 縦横比を保持 */
-    display:block;
-    margin:0 auto 4mm;
+    width:30mm;height:10mm;object-fit:contain;display:block;margin:0 auto 4mm;
   }
   #print-header span {
-    display:block;
-    font-size:16px;
-    font-weight:bold;
+    display:block;font-size:16px;font-weight:bold;
   }
 
-  .print-buttons {
-    margin-top:48px;
-    display:flex;
-    gap:10px;
-  }
-  .print-btn {
-    background:#4caf50;
-    color:#fff;
-    padding:10px 18px;
-    border:none;
-    border-radius:8px;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .pdf-btn {
-    background:#1f8ef1;
-    color:#fff;
-    padding:10px 18px;
-    border:none;
-    border-radius:8px;
-    font-weight:700;
-    cursor:pointer;
-    transition:background 0.2s;
-  }
+  .print-buttons {margin-top:48px;display:flex;gap:10px;}
+  .print-btn {background:#4caf50;color:#fff;padding:10px 18px;border:none;border-radius:8px;font-weight:700;cursor:pointer;}
+  .pdf-btn {background:#1f8ef1;color:#fff;padding:10px 18px;border:none;border-radius:8px;font-weight:700;cursor:pointer;transition:background .2s;}
   .pdf-btn:hover {background:#409eff;}
 </style>
 
+<!-- 外部ライブラリ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -162,6 +112,7 @@
   </section>
 
   <section style="margin-top:16px" class="card print-area">
+    <!-- 印刷・PDFヘッダー -->
     <div id="print-header">
       <img src="logo_biofesta.jpg" alt="Biofestaロゴ">
       <span>姓名判断（五格診断と主格相性診断）簡易版　by Biofesta</span>
@@ -183,8 +134,10 @@
 </div>
 
 <script>
+/* ---------------- 変数 ---------------- */
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
 
+/* ---------------- データ読込 ---------------- */
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
@@ -203,6 +156,7 @@ async function loadData(){
   }
 }
 
+/* ---------------- 共通関数 ---------------- */
 function splitChars(str){ return Array.from(String(str).trim()); }
 function charVal(ch){
   if(!strokes) return 0;
@@ -249,6 +203,8 @@ function calcExpr(chars, addRei=false){
   if(addRei) parts.push('霊数1');
   return `<span class="brown">[ ${parts.join('＋')} ]</span>`;
 }
+
+/* ---------------- 診断本体 ---------------- */
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
@@ -258,19 +214,25 @@ function calculate(){
   const s1=sei.map(charVal).reduce((a,b)=>a+b,0);
   const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
+
   let reiTen=0,reiChi=0,reiGai=0;
   if(sei.length===1&&mei.length===1){reiChi=1;reiGai=2;}
   else if(sei.length===1){reiTen=1;reiGai=1;}
   else if(mei.length===1){reiChi=1;reiGai=1;}
+
   const ten=s1+reiTen,chi=s2+reiChi,sou=s1+s2;
+
   let gaiExprChars=[],gai=0;
   if(mei.length===1){gai=charVal(sei[0])+1;gaiExprChars=[sei[0]];}
   else{gai=(s1+s2)-jin+reiGai;gaiExprChars=[sei[0], mei[mei.length-1]];}
+
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
+
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
   const sOver=pickCompat('overall',jinG,souG);
+
   const lines=[];
   lines.push('<span class="section-title">【五格診断結果】</span>\n');
   lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>　${calcExpr([...sei,...mei])}\n${wrapZenkaku(getDiagnosis('sou',sou))}\n`);
@@ -278,62 +240,84 @@ function calculate(){
   lines.push(`\n<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>　${calcExpr([sei[sei.length-1], mei[0]])}\n${wrapZenkaku(getDiagnosis('jin',jin))}\n`);
   lines.push(`\n<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>　${calcExpr(mei, reiChi===1)}\n${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
   lines.push(`\n<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>　${calcExpr(gaiExprChars, mei.length===1)}\n${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'\n<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}\n`);
+
   lines.push('\n\n<span class="section-title" style="color:#000;">【主格相性診断】</span>\n');
   lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}\n${wrapZenkaku(sSucc.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}\n${wrapZenkaku(sFoun.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}\n${wrapZenkaku(sRela.text)}\n`);
   lines.push(`\n<span class="compat-subtitle">総合バランス（主格⇔総画）</span> ${sOver.symbol}\n${wrapZenkaku(sOver.text)}\n`);
+
   if(missingInfo.length){lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));}
+
   document.getElementById('result').innerHTML=lines.join('');
 }
 
+/* クリア */
 function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
 }
-document.addEventListener('DOMContentLoaded',loadData);
 
-/* ▼ 印刷／PDF保存ボタン動作修正版 */
-function setPrintTitle(){
-  const sei=document.getElementById("sei").value.trim();
-  const mei=document.getElementById("mei").value.trim();
-  const now=new Date();
-  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-  document.title=`姓名判断_${sei}${mei}_${dateStr}`;
-}
+/* 初期化 */
+document.addEventListener('DOMContentLoaded',()=>{
+  loadData();
 
-document.getElementById("printBtn").addEventListener("click",()=>{
-  setPrintTitle();
-  window.print();
-});
-
-document.getElementById("pdfBtn").addEventListener("click",async()=>{
-  setPrintTitle();
-  const { jsPDF } = window.jspdf;
-  const element = document.querySelector(".print-area");
-  const buttons = element.querySelector(".print-buttons");
-  const header = document.getElementById("print-header");
-  const logo = header.querySelector("img");
-  buttons.style.display = "none";
-  header.style.display = "block";
-
-  if (logo && !logo.complete) {
-    await new Promise(resolve => { logo.onload = resolve; });
+  function setPrintTitle(){
+    const sei=document.getElementById("sei").value.trim();
+    const mei=document.getElementById("mei").value.trim();
+    const now=new Date();
+    const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+    document.title=`姓名判断_${sei}${mei}_${dateStr}`;
   }
 
-  const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
-  const imgData = canvas.toDataURL("image/jpeg", 1.0);
-  const pdf = new jsPDF("p", "mm", "a4");
+  document.getElementById("printBtn").addEventListener("click",()=>{
+    setPrintTitle();
+    window.print();
+  });
 
-  const pageWidth = 210;
-  const imgWidth = pageWidth;
-  let imgHeight = canvas.height * imgWidth / canvas.width;
-  imgHeight *= 0.83; // 縦方向補正（20％縮小）
-  const yOffset = -5; // 上方向調整
-  pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
+  document.getElementById("pdfBtn").addEventListener("click",async()=>{
+    setPrintTitle();
+    const { jsPDF } = window.jspdf;
+    const element = document.querySelector(".print-area");
+    const buttons = element.querySelector(".print-buttons");
+    const header = document.getElementById("print-header");
+    const logo = header.querySelector("img");
 
-  const sei=document.getElementById("sei").value.trim();
-  const mei=document.getElementById("mei").value.trim();
-  const now=new Date();
-  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now
+    // 一時的にUI調整
+    buttons.style.display = "none";
+    header.style.display = "block";
+
+    // ロゴ読み込み待機
+    if (logo && !logo.complete) {
+      await new Promise(resolve => { logo.onload = resolve; });
+    }
+
+    // 画像化
+    const canvas = await html2canvas(element,{scale:2,backgroundColor:"#fff"});
+    const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+    // A4 PDF化（縦比率補正 + 上詰め）
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = 210;
+    const imgWidth = pageWidth;
+    let imgHeight = canvas.height * imgWidth / canvas.width;
+    imgHeight *= 0.83; // ← 縦方向20%縮小補正
+    const yOffset = -5; // ← 上方向に5mm詰める
+    pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
+
+    // 保存名
+    const sei=document.getElementById("sei").value.trim();
+    const mei=document.getElementById("mei").value.trim();
+    const now=new Date();
+    const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+    pdf.save(`姓名判断_${sei}${mei}_${dateStr}.pdf`);
+
+    // 後片付け
+    buttons.style.display = "flex";
+    header.style.display = "none";
+  });
+});
+</script>
+</body>
+</html>
