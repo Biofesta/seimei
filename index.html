@@ -147,11 +147,11 @@
       <div class="grid">
         <div>
           <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" style="width:96%;margin-right:0.5em;" />
+          <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
         </div>
         <div>
           <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：亨" autocomplete="off" style="width:96%;" />
+          <input id="mei" type="text" placeholder="例：亨" autocomplete="off" />
         </div>
       </div>
       <div class="btns">
@@ -162,12 +162,10 @@
   </section>
 
   <section style="margin-top:16px" class="card print-area">
-    <!-- ▼ 印刷・PDFヘッダー -->
     <div id="print-header">
       <img src="logo_biofesta.jpg" alt="Biofestaロゴ">
       <span>姓名判断（五格診断と主格相性診断）簡易版　by Biofesta</span>
     </div>
-    <!-- ▲ -->
 
     <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
     <pre id="result">まだ診断されていません。</pre>
@@ -288,6 +286,7 @@ function calculate(){
   if(missingInfo.length){lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));}
   document.getElementById('result').innerHTML=lines.join('');
 }
+
 function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
@@ -319,7 +318,6 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   buttons.style.display = "none";
   header.style.display = "block";
 
-  // ロゴ画像読み込みを待機
   if (logo && !logo.complete) {
     await new Promise(resolve => { logo.onload = resolve; });
   }
@@ -329,14 +327,13 @@ document.getElementById("pdfBtn").addEventListener("click",async()=>{
   const pdf = new jsPDF("p", "mm", "a4");
 
   const pageWidth = 210;
-  const pageHeight = 297;
   const imgWidth = pageWidth;
   let imgHeight = canvas.height * imgWidth / canvas.width;
+  imgHeight *= 0.83; // 縦方向補正（20％縮小）
+  const yOffset = -5; // 上方向調整
+  pdf.addImage(imgData, "JPEG", 0, yOffset, imgWidth, imgHeight);
 
-  // ▼ 縦方向補正（20％縮小）
-  imgHeight *= 0.83;
-
-  // ▼ 上方向に少し詰める（印刷と統一）
-  const yOffset = -5;
-
-  pdf.addImage(imgData, "JPEG", 0, yOffset,
+  const sei=document.getElementById("sei").value.trim();
+  const mei=document.getElementById("mei").value.trim();
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now
