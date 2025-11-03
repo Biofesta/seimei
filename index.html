@@ -29,34 +29,22 @@
     border:1px solid #ddd;
     border-radius:6px;
   }
+  /* 入力エリア：PC横並び／スマホ縦並び、間は全角1文字相当 */
   .name-grid{
     display:flex;
-    gap:1em; /* 全角1文字分 */
+    gap:1em;
   }
   @media(max-width:640px){
     .name-grid{flex-direction:column;gap:8px;}
     pre{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.9;}
   }
   button{
-    background:#1f8ef1;
-    color:#fff;
-    border:0;
-    padding:10px 14px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:700;
+    background:#1f8ef1;color:#fff;border:0;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700;
   }
   button:disabled{opacity:0.5;cursor:not-allowed}
   pre{
-    white-space:pre-wrap;
-    word-break:break-word;
-    background:#fafafa;
-    padding:12px;
-    border-radius:8px;
-    border:1px dashed #eee;
-    font-family:monospace;
-    line-height:1.8;
-    overflow-wrap:break-word;
+    white-space:pre-wrap;word-break:break-word;background:#fafafa;padding:12px;border-radius:8px;border:1px dashed #eee;
+    font-family:monospace;line-height:1.8;overflow-wrap:break-word;
   }
   .brown{color:#8B4513;}
 </style>
@@ -96,20 +84,18 @@
 </div>
 
 <script>
-let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
+let strokes=null, diagnosis=null, missingInfo=[];
 
 // === データ読込 ===
 async function loadData(){
   try{
-    const [r1,r2,r3]=await Promise.all([
+    const [r1,r2]=await Promise.all([
       fetch("strokes_kumazaki_full.json"),
-      fetch("diagnosis_data.json"),
-      fetch("diagnosis_compatibility.json")
+      fetch("diagnosis_data.json")
     ]);
-    if(!r1.ok||!r2.ok||!r3.ok) throw new Error("ファイル読込失敗");
+    if(!r1.ok||!r2.ok) throw new Error("ファイル読込失敗");
     strokes=await r1.json();
     diagnosis=await r2.json();
-    compatibility=await r3.json();
     document.getElementById('debug').textContent='データ読み込みOK。';
   }catch(e){
     document.getElementById('debug').textContent='読み込みエラー：'+e.message;
@@ -119,70 +105,118 @@ async function loadData(){
 
 // === 基本関数 ===
 function splitChars(str){return Array.from(String(str).trim());}
-function charVal(ch){if(!strokes)return 0;if(ch in strokes)return strokes[ch]||0;missingInfo.push(ch+"：未登録");return 0;}
-function kikkou(num){
-  const n=Number(num);
-  const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);
-  if(good.has(n))return'吉';
-  if(n===0)return'不明';
-  return'凶';
+function charVal(ch){
+  if(!strokes) return 0;
+  if(ch in strokes) return strokes[ch]||0;
+  missingInfo.push(ch+"：未登録");
+  return 0;
 }
+
+// ★修正版 kikkou()：型変換で数値化し、吉数集合で判定
+function kikkou(num){
+  const n=Number(num); // 数値型に統一
+  const good=new Set([
+    1,3,5,6,7,8,11,13,15,16,17,18,
+    21,23,24,25,31,32,33,35,37,38,39,
+    41,45,47,48,52
+  ]);
+  if(good.has(n)) return '吉';
+  if(n===0) return '不明';
+  return '凶';
+}
+
+// 五行（末尾数→五行）
 function toGogyo(n){
   const map={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};
   return map[n%10];
 }
+
+// 診断文取得
 function getDiagnosis(type,num){
-  if(!diagnosis||!diagnosis[type])return'診断データなし';
+  if(!diagnosis||!diagnosis[type]) return '診断データなし';
   return diagnosis[type][String(num)]||'該当する診断文がありません。';
 }
-function getCompatibilityText(cat,key){
-  if(!compatibility||!compatibility[cat])return'';
-  return compatibility[cat][key]||'該当なし';
+
+// 計算式（茶色）生成：例「木(4)＋村(7)」＋必要時「＋霊数1」
+function calcExpr(chars, addRei){
+  const parts=chars.map(c=>`${c}(${charVal(c)})`);
+  if(addRei) parts.push('霊数1');
+  return `<span class="brown">[ ${parts.join('＋')} ]</span>`;
 }
 
-// === 計算処理 ===
+// === メイン計算 ===
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
   const mei=splitChars(document.getElementById('mei').value||'');
   if(sei.length===0||mei.length===0){alert('姓と名を入力してください。');return;}
 
+  // 基本画数
   const s1=sei.map(charVal).reduce((a,b)=>a+b,0);
   const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
+
+  // 主格（人格）
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
-  let reiTen=0,reiChi=0,reiGai=0;
-  if(sei.length===1&&mei.length===1){reiChi=1;reiGai=2;}
-  else if(sei.length===1){reiTen=1;reiGai=1;}
-  else if(mei.length===1){reiChi=1;reiGai=1;}
 
-  const ten=s1+reiTen,chi=s2+reiChi,gai=(s1+s2)-jin+reiGai,sou=s1+s2;
-  const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai);
-
-  function partText(chars,addRei=false){
-    const arr=chars.map(c=>`${c}(${charVal(c)})`);
-    if(addRei)arr.push('霊数1');
-    return arr.join('＋');
+  // 霊数補正
+  let reiTen=0, reiChi=0, reiGai=0;
+  if(sei.length===1 && mei.length===1){ // 姓1＋名1
+    reiChi=1; reiGai=2;                // 地格+1, 外格+2
+  }else if(sei.length===1){             // 姓1
+    reiTen=1; reiGai=1;                 // 天格+1, 外格+1
+  }else if(mei.length===1){             // 名1
+    reiChi=1; reiGai=1;                 // 地格+1, 外格+1
   }
+
+  // 各格
+  const ten=s1+reiTen;
+  const chi=s2+reiChi;
+  const gai=(s1+s2)-jin+reiGai;
+  const sou=s1+s2; // 総格は霊数を加えない
+
+  // 計算表示用
+  const tenExpr = calcExpr(sei, reiTen===1);
+  const jinExpr = calcExpr([sei[sei.length-1], mei[0]], false);
+  const chiExpr = calcExpr(mei, reiChi===1);
+  const gaiExpr = calcExpr([sei[0], mei[mei.length-1]], reiGai>0);
+  const souExpr = calcExpr([...sei, ...mei], false);
 
   const lines=[];
   lines.push('【五格診断結果】\n');
-  lines.push(`総格：${sou}（${kikkou(sou)}）　[ ${partText([...sei,...mei])} ]\n${getDiagnosis('sou',sou)}\n\n`);
-  lines.push(`天格：${ten}（${kikkou(ten)}）　[ ${partText(sei,reiTen===1)} ]\n単独での吉凶判断はできません。${reiTen===1?'\n<span style="color:#8B4513">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n\n`);
-  lines.push(`主格：${jin}（${kikkou(jin)}）　[ ${partText([sei[sei.length-1],mei[0]])} ]\n${getDiagnosis('jin',jin)}\n\n`);
-  lines.push(`地格：${chi}（${kikkou(chi)}）　[ ${partText(mei,reiChi===1)} ]\n${getDiagnosis('chi',chi)}${reiChi===1?'\n<span style="color:#8B4513">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n\n`);
-  lines.push(`外格：${gai}（${kikkou(gai)}）　[ ${partText([sei[0],mei[mei.length-1]],reiGai===1)} ]\n${getDiagnosis('gai',gai)}${reiGai===1?'\n<span style="color:#8B4513">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n\n`);
 
-  lines.push('【主格相性診断】\n');
-  const success=getCompatibilityText('success',tenG+jinG);
-  const foundation=getCompatibilityText('foundation',chiG+jinG);
-  const relation=getCompatibilityText('relation',gaiG+jinG);
-  const overall=getCompatibilityText('overall',tenG+jinG);
-  lines.push(`成功・発展運（主格⇔天格） ${success}\n`);
-  lines.push(`基礎運（主格⇔地格） ${foundation}\n`);
-  lines.push(`対人・職業運（主格⇔外格） ${relation}\n`);
-  lines.push(`総合バランス（主格⇔総画） ${overall}\n`);
+  // 総格
+  lines.push(`総格：${sou}（${kikkou(sou)}）　${souExpr}`);
+  lines.push('\n'+getDiagnosis('sou',sou)+'\n');
 
-  if(missingInfo.length){lines.push('\n【未登録】\n'+missingInfo.join(' / '));}
+  // 天格（注記：単独判断不可、霊数注記があれば茶色で）
+  lines.push(`\n天格：${ten}（${kikkou(ten)}）　${tenExpr}`);
+  lines.push('\n単独での吉凶判断はできません。');
+  if(reiTen===1){
+    lines.push('\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>');
+  }
+
+  // 主格
+  lines.push(`\n\n主格：${jin}（${kikkou(jin)}）　${jinExpr}`);
+  lines.push('\n'+getDiagnosis('jin',jin));
+
+  // 地格
+  lines.push(`\n\n地格：${chi}（${kikkou(chi)}）　${chiExpr}`);
+  lines.push('\n'+getDiagnosis('chi',chi));
+  if(reiChi===1){
+    lines.push('\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>');
+  }
+
+  // 外格
+  lines.push(`\n\n外格：${gai}（${kikkou(gai)}）　${gaiExpr}`);
+  lines.push('\n'+getDiagnosis('gai',gai));
+  if(reiGai>0){
+    lines.push('\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>');
+  }
+
+  if(missingInfo.length){
+    lines.push('\n\n【未登録】\n'+missingInfo.join(' / '));
+  }
+
   document.getElementById('result').innerHTML=lines.join('');
 }
 
@@ -191,6 +225,7 @@ function clearForm(){
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
 }
+
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
 </body>
