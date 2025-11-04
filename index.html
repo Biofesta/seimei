@@ -30,7 +30,7 @@
     border-radius:6px;
   }
 
-  /* ★ 入力欄の間にしっかり全角2文字ぶん空白 */
+  /* ★ 入力欄の間に全角2文字ぶんの空白を確保 */
   .grid{
     display:grid;
     grid-template-columns: 1fr minmax(2em,2em) 1fr;
@@ -88,7 +88,7 @@
     font-size:14px;
     line-height:1.8;
     margin:4px 0 0;
-    margin-bottom:0; /* 下の余白を消す */
+    margin-bottom:0;
     font-family:monospace;
   }
 
@@ -214,15 +214,9 @@ function getDiagnosis(type,num){
   return diagnosis[type][String(num)]||'該当する診断文がありません。';
 }
 
-function wrapZenkaku(text,cols=32){
-  let out=[],cur='',w=0;
-  for(const ch of text){
-    const add=(ch.charCodeAt(0)<=0x7F)?1:2;
-    if(w+add>cols*2){ out.push(cur); cur=ch; w=add; }
-    else{ cur+=ch; w+=add; }
-  }
-  if(cur) out.push(cur);
-  return out.join('\n');
+/* ★ wrapZenkaku改良：人工改行を除去して自然折返しに */
+function wrapZenkaku(text){
+  return text.replace(/\n+/g, '');
 }
 
 function pickCompat(cat,mainEl,otherEl){
@@ -263,7 +257,6 @@ function calculate(){
   const ten=s1+reiTen,chi=s2+reiChi,sou=s1+s2;
   let gai=(s1+s2)-jin+reiGai;
 
-  /* 外格式修正 */
   let gaiExprChars=[];
   if(mei.length===1){
     gaiExprChars=[...sei.slice(0,-1)];
