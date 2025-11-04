@@ -30,7 +30,7 @@
     border-radius:6px;
   }
 
-  /* ★ 入力欄の間に全角2文字ぶんの空白を確保 */
+  /* 入力欄の間に全角2文字ぶん空白 */
   .grid{
     display:grid;
     grid-template-columns: 1fr minmax(2em,2em) 1fr;
@@ -45,12 +45,6 @@
   @media(max-width:640px){
     .grid{grid-template-columns:1fr;}
     .grid .zenkaku-gap{display:none;}
-    pre{
-      white-space:pre-wrap;
-      word-break:break-word;
-      font-size:15px;
-      line-height:1.9;
-    }
   }
 
   button{
@@ -63,36 +57,33 @@
     font-weight:700;
   }
   button:disabled{opacity:0.5;cursor:not-allowed}
-  pre{
-    white-space:pre-wrap;
-    word-break:break-word;
+
+  /* ★ preをやめ、自然段落用スタイルを新設 */
+  #result{
+    white-space:normal;
     background:#fafafa;
     padding:12px;
     border-radius:8px;
     border:1px dashed #eee;
-    font-family:monospace;
     line-height:1.8;
-    overflow-wrap:break-word;
     font-size:16px;
   }
+
   .btns{display:flex;gap:10px;margin-top:12px}
   .brown{color:#8B4513;}
   .section-title{font-size:20px;font-weight:bold;margin:20px 0 8px;}
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
-
-  /* ★ 計算式の余分な改行をなくし自然に接続 */
   .expr{
     display:block;
     color:#8B4513;
     font-size:14px;
     line-height:1.8;
     margin:4px 0 0;
-    margin-bottom:0;
     font-family:monospace;
   }
 
-  /* === 印刷・PDFボタン === */
+  /* 印刷・PDFボタン */
   .print-controls{
     display:flex;
     justify-content:center;
@@ -107,16 +98,10 @@
     cursor:pointer;
     border:none;
   }
-  .print-btn.print{
-    background:#4caf50;
-    color:#fff;
-  }
-  .print-btn.pdf{
-    background:#2196f3;
-    color:#fff;
-  }
+  .print-btn.print{background:#4caf50;color:#fff;}
+  .print-btn.pdf{background:#2196f3;color:#fff;}
 
-  /* === 印刷設定：A4・85%縮小 === */
+  /* 印刷設定 */
   @page { size: A4; margin: 20mm; }
   @media print {
     body { zoom:0.85; }
@@ -136,7 +121,6 @@
           <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
         </div>
 
-        <!-- ★ 全角空白スペーサー -->
         <div class="zenkaku-gap" aria-hidden="true"></div>
 
         <div>
@@ -153,7 +137,8 @@
 
   <section style="margin-top:16px" class="card">
     <h2 style="font-size:16px;margin:0 0 8px">診断結果</h2>
-    <pre id="result">まだ診断されていません。</pre>
+    <!-- ★ pre → div に変更 -->
+    <div id="result">まだ診断されていません。</div>
 
     <div class="print-controls">
       <button class="print-btn print" id="printBtn">印刷</button>
@@ -214,10 +199,8 @@ function getDiagnosis(type,num){
   return diagnosis[type][String(num)]||'該当する診断文がありません。';
 }
 
-/* ★ wrapZenkaku改良：人工改行を除去して自然折返しに */
-function wrapZenkaku(text){
-  return text.replace(/\n+/g, '');
-}
+/* wrapZenkaku改良：改行せず自然段落に */
+function wrapZenkaku(text){ return text.replace(/\n+/g,''); }
 
 function pickCompat(cat,mainEl,otherEl){
   if(!compatibility||!compatibility[cat]) return {symbol:'',text:'（相性データ未読込）'};
@@ -232,7 +215,7 @@ function pickCompat(cat,mainEl,otherEl){
   return {symbol:obj.symbol||'',text:text};
 }
 
-/* ★ 改行＋小サイズの式 */
+/* 改行＋小サイズの式 */
 function calcExpr(chars, addRei=false){
   const parts=chars.map(c=>`${c}(${charVal(c)})`);
   if(addRei) parts.push('霊数1');
@@ -258,11 +241,8 @@ function calculate(){
   let gai=(s1+s2)-jin+reiGai;
 
   let gaiExprChars=[];
-  if(mei.length===1){
-    gaiExprChars=[...sei.slice(0,-1)];
-  }else{
-    gaiExprChars=[...sei.slice(0,-1),...mei.slice(1)];
-  }
+  if(mei.length===1){gaiExprChars=[...sei.slice(0,-1)];}
+  else{gaiExprChars=[...sei.slice(0,-1),...mei.slice(1)];}
 
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
   const sSucc=pickCompat('success',jinG,tenG);
@@ -271,23 +251,21 @@ function calculate(){
   const sOver=pickCompat('overall',jinG,souG);
 
   const lines=[];
-  lines.push('<span class="section-title">【五格診断結果】</span>\n');
-  lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>\n${calcExpr([...sei,...mei])}\n${wrapZenkaku(getDiagnosis('sou',sou))}\n`);
-  lines.push(`\n<span class="kaku-title">天格：${ten}（－）</span>\n${calcExpr(sei, reiTen===1)}\n${wrapZenkaku('単独での吉凶判断はありません。')}${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
-  lines.push(`\n<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>\n${calcExpr([sei[sei.length-1], mei[0]])}\n${wrapZenkaku(getDiagnosis('jin',jin))}\n`);
-  lines.push(`\n<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>\n${calcExpr(mei, reiChi===1)}\n${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
-  lines.push(`\n<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>\n${calcExpr(gaiExprChars, reiGai>0)}\n${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'\n<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push('<span class="section-title">【五格診断結果】</span>');
+  lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
+  lines.push(`<span class="kaku-title">天格：${ten}（－）</span>${calcExpr(sei, reiTen===1)}${wrapZenkaku('単独での吉凶判断はありません。')}${reiTen===1?'<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}`);
+  lines.push(`<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>${calcExpr([sei[sei.length-1], mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
+  lines.push(`<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>${calcExpr(mei, reiChi===1)}${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}`);
+  lines.push(`<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>${calcExpr(gaiExprChars, reiGai>0)}${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}`);
 
-  lines.push('\n\n<span class="section-title" style="color:#000;">【主格相性診断】</span>\n');
-  lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}\n${wrapZenkaku(sSucc.text)}\n`);
-  lines.push(`\n<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}\n${wrapZenkaku(sFoun.text)}\n`);
-  lines.push(`\n<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}\n${wrapZenkaku(sRela.text)}\n`);
-  lines.push(`\n<span class="compat-subtitle">総合バランス（主格⇔総画）</span> ${sOver.symbol}\n${wrapZenkaku(sOver.text)}\n`);
+  lines.push('<span class="section-title" style="color:#000;">【主格相性診断】</span>');
+  lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}${wrapZenkaku(sSucc.text)}`);
+  lines.push(`<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}${wrapZenkaku(sFoun.text)}`);
+  lines.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}${wrapZenkaku(sRela.text)}`);
+  lines.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）</span> ${sOver.symbol}${wrapZenkaku(sOver.text)}`);
 
-  if(missingInfo.length){
-    document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
-  }
-  document.getElementById('result').innerHTML=lines.join('');
+  if(missingInfo.length){document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');}
+  document.getElementById('result').innerHTML=lines.join('<br><br>');
 }
 
 function clearForm(){
