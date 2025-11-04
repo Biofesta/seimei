@@ -64,7 +64,13 @@
   .brown{color:#8B4513;}
   .section-title{font-size:20px;font-weight:bold;margin:20px 0 8px;}
   .kaku-title{font-size:18px;font-weight:bold;}
-  .compat-subtitle{display:block;font-size:16px;font-weight:bold;margin-top:12px;}
+  .compat-subtitle{
+    display:block;
+    font-size:16px;
+    font-weight:bold;
+    margin-top:14px;
+    margin-bottom:4px;
+  }
   .expr{display:block;color:#8B4513;font-size:14px;line-height:1.8;margin:4px 0 0;font-family:monospace;}
 
   /* 印刷・PDFボタン */
@@ -217,11 +223,12 @@ function calculate(){
   lines.push(`<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>${calcExpr(mei,reiChi===1)}${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}`);
   lines.push(`<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>${calcExpr(gaiExprChars,reiGai>0)}${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}`);
 
+  // --- 相性診断（サブタイトル＋診断⇒評価＋改行説明） ---
   lines.push('<div class="compatibility-section"><span class="section-title" style="color:#000;">【主格相性診断】</span>');
-  lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}<br>${wrapZenkaku(sSucc.text)}`);
-  lines.push(`<span class="compat-subtitle">基礎運（主格⇔地格）</span> ${sFoun.symbol}<br>${wrapZenkaku(sFoun.text)}`);
-  lines.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）</span> ${sRela.symbol}<br>${wrapZenkaku(sRela.text)}`);
-  lines.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）</span> ${sOver.symbol}<br>${wrapZenkaku(sOver.text)}</div>`);
+  lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）診断⇒${sSucc.symbol}</span>${wrapZenkaku(sSucc.text)}`);
+  lines.push(`<span class="compat-subtitle">基礎運（主格⇔地格）診断⇒${sFoun.symbol}</span>${wrapZenkaku(sFoun.text)}`);
+  lines.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）診断⇒${sRela.symbol}</span>${wrapZenkaku(sRela.text)}`);
+  lines.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）診断⇒${sOver.symbol}</span>${wrapZenkaku(sOver.text)}</div>`);
   lines.push('</div>');
 
   document.getElementById('result').innerHTML = lines.join('<br><br>');
