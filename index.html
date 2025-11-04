@@ -30,16 +30,16 @@
     border-radius:6px;
   }
 
-  /* ★ 姓と名の間に全角1文字ぶんの空白列を設ける */
+  /* ★ 入力欄の間にしっかり全角2文字ぶん空白 */
   .grid{
     display:grid;
-    grid-template-columns: 1fr minmax(1em,1em) 1fr;
+    grid-template-columns: 1fr minmax(2em,2em) 1fr;
     align-items:start;
     column-gap:0;
     row-gap:1em;
   }
   .grid .zenkaku-gap{
-    width:1em; min-width:1em; height:1px;
+    width:2em; min-width:2em; height:1px;
     pointer-events:none; user-select:none;
   }
   @media(max-width:640px){
@@ -81,13 +81,14 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
-  /* ★ 計算式の見た目を小さく・改行表示 */
+  /* ★ 計算式の余分な改行をなくし自然に接続 */
   .expr{
     display:block;
     color:#8B4513;
     font-size:14px;
     line-height:1.8;
     margin:4px 0 0;
+    margin-bottom:0; /* 下の余白を消す */
     font-family:monospace;
   }
 
@@ -135,7 +136,7 @@
           <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
         </div>
 
-        <!-- ★ 全角1文字分の見えないスペーサー -->
+        <!-- ★ 全角空白スペーサー -->
         <div class="zenkaku-gap" aria-hidden="true"></div>
 
         <div>
@@ -262,7 +263,7 @@ function calculate(){
   const ten=s1+reiTen,chi=s2+reiChi,sou=s1+s2;
   let gai=(s1+s2)-jin+reiGai;
 
-  /* ★ 外格の式に使う文字を正確に修正 */
+  /* 外格式修正 */
   let gaiExprChars=[];
   if(mei.length===1){
     gaiExprChars=[...sei.slice(0,-1)];
