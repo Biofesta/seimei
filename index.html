@@ -12,6 +12,8 @@
     background:var(--bg);
     margin:0;padding:24px;
     color:#222;line-height:1.8;
+    transform: scale(0.9);
+    transform-origin: top center;
   }
   .wrap{max-width:920px;margin:0 auto}
   header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
@@ -30,8 +32,6 @@
     border:1px solid #ddd;
     border-radius:6px;
   }
-
-  /* 入力欄の間隔 */
   .grid{
     display:grid;
     grid-template-columns: 1fr minmax(2em,2em) 1fr;
@@ -43,14 +43,12 @@
     .grid{grid-template-columns:1fr;}
     .zenkaku-gap{display:none;}
   }
-
   .btns{display:flex;gap:10px;margin-top:12px}
   button{
     background:#1f8ef1;color:#fff;border:0;padding:10px 14px;
     border-radius:8px;cursor:pointer;font-weight:700;
   }
   button:disabled{opacity:0.5;cursor:not-allowed}
-
   #result{
     white-space:normal;
     background:#fafafa;
@@ -60,7 +58,6 @@
     line-height:1.8;
     font-size:16px;
   }
-
   .brown{color:#8B4513;}
   .section-title{font-size:20px;font-weight:bold;margin:20px 0 8px;}
   .kaku-title{font-size:18px;font-weight:bold;}
@@ -68,12 +65,10 @@
     display:block;
     font-size:16px;
     font-weight:bold;
-    margin-top:14px;
-    margin-bottom:4px;
+    margin-top:8px;
+    margin-bottom:2px;
   }
   .expr{display:block;color:#8B4513;font-size:14px;line-height:1.8;margin:4px 0 0;font-family:monospace;}
-
-  /* 印刷・PDFボタン */
   .print-controls{
     display:flex;justify-content:center;gap:160px;margin-top:48px;
   }
@@ -82,11 +77,8 @@
   }
   .print-btn.print{background:#4caf50;color:#fff;}
   .print-btn.pdf{background:#2196f3;color:#fff;}
-
-  /* === 印刷設定 === */
-  @page { size: A4; margin: 15mm; }
+  @page { size: A4; margin: 12mm; }
   @media print {
-    body { zoom:0.8; }
     header, form, .print-controls, #debug { display:none !important; }
   }
 </style>
@@ -223,7 +215,7 @@ function calculate(){
   lines.push(`<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>${calcExpr(mei,reiChi===1)}${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}`);
   lines.push(`<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>${calcExpr(gaiExprChars,reiGai>0)}${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}`);
 
-  // --- 相性診断（サブタイトル＋診断⇒評価＋改行説明） ---
+  // --- 相性診断（詰めた表示） ---
   lines.push('<div class="compatibility-section"><span class="section-title" style="color:#000;">【主格相性診断】</span>');
   lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）診断⇒${sSucc.symbol}</span>${wrapZenkaku(sSucc.text)}`);
   lines.push(`<span class="compat-subtitle">基礎運（主格⇔地格）診断⇒${sFoun.symbol}</span>${wrapZenkaku(sFoun.text)}`);
@@ -245,10 +237,9 @@ function clearForm(){
 document.getElementById("printBtn").addEventListener("click",()=>{window.print();});
 document.getElementById("pdfBtn").addEventListener("click",()=>{
   const main=document.querySelector("#main-diagnosis");
-  const opt={margin:10,filename:'姓名判断結果.pdf',image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
+  const opt={margin:5,filename:'姓名判断結果.pdf',image:{type:'jpeg',quality:0.98},html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
   html2pdf().set(opt).from(main).save();
 });
-
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
 </body>
