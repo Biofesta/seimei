@@ -29,13 +29,22 @@
     border:1px solid #ddd;
     border-radius:6px;
   }
+
+  /* ★ 姓と名の間に全角1文字ぶんの空白列を設ける */
   .grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:1em; /* ← 全角1文字分の空白を追加 */
+    grid-template-columns: 1fr minmax(1em,1em) 1fr;
+    align-items:start;
+    column-gap:0;
+    row-gap:1em;
+  }
+  .grid .zenkaku-gap{
+    width:1em; min-width:1em; height:1px;
+    pointer-events:none; user-select:none;
   }
   @media(max-width:640px){
-    .grid{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr;}
+    .grid .zenkaku-gap{display:none;}
     pre{
       white-space:pre-wrap;
       word-break:break-word;
@@ -43,6 +52,7 @@
       line-height:1.9;
     }
   }
+
   button{
     background:#1f8ef1;
     color:#fff;
@@ -71,12 +81,22 @@
   .kaku-title{font-size:18px;font-weight:bold;}
   .compat-subtitle{font-size:16px;font-weight:bold;}
 
+  /* ★ 計算式の見た目を小さく・改行表示 */
+  .expr{
+    display:block;
+    color:#8B4513;
+    font-size:14px;
+    line-height:1.8;
+    margin:4px 0 0;
+    font-family:monospace;
+  }
+
   /* === 印刷・PDFボタン === */
   .print-controls{
     display:flex;
     justify-content:center;
-    gap:160px; /* ボタン幅程度の間隔 */
-    margin-top:48px; /* 結果との間を3行分空ける */
+    gap:160px;
+    margin-top:48px;
   }
   .print-btn{
     width:160px;
@@ -114,6 +134,10 @@
           <label for="sei">姓（苗字）</label>
           <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
         </div>
+
+        <!-- ★ 全角1文字分の見えないスペーサー -->
+        <div class="zenkaku-gap" aria-hidden="true"></div>
+
         <div>
           <label for="mei">名（名前）</label>
           <input id="mei" type="text" placeholder="例：亨" autocomplete="off" />
@@ -213,10 +237,11 @@ function pickCompat(cat,mainEl,otherEl){
   return {symbol:obj.symbol||'',text:text};
 }
 
+/* ★ 改行＋小サイズの式 */
 function calcExpr(chars, addRei=false){
   const parts=chars.map(c=>`${c}(${charVal(c)})`);
   if(addRei) parts.push('霊数1');
-  return `<span class="brown">[ ${parts.join('＋')} ]</span>`;
+  return `<div class="expr">［ ${parts.join('＋')} ］</div>`;
 }
 
 function calculate(){
@@ -228,18 +253,24 @@ function calculate(){
   const s1=sei.map(charVal).reduce((a,b)=>a+b,0);
   const s2=mei.map(charVal).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1])+charVal(mei[0]);
+
   let reiTen=0,reiChi=0,reiGai=0;
   if(sei.length===1&&mei.length===1){reiChi=1;reiGai=2;}
   else if(sei.length===1){reiTen=1;reiGai=1;}
   else if(mei.length===1){reiChi=1;reiGai=1;}
 
   const ten=s1+reiTen,chi=s2+reiChi,sou=s1+s2;
-  let gaiExprChars=[],gai=0;
-  if(mei.length===1){gai=charVal(sei[0])+1;gaiExprChars=[sei[0]];}
-  else {gai=(s1+s2)-jin+reiGai;gaiExprChars=[sei[0], mei[mei.length-1]];}
+  let gai=(s1+s2)-jin+reiGai;
+
+  /* ★ 外格の式に使う文字を正確に修正 */
+  let gaiExprChars=[];
+  if(mei.length===1){
+    gaiExprChars=[...sei.slice(0,-1)];
+  }else{
+    gaiExprChars=[...sei.slice(0,-1),...mei.slice(1)];
+  }
 
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
-
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
@@ -247,11 +278,11 @@ function calculate(){
 
   const lines=[];
   lines.push('<span class="section-title">【五格診断結果】</span>\n');
-  lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>　${calcExpr([...sei,...mei])}\n${wrapZenkaku(getDiagnosis('sou',sou))}\n`);
-  lines.push(`\n<span class="kaku-title">天格：${ten}（－）</span>　${calcExpr(sei, reiTen===1)}\n${wrapZenkaku('単独での吉凶判断はありません。')}${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
-  lines.push(`\n<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>　${calcExpr([sei[sei.length-1], mei[0]])}\n${wrapZenkaku(getDiagnosis('jin',jin))}\n`);
-  lines.push(`\n<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>　${calcExpr(mei, reiChi===1)}\n${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
-  lines.push(`\n<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>　${calcExpr(gaiExprChars, mei.length===1)}\n${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'\n<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`<span class="kaku-title">総格：${sou}（${kikkou(sou)}）</span>\n${calcExpr([...sei,...mei])}\n${wrapZenkaku(getDiagnosis('sou',sou))}\n`);
+  lines.push(`\n<span class="kaku-title">天格：${ten}（－）</span>\n${calcExpr(sei, reiTen===1)}\n${wrapZenkaku('単独での吉凶判断はありません。')}${reiTen===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`\n<span class="kaku-title">主格：${jin}（${kikkou(jin)}）</span>\n${calcExpr([sei[sei.length-1], mei[0]])}\n${wrapZenkaku(getDiagnosis('jin',jin))}\n`);
+  lines.push(`\n<span class="kaku-title">地格：${chi}（${kikkou(chi)}）</span>\n${calcExpr(mei, reiChi===1)}\n${wrapZenkaku(getDiagnosis('chi',chi))}${reiChi===1?'\n<span class="brown">※ 姓または名が一文字のため霊数を加算しています。</span>':''}\n`);
+  lines.push(`\n<span class="kaku-title">外格：${gai}（${kikkou(gai)}）</span>\n${calcExpr(gaiExprChars, reiGai>0)}\n${wrapZenkaku(getDiagnosis('gai',gai))}${mei.length===1?'\n<span class="brown">※ 名が一文字のため霊数を加算しています。</span>':''}\n`);
 
   lines.push('\n\n<span class="section-title" style="color:#000;">【主格相性診断】</span>\n');
   lines.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）</span> ${sSucc.symbol}\n${wrapZenkaku(sSucc.text)}\n`);
@@ -281,7 +312,7 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   const d=String(today.getDate()).padStart(2,"0");
   const dateStr=`${y}-${m}-${d}`;
   document.title=`姓名判断_${sei}${mei}_${dateStr}`;
-  window.print(); // PDF保存をブラウザ印刷経由で実現
+  window.print();
 });
 
 document.addEventListener('DOMContentLoaded',loadData);
