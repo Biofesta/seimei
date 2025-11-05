@@ -36,11 +36,15 @@
   }
   .grid {
     display:grid;
-    grid-template-columns:1fr minmax(1em,1em) 1fr; /* ← 全角1文字分スペース */
+    grid-template-columns:1fr minmax(2em,2em) 1fr; /* ← 全角1文字より少し広めに確保 */
     align-items:start;
     row-gap:1em;
   }
-  .zenkaku-gap { width:1em; min-width:1em; height:1px; }
+  .zenkaku-gap {
+    width:2em; /* ← 視覚的に明確なスペースを確保 */
+    min-width:2em;
+    height:1px;
+  }
   @media(max-width:640px){
     .grid { grid-template-columns:1fr; }
     .zenkaku-gap { display:none; }
@@ -104,7 +108,7 @@
   @page { size:A4; margin:10mm; }
   @media print {
     body { zoom:0.85; }
-    form, .print-controls, header, #debug { display:none !important; }
+    form, .print-controls, header, #debug { display:none !important; } /* ← デバッグ非表示 */
   }
 </style>
 </head>
@@ -118,12 +122,12 @@
       <div class="grid">
         <div>
           <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
+          <input id="sei" type="text" placeholder="例：木村" autocomplete="off" />
         </div>
         <div class="zenkaku-gap" aria-hidden="true"></div>
         <div>
           <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：亨" autocomplete="off" />
+          <input id="mei" type="text" placeholder="例：友昭" autocomplete="off" />
         </div>
       </div>
       <div class="btns">
@@ -144,7 +148,8 @@
     </div>
   </section>
 
-  <section style="margin-top:16px" class="card">
+  <!-- デバッグ情報（印刷/PDFには出さない） -->
+  <section style="margin-top:16px" class="card" id="debugSection">
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
   </section>
@@ -173,7 +178,10 @@ function charVal(ch){if(!strokes)return 0;if(ch in strokes)return strokes[ch]||0
 function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(good.has(n))return'吉';if(n===0)return'不明';return'凶';}
 function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
 function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
-function wrapZenkaku(t){return t.replace(/\n+/g,'');}
+function wrapZenkaku(t){
+  // 【要注意】を赤文字に置換
+  return t.replace(/\n+/g,'').replace(/【要注意】/g,'<span style="color:red;">【要注意】</span>');
+}
 function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:''};return o;}
 function calcExpr(chars,rei=false){const p=chars.map(c=>`${c}(${charVal(c)})`);if(rei)p.push('霊数1');return `<div class="expr">［ ${p.join('＋')} ］</div>`;}
 
@@ -218,6 +226,8 @@ function clearForm(){
 
 document.getElementById("printBtn").addEventListener("click",()=>{window.print();});
 document.getElementById("pdfBtn").addEventListener("click",()=>{
+  const debugSec=document.getElementById("debugSection");
+  debugSec.style.display="none"; // ← PDF出力時にデバッグ非表示
   const main=document.querySelector("#result");
   const opt={margin:5,filename:'姓名判断結果.pdf',
     image:{type:'jpeg',quality:1},
@@ -225,10 +235,10 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
   html2pdf().set(opt).from(main).toPdf().get('pdf').then(pdf=>{
     if(pdf.internal.getNumberOfPages()>1)pdf.deletePage(2);
+    debugSec.style.display=""; // ← 戻す
   }).save();
 });
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
 </body>
 </html>
-
