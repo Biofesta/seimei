@@ -210,18 +210,16 @@ function calculate(){
   out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
   out.push('<div class="section-title">【主格相性診断】</div>');
-  out.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）診断⇒${mark(sSucc.symbol)}</span>
-<p>${wrapZenkaku(sSucc.text)}</p>
-<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${wrapZenkaku(sSucc.advice)}</p>`);
-  out.push(`<span class="compat-subtitle">基礎運（主格⇔地格）診断⇒${mark(sFoun.symbol)}</span>
-<p>${wrapZenkaku(sFoun.text)}</p>
-<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${wrapZenkaku(sFoun.advice)}</p>`);
-  out.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）診断⇒${mark(sRela.symbol)}</span>
-<p>${wrapZenkaku(sRela.text)}</p>
-<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${wrapZenkaku(sRela.advice)}</p>`);
-  out.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）診断⇒${mark(sOver.symbol)}</span>
-<p>${wrapZenkaku(sOver.text)}</p>
-<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${wrapZenkaku(sOver.advice)}</p>`);
+  const addCompat = (title, sym, txt, adv) => {
+    out.push(`<span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
+<p>${wrapZenkaku(txt)}</p>
+<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g, '')}</p>`);
+  };
+
+  addCompat('成功・発展運（主格⇔天格）', sSucc.symbol, sSucc.text, sSucc.advice);
+  addCompat('基礎運（主格⇔地格）', sFoun.symbol, sFoun.text, sFoun.advice);
+  addCompat('対人・職業運（主格⇔外格）', sRela.symbol, sRela.text, sRela.advice);
+  addCompat('総合バランス（主格⇔総画）', sOver.symbol, sOver.text, sOver.advice);
 
   document.getElementById('result').innerHTML=out.join('');
   if(missingInfo.length)document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
