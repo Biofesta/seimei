@@ -210,10 +210,15 @@ function calculate(){
   out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
   out.push('<div class="section-title">【主格相性診断】</div>');
+
+  // ← 修正箇所：本文とアドバイスを詰めて、次ブロック前だけ余白
   const addCompat = (title, sym, txt, adv) => {
-    out.push(`<span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
-<p>${wrapZenkaku(txt)}</p>
-<p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g, '')}</p>`);
+    out.push(`
+      <div style="margin-top:12px;">
+        <span class="compat-subtitle" style="margin-bottom:2px;">${title}診断⇒${mark(sym)}</span>
+        <p style="margin:0;">${wrapZenkaku(txt)}</p>
+        <p style="margin:0 0 12px 0;"><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g, '')}</p>
+      </div>`);
   };
 
   addCompat('成功・発展運（主格⇔天格）', sSucc.symbol, sSucc.text, sSucc.advice);
