@@ -51,11 +51,11 @@
   }
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
-  /* === 結果出力部 === */
+  /* === 診断結果 === */
   #result {
-    white-space: normal;        /* ← 通常折返し（改行文字は無視） */
-    word-break: break-word;     /* 長文も安全に折返し */
-    max-width: 40em;            /* 全角40文字相当で自然改行 */
+    white-space: normal;
+    word-break: break-word;
+    max-width: 40em;
     background:#fafafa;
     padding:12px;
     border-radius:8px;
@@ -63,8 +63,7 @@
     line-height:1.8;
     font-size:16px;
   }
-
-  p { margin:0; padding:0; } /* MakeShop側干渉防止 */
+  p { margin:0; padding:0; }
   .expr {
     display:block;
     color:#8B4513;
@@ -106,7 +105,7 @@
   @media print {
     body { zoom:0.80 !important; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
-    #result { max-width:none; } /* 印刷時は制限解除 */
+    #result { max-width:none; }
   }
 </style>
 </head>
@@ -254,12 +253,25 @@ document.getElementById("printBtn").addEventListener("click",()=>{
 document.getElementById("pdfBtn").addEventListener("click",()=>{
   const debugSec=document.getElementById("debugSection");
   debugSec.style.display="none";
+
   const main=document.querySelector("#result");
-  const opt={margin:5,filename:'姓名判断結果.pdf',
+  main.style.transformOrigin="top left";
+  main.style.transform="scale(0.82)";
+  main.style.width="122%";
+
+  const opt={
+    margin:5,
+    filename:'姓名判断結果.pdf',
     image:{type:'jpeg',quality:1},
-    html2canvas:{scale:0.9,scrollY:0,windowWidth:850},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
-  html2pdf().set(opt).from(main).save().then(()=>{debugSec.style.display="";});
+    html2canvas:{scale:1.0,scrollY:0,windowWidth:1000},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+  };
+
+  html2pdf().set(opt).from(main).save().then(()=>{
+    main.style.transform="";
+    main.style.width="";
+    debugSec.style.display="";
+  });
 });
 
 document.addEventListener('DOMContentLoaded',loadData);
