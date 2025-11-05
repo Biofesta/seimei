@@ -101,7 +101,7 @@
   .print-btn.print { background:#4caf50; color:#fff; }
   .print-btn.pdf { background:#2196f3; color:#fff; }
 
-  @page { size:A4; margin:10mm; }
+  @page { size:A4; margin:8mm; } /* ← 下端余白を小さめに調整 */
   @media print {
     body { zoom:0.80 !important; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
@@ -259,8 +259,12 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   main.style.transform="scale(0.82)";
   main.style.width="122%";
 
+  // ✅ 高さを整数に丸めて白紙ページ防止
+  const h=Math.floor(main.offsetHeight);
+  main.style.height=h+"px";
+
   const opt={
-    margin:5,
+    margin:[5,5,5,5],
     filename:'姓名判断結果.pdf',
     image:{type:'jpeg',quality:1},
     html2canvas:{scale:1.0,scrollY:0,windowWidth:1000},
@@ -270,6 +274,7 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   html2pdf().set(opt).from(main).save().then(()=>{
     main.style.transform="";
     main.style.width="";
+    main.style.height="";
     debugSec.style.display="";
   });
 });
