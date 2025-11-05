@@ -51,7 +51,6 @@
   }
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
-  /* === 診断結果 === */
   #result {
     white-space: normal;
     word-break: break-word;
@@ -101,7 +100,7 @@
   .print-btn.print { background:#4caf50; color:#fff; }
   .print-btn.pdf { background:#2196f3; color:#fff; }
 
-  @page { size:A4; margin:8mm; } /* ← 下端余白を小さめに調整 */
+  @page { size:A4; margin:8mm; }
   @media print {
     body { zoom:0.80 !important; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
@@ -113,7 +112,6 @@
 <div class="wrap">
   <header><h1>姓名判断 by Biofesta</h1></header>
 
-  <!-- 入力 -->
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
       <div class="grid">
@@ -134,7 +132,6 @@
     </form>
   </section>
 
-  <!-- 結果 -->
   <section style="margin-top:16px" class="card">
     <h2 style="font-size:16px;margin:0 0 8px;">診断結果</h2>
     <div id="result">まだ診断されていません。</div>
@@ -145,7 +142,6 @@
     </div>
   </section>
 
-  <!-- デバッグ -->
   <section style="margin-top:16px" class="card" id="debugSection">
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
@@ -258,8 +254,6 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   main.style.transformOrigin="top left";
   main.style.transform="scale(0.82)";
   main.style.width="122%";
-
-  // ✅ 高さを整数に丸めて白紙ページ防止
   const h=Math.floor(main.offsetHeight);
   main.style.height=h+"px";
 
@@ -271,12 +265,22 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
   };
 
-  html2pdf().set(opt).from(main).save().then(()=>{
-    main.style.transform="";
-    main.style.width="";
-    main.style.height="";
-    debugSec.style.display="";
-  });
+  html2pdf()
+    .set(opt)
+    .from(main)
+    .toPdf()
+    .get('pdf')
+    .then(pdf => {
+      const totalPages = pdf.internal.getNumberOfPages();
+      if (totalPages > 1) pdf.deletePage(totalPages); // ✅ 余白ページ削除
+    })
+    .save()
+    .then(()=>{
+      main.style.transform="";
+      main.style.width="";
+      main.style.height="";
+      debugSec.style.display="";
+    });
 });
 
 document.addEventListener('DOMContentLoaded',loadData);
