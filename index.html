@@ -51,10 +51,11 @@
   }
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
+  /* === 結果出力部 === */
   #result {
-    white-space:pre-wrap;          /* 改行保持 */
-    word-break:keep-all;           /* 全角文字単位で折り返し */
-    width:40em;                    /* 全角40文字幅 */
+    white-space: normal;        /* ← 通常折返し（改行文字は無視） */
+    word-break: break-word;     /* 長文も安全に折返し */
+    max-width: 40em;            /* 全角40文字相当で自然改行 */
     background:#fafafa;
     padding:12px;
     border-radius:8px;
@@ -62,6 +63,8 @@
     line-height:1.8;
     font-size:16px;
   }
+
+  p { margin:0; padding:0; } /* MakeShop側干渉防止 */
   .expr {
     display:block;
     color:#8B4513;
@@ -77,9 +80,10 @@
     font-size:16px;
     font-weight:bold;
     margin-top:10px;
-    margin-bottom:4px;
+    margin-bottom:2px;
   }
   .warn { color:red; font-weight:bold; }
+  .compat-block { margin-bottom:10px; }
 
   .print-controls {
     display:flex;
@@ -100,8 +104,9 @@
 
   @page { size:A4; margin:10mm; }
   @media print {
-    body { zoom:0.80 !important; } /* 縮小率調整で1ページ化 */
+    body { zoom:0.80 !important; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
+    #result { max-width:none; } /* 印刷時は制限解除 */
   }
 </style>
 </head>
@@ -109,6 +114,7 @@
 <div class="wrap">
   <header><h1>姓名判断 by Biofesta</h1></header>
 
+  <!-- 入力 -->
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
       <div class="grid">
@@ -129,6 +135,7 @@
     </form>
   </section>
 
+  <!-- 結果 -->
   <section style="margin-top:16px" class="card">
     <h2 style="font-size:16px;margin:0 0 8px;">診断結果</h2>
     <div id="result">まだ診断されていません。</div>
@@ -139,6 +146,7 @@
     </div>
   </section>
 
+  <!-- デバッグ -->
   <section style="margin-top:16px" class="card" id="debugSection">
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
@@ -173,7 +181,7 @@ function wrapZenkaku(t){
   if(!t) return '';
   const red = '<span style="color:red;">【要注意】</span>';
   return String(t)
-    .replace(/\n+/g, '')
+    .replace(/\n+/g, '')                    
     .replace(/【要注意】/g, red)
     .replace(/【\s*注\s*】/g, red)
     .replace(/（\s*注\s*）/g, red)
@@ -205,7 +213,6 @@ function calculate(){
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
   out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
-  // ★ 天格だけは吉凶なし
   out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei)}<p>※天格単独での診断はございません。</p>`);
   out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
   out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
@@ -215,10 +222,10 @@ function calculate(){
 
   const addCompat = (title, sym, txt, adv) => {
     out.push(`
-      <div style="margin-top:12px;">
-        <span class="compat-subtitle" style="margin-bottom:2px;">${title}診断⇒${mark(sym)}</span>
-        <p style="margin:0;">${wrapZenkaku(txt)}</p>
-        <p style="margin:0 0 12px 0;"><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g, '')}</p>
+      <div class="compat-block">
+        <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
+        <p>${wrapZenkaku(txt)}</p>
+        <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g, '')}</p>
       </div>`);
   };
 
