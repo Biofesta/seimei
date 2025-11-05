@@ -17,7 +17,6 @@
   header { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
   h1 { font-size:20px; margin:0; }
 
-  /* === カードエリア === */
   .card {
     background:var(--card);
     padding:18px;
@@ -25,7 +24,6 @@
     box-shadow:0 6px 18px rgba(20,20,20,0.04);
   }
 
-  /* === 入力フォーム === */
   label { display:block; margin:8px 0 4px; font-weight:600; }
   input[type="text"] {
     width:100%;
@@ -36,19 +34,16 @@
   }
   .grid {
     display:grid;
-    grid-template-columns:1fr minmax(2em,2em) 1fr; /* ← 全角1文字より広め */
+    grid-template-columns:1fr minmax(2em,2em) 1fr; /* ← 全角1文字相当の間隔 */
     align-items:start;
     row-gap:1em;
   }
-  .zenkaku-gap {
-    width:2em; min-width:2em; height:1px;
-  }
+  .zenkaku-gap { width:2em; min-width:2em; height:1px; }
   @media(max-width:640px){
     .grid { grid-template-columns:1fr; }
     .zenkaku-gap { display:none; }
   }
 
-  /* === ボタン類 === */
   .btns { display:flex; gap:10px; margin-top:12px; }
   button {
     background:#1f8ef1; color:#fff; border:0; padding:10px 14px;
@@ -56,7 +51,6 @@
   }
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
-  /* === 診断結果 === */
   #result {
     white-space:normal;
     background:#fafafa;
@@ -65,6 +59,10 @@
     border:1px dashed #eee;
     line-height:1.8;
     font-size:16px;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+    page-break-inside:auto;
+    break-inside:auto;
   }
   .expr {
     display:block;
@@ -84,7 +82,6 @@
     margin-bottom:2px;
   }
 
-  /* === 印刷・PDFボタン === */
   .print-controls {
     display:flex;
     justify-content:center;
@@ -102,7 +99,6 @@
   .print-btn.print { background:#4caf50; color:#fff; }
   .print-btn.pdf { background:#2196f3; color:#fff; }
 
-  /* === 印刷設定：A4・85%縮小・余白最小化 === */
   @page { size:A4; margin:10mm; }
   @media print {
     body { zoom:0.85 !important; }
@@ -114,7 +110,6 @@
 <div class="wrap">
   <header><h1>姓名判断 by Biofesta</h1></header>
 
-  <!-- 入力フォーム -->
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
       <div class="grid">
@@ -135,7 +130,6 @@
     </form>
   </section>
 
-  <!-- 結果 -->
   <section style="margin-top:16px" class="card">
     <h2 style="font-size:16px;margin:0 0 8px;">診断結果</h2>
     <div id="result">まだ診断されていません。</div>
@@ -146,7 +140,6 @@
     </div>
   </section>
 
-  <!-- デバッグ情報（印刷/PDF非表示） -->
   <section style="margin-top:16px" class="card" id="debugSection">
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
@@ -177,20 +170,13 @@ function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25
 function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
 function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
 
-/* === 指定の wrapZenkaku 関数 === */
+/* JSON内の【要注意】→赤文字化のみ */
 function wrapZenkaku(t){
   if(!t) return '';
-  const red = '<span style="color:red;">【要注意】</span>';
-  return String(t)
-    .replace(/\n+/g, '')                    // 改行を除去
-    .replace(/【要注意】/g, red)            // 既に【要注意】なら赤字化
-    .replace(/【\s*注\s*】/g, red)          // 【注】 → 赤【要注意】
-    .replace(/（\s*注\s*）/g, red)          // （注） → 赤【要注意】
-    .replace(/(^|[。．、,\s])注[:：]/g, `$1${red} `) // 「注:」「注：」→ 赤【要注意】
-    .replace(/(^|[。．、,\s])※\s*注/g, `$1${red} `); // 「※注」→ 赤【要注意】
+  return String(t).replace(/【要注意】/g, '<span style="color:red;font-weight:bold;">【要注意】</span>');
 }
 
-function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:''};return o;}
+function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
 function calcExpr(chars,rei=false){const p=chars.map(c=>`${c}(${charVal(c)})`);if(rei)p.push('霊数1');return `<div class="expr">［ ${p.join('＋')} ］</div>`;}
 
 function calculate(){
@@ -207,7 +193,7 @@ function calculate(){
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
-  const sOver=pickCompat('overall',jinG,souG);
+  const sOver=pickCompat('total',jinG,souG);
 
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
@@ -217,10 +203,10 @@ function calculate(){
   out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
   out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
   out.push('<div class="section-title">【主格相性診断】</div>');
-  out.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）診断⇒${sSucc.symbol}</span><p>${wrapZenkaku(sSucc.text)}</p>`);
-  out.push(`<span class="compat-subtitle">基礎運（主格⇔地格）診断⇒${sFoun.symbol}</span><p>${wrapZenkaku(sFoun.text)}</p>`);
-  out.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）診断⇒${sRela.symbol}</span><p>${wrapZenkaku(sRela.text)}</p>`);
-  out.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）診断⇒${sOver.symbol}</span><p>${wrapZenkaku(sOver.text)}</p>`);
+  out.push(`<span class="compat-subtitle">成功・発展運（主格⇔天格）診断⇒${sSucc.symbol}</span><p>${wrapZenkaku(sSucc.text)}${wrapZenkaku(sSucc.advice)}</p>`);
+  out.push(`<span class="compat-subtitle">基礎運（主格⇔地格）診断⇒${sFoun.symbol}</span><p>${wrapZenkaku(sFoun.text)}${wrapZenkaku(sFoun.advice)}</p>`);
+  out.push(`<span class="compat-subtitle">対人・職業運（主格⇔外格）診断⇒${sRela.symbol}</span><p>${wrapZenkaku(sRela.text)}${wrapZenkaku(sRela.advice)}</p>`);
+  out.push(`<span class="compat-subtitle">総合バランス（主格⇔総画）診断⇒${sOver.symbol}</span><p>${wrapZenkaku(sOver.text)}${wrapZenkaku(sOver.advice)}</p>`);
 
   document.getElementById('result').innerHTML=out.join('');
   if(missingInfo.length)document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
@@ -243,10 +229,14 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   const debugSec=document.getElementById("debugSection");
   debugSec.style.display="none";
   const main=document.querySelector("#result");
-  const opt={margin:5,filename:'姓名判断結果.pdf',
+  const opt={
+    margin:5,
+    filename:'姓名判断結果.pdf',
     image:{type:'jpeg',quality:1},
-    html2canvas:{scale:0.85,scrollY:0,windowWidth:900},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
+    html2canvas:{scale:2,scrollY:0,useCORS:true},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['css','avoid-all','legacy']}
+  };
   html2pdf().set(opt).from(main).save().then(()=>{debugSec.style.display="";});
 });
 
