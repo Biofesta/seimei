@@ -52,7 +52,9 @@
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
   #result {
-    white-space:normal;
+    white-space:pre-wrap;          /* 改行保持 */
+    word-break:keep-all;           /* 全角文字単位で折り返し */
+    width:40em;                    /* 全角40文字幅 */
     background:#fafafa;
     padding:12px;
     border-radius:8px;
@@ -98,7 +100,7 @@
 
   @page { size:A4; margin:10mm; }
   @media print {
-    body { zoom:0.85 !important; }
+    body { zoom:0.80 !important; } /* 縮小率調整で1ページ化 */
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
   }
 </style>
@@ -179,7 +181,6 @@ function wrapZenkaku(t){
     .replace(/(^|[。．、,\s])※\s*注/g, `$1${red} `);
 }
 
-// ×のとき赤字【要注意】を付ける関数
 const mark = sym => sym === "×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
 
 function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
@@ -204,14 +205,14 @@ function calculate(){
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
   out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
-  out.push(`<div class="kaku-title">天格：${ten}（${kikkou(ten)}）</div>${calcExpr(sei)}${wrapZenkaku(getDiagnosis('ten',ten))}`);
+  // ★ 天格だけは吉凶なし
+  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei)}<p>※天格単独での診断はございません。</p>`);
   out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
   out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
   out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
   out.push('<div class="section-title">【主格相性診断】</div>');
 
-  // ← 修正箇所：本文とアドバイスを詰めて、次ブロック前だけ余白
   const addCompat = (title, sym, txt, adv) => {
     out.push(`
       <div style="margin-top:12px;">
@@ -249,7 +250,7 @@ document.getElementById("pdfBtn").addEventListener("click",()=>{
   const main=document.querySelector("#result");
   const opt={margin:5,filename:'姓名判断結果.pdf',
     image:{type:'jpeg',quality:1},
-    html2canvas:{scale:0.85,scrollY:0,windowWidth:900},
+    html2canvas:{scale:0.9,scrollY:0,windowWidth:850},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}};
   html2pdf().set(opt).from(main).save().then(()=>{debugSec.style.display="";});
 });
