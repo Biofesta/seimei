@@ -63,7 +63,7 @@
     border:1px dashed #eee;
     line-height:1.8;
     font-size:16px;
-    margin-top:8px; /* 🔼 診断枠を上に詰める */
+    margin-top:8px;
   }
   p { margin:0; padding:0; }
   .expr {
@@ -103,11 +103,6 @@
   .print-btn.print { background:#4caf50; color:#fff; }
   .print-btn.pdf { background:#2196f3; color:#fff; }
 
-  footer {
-    text-align:center;
-    margin-top:40px;
-  }
-
   @page { size:A4; margin:8mm; }
   @media print {
     body { zoom:0.80 !important; }
@@ -140,7 +135,6 @@
     </form>
   </section>
 
-  <!-- 🩵 診断結果セクション：タイトルを非表示に変更 -->
   <section style="margin-top:8px" class="card">
     <div id="result">まだ診断されていません。</div>
 
@@ -271,31 +265,41 @@ document.getElementById("printBtn").addEventListener("click",()=>{
   debugSec.style.display="";
 });
 
-document.getElementById("pdfBtn").addEventListener("click",()=>{
-  const debugSec=document.getElementById("debugSection");
-  debugSec.style.display="none";
-  const main=document.querySelector("#result");
-  main.style.transformOrigin="top left";
-  main.style.transform="scale(0.82)";
-  main.style.width="122%";
-  const h=Math.floor(main.offsetHeight);
-  main.style.height=h+"px";
-  const opt={
-    margin:[5,5,5,5],
-    filename:'姓名判断結果.pdf',
-    image:{type:'jpeg',quality:1},
-    html2canvas:{scale:1.0,scrollY:0,windowWidth:1000},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+// ✅ PDF 1ページ確定版
+document.getElementById("pdfBtn").addEventListener("click", () => {
+  const debugSec = document.getElementById("debugSection");
+  const main = document.querySelector("#result");
+  debugSec.style.display = "none";
+
+  main.style.transformOrigin = "top left";
+  main.style.transform = "scale(0.80)";
+  main.style.width = "125%";
+  main.style.height = "";
+
+  const opt = {
+    margin: [5, 5, 5, 5],
+    filename: '姓名判断結果.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 1.0, scrollY: 0, windowWidth: 1000 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
+
   html2pdf()
     .set(opt)
     .from(main)
+    .toPdf()
+    .get('pdf')
+    .then(pdf => {
+      const total = pdf.internal.getNumberOfPages();
+      if (total > 1) pdf.deletePage(total);
+    })
     .save()
-    .then(()=>{
-      main.style.transform="";
-      main.style.width="";
-      main.style.height="";
-      debugSec.style.display="";
+    .then(() => {
+      main.style.transform = "";
+      main.style.width = "";
+      main.style.height = "";
+      debugSec.style.display = "";
     });
 });
 
