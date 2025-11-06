@@ -159,7 +159,12 @@ async function loadData(){
       fetch("diagnosis_compatibility.json")
     ]);
     strokes=await r1.json(); diagnosis=await r2.json(); compatibility=await r3.json();
-    document.getElementById('debug').textContent='データ読み込みOK。';
+
+    // 🧩 デバッグ表示に登録文字数を追加
+    const totalChars = Object.keys(strokes || {}).length;
+    document.getElementById('debug').textContent =
+      `データ読み込みOK。熊﨑式登録文字数：${totalChars}字`;
+
   }catch(e){
     document.getElementById('debug').textContent='読み込みエラー：'+e.message;
     document.getElementById('runBtn').disabled=true;
