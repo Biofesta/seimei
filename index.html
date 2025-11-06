@@ -26,7 +26,6 @@
 
   label { display:block; margin:8px 0 4px; font-weight:600; }
 
-  /* 👇 入力フィールドの横幅を90%に縮小 */
   input[type="text"] {
     width:90%;
     padding:10px;
@@ -103,6 +102,17 @@
   .print-btn.print { background:#4caf50; color:#fff; }
   .print-btn.pdf { background:#2196f3; color:#fff; }
 
+  footer {
+    text-align:center;
+    margin-top:40px;
+  }
+  footer img {
+    width:30mm;
+    height:auto;
+    display:block;
+    margin:0 auto;
+  }
+
   @page { size:A4; margin:8mm; }
   @media print {
     body { zoom:0.80 !important; }
@@ -149,6 +159,12 @@
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
   </section>
+
+  <!-- ▼ フッター（biofestaロゴのみ） -->
+  <footer>
+    <img src="logo_biofesta.jpg" alt="biofesta logo" />
+  </footer>
+
 </div>
 
 <script>
@@ -242,8 +258,16 @@ function calculate(){
   addCompat('対人・職業運（主格⇔外格）',sRela.symbol,sRela.text,sRela.advice);
   addCompat('総合バランス（主格⇔総画）',sOver.symbol,sOver.text,sOver.advice);
 
-  document.getElementById('result').innerHTML=out.join('');
-  if(missingInfo.length)document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
+  document.getElementById('result').innerHTML =
+    `<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:8px;">
+       姓名判断（簡易型）by biofesta
+     </div>` + out.join('') +
+    `<div style="text-align:center;margin-top:40px;">
+       <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
+     </div>`;
+
+  if(missingInfo.length)
+    document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
 }
 
 function clearForm(){
