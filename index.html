@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>姓名判断 正統派（簡易型）by Biofesta</title>
+<title>熊﨑式姓名判断（霊数補正式）</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
@@ -25,6 +25,7 @@
   }
 
   label { display:block; margin:8px 0 4px; font-weight:600; }
+
   input[type="text"] {
     width:90%;
     padding:10px;
@@ -62,6 +63,7 @@
     border:1px dashed #eee;
     line-height:1.8;
     font-size:16px;
+    margin-top:8px;
   }
   p { margin:0; padding:0; }
   .expr {
@@ -84,32 +86,11 @@
   .warn { color:red; font-weight:bold; }
   .compat-block { margin-bottom:10px; }
 
-  /* 🈶 和風ビジュアル五格ブロック */
-  .gokaku-chart {
-    display:flex; flex-wrap:wrap; justify-content:center;
-    background:#fdfaf4 url("wasabi_texture.png");
-    border:2px solid #d7c19e; border-radius:12px;
-    padding:20px; margin-bottom:16px;
-    box-shadow:0 3px 10px rgba(0,0,0,0.08);
-    position:relative;
-  }
-  .name-vertical { font-size:20px; font-weight:700; color:#3b2f1c; text-align:center; margin-right:24px; }
-  .name-char { margin:4px 0; }
-  .gokaku-box { font-family:"Yu Mincho"; color:#4a3b1b; position:relative; }
-  .gokaku-box .line { margin:4px 0; font-size:16px; }
-  .luck { margin-left:6px; color:#b22222; font-weight:bold; }
-  .chart-footer {
-    text-align:center; font-size:12px; color:#555; margin-top:8px;
-  }
-  .chart-footer img {
-    width:30mm; height:auto; opacity:0.85; display:block; margin:4px auto;
-  }
-
   .print-controls {
     display:flex;
     justify-content:center;
     gap:160px;
-    margin-top:48px;
+    margin-top:40px;
   }
   .print-btn {
     width:160px;
@@ -127,13 +108,12 @@
     body { zoom:0.80 !important; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
     #result { max-width:none; }
-    .chart-footer img { opacity:0.4; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header><h1>姓名判断 正統派 by Biofesta</h1></header>
+  <header><h1>姓名判断 by Biofesta</h1></header>
 
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
@@ -155,8 +135,9 @@
     </form>
   </section>
 
-  <section style="margin-top:16px" class="card">
+  <section style="margin-top:8px" class="card">
     <div id="result">まだ診断されていません。</div>
+
     <div class="print-controls">
       <button class="print-btn print" id="printBtn">印刷</button>
       <button class="print-btn pdf" id="pdfBtn">PDF保存</button>
@@ -172,7 +153,6 @@
 <script>
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
 
-/* === データ読み込み === */
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
@@ -182,55 +162,46 @@ async function loadData(){
     ]);
     strokes=await r1.json(); diagnosis=await r2.json(); compatibility=await r3.json();
     const totalChars = Object.keys(strokes || {}).length;
-    document.getElementById('debug').textContent = `データ読み込みOK。熊﨑式登録文字数：${totalChars}字`;
+    document.getElementById('debug').textContent =
+      `データ読み込みOK。熊﨑式登録文字数：${totalChars}字`;
   }catch(e){
     document.getElementById('debug').textContent='読み込みエラー：'+e.message;
     document.getElementById('runBtn').disabled=true;
   }
 }
 
-/* === 五格ビジュアル描画 === */
-function renderChart(sei, mei, data) {
-  const { ten, jin, chi, gai, sou } = data;
-  const luck = n => (new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]).has(n) ? "吉" : "凶");
-  const wrap = document.createElement("div");
-  wrap.className = "gokaku-chart";
-  wrap.innerHTML = `
-    <div class="name-vertical">
-      ${[...sei,...mei].map(c=>`<div class="name-char">${c}</div>`).join('')}
-    </div>
-    <div class="gokaku-box">
-      <div class="line">天格 ${ten} <span class="luck">${luck(ten)}</span></div>
-      <div class="line">人格 ${jin} <span class="luck">${luck(jin)}</span></div>
-      <div class="line">地格 ${chi} <span class="luck">${luck(chi)}</span></div>
-      <div class="line">外格 ${gai} <span class="luck">${luck(gai)}</span></div>
-      <div class="line">総格 ${sou} <span class="luck">${luck(sou)}</span></div>
-    </div>
-    <div class="chart-footer">
-      <img src="logo_biofesta.jpg" alt="Biofesta ロゴ">
-      <div>姓名判断 正統派 by Biofesta</div>
-    </div>`;
-  document.querySelector("#result").prepend(wrap);
-}
-
-/* === 各補助関数 === */
 function splitChars(s){return Array.from(String(s).trim());}
+
 function charVal(ch, prevChar=null){
   if(!strokes)return 0;
-  if(ch==="々" && prevChar && prevChar in strokes)return strokes[prevChar]||0;
+  if(ch==="々" && prevChar && prevChar in strokes){
+    return strokes[prevChar] || 0;
+  }
   if(ch in strokes)return strokes[ch]||0;
-  missingInfo.push(ch+"：未登録"); return 0;
-}
-function kikkou(n){const g=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(g.has(n))return'吉';if(n===0)return'不明';return'凶';}
-function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
-function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
-function wrapZenkaku(t){
-  if(!t)return '';
-  const red='<span style="color:red;">【要注意】</span>';
-  return String(t).replace(/\n+/g,'').replace(/【要注意】/g,red);
+  missingInfo.push(ch+"：未登録");
+  return 0;
 }
 
-/* === メイン診断 === */
+function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(good.has(n))return'吉';if(n===0)return'不明';return'凶';}
+function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
+function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
+
+function wrapZenkaku(t){
+  if(!t) return '';
+  const red = '<span style="color:red;">【要注意】</span>';
+  return String(t)
+    .replace(/\n+/g, '')                    
+    .replace(/【要注意】/g, red)
+    .replace(/【\s*注\s*】/g, red)
+    .replace(/（\s*注\s*）/g, red)
+    .replace(/(^|[。．、,\s])注[:：]/g, `$1${red} `)
+    .replace(/(^|[。．、,\s])※\s*注/g, `$1${red} `);
+}
+
+const mark = sym => sym === "×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
+function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
+function calcExpr(chars,rei=false){const p=chars.map((c,i)=>`${c}(${charVal(c,chars[i-1])})`);if(rei)p.push('霊数1');return `<div class="expr">［ ${p.join('＋')} ］</div>`;}
+
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
@@ -241,49 +212,97 @@ function calculate(){
   const s2=mei.map((c,i)=>charVal(c,mei[i-1])).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1],sei[sei.length-2])+charVal(mei[0]);
   const ten=s1,chi=s2,gai=(s1+s2)-jin,sou=s1+s2;
+  const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
+  const sSucc=pickCompat('success',jinG,tenG);
+  const sFoun=pickCompat('foundation',jinG,chiG);
+  const sRela=pickCompat('relation',jinG,gaiG);
+  const sOver=pickCompat('total',jinG,souG);
 
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
-  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>`);
-  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>`);
-  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>`);
-  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>`);
+  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
+  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei)}<p>※天格単独での診断はございません。</p>`);
+  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
+  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
+  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
-  document.getElementById('result').innerHTML=out.join('');
-  renderChart(sei, mei, {ten, jin, chi, gai, sou});
+  out.push('<div class="section-title">【主格相性診断】</div>');
+  const addCompat=(title,sym,txt,adv)=>{
+    out.push(`
+      <div class="compat-block">
+        <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
+        <p>${wrapZenkaku(txt)}</p>
+        <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g,'')}</p>
+      </div>`);
+  };
+  addCompat('成功・発展運（主格⇔天格）',sSucc.symbol,sSucc.text,sSucc.advice);
+  addCompat('基礎運（主格⇔地格）',sFoun.symbol,sFoun.text,sFoun.advice);
+  addCompat('対人・職業運（主格⇔外格）',sRela.symbol,sRela.text,sRela.advice);
+  addCompat('総合バランス（主格⇔総画）',sOver.symbol,sOver.text,sOver.advice);
+
+  document.getElementById('result').innerHTML =
+    `<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;">
+       姓名判断（簡易型）by biofesta
+     </div>` + out.join('') +
+    `<div style="text-align:center;margin-top:30px;">
+       <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
+     </div>`;
 
   if(missingInfo.length)
     document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
 }
 
-/* === 各種操作 === */
 function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
 }
+
 document.getElementById("printBtn").addEventListener("click",()=>{
   const debugSec=document.getElementById("debugSection");
-  debugSec.style.display="none"; window.print(); debugSec.style.display="";
-});
-document.getElementById("pdfBtn").addEventListener("click",()=>{
-  const debugSec=document.getElementById("debugSection");
   debugSec.style.display="none";
-  const main=document.querySelector("#result");
-  main.style.transformOrigin="top left";
-  main.style.transform="scale(0.82)";
-  main.style.width="122%";
-  const opt={
-    margin:[5,5,5,5],
-    filename:'姓名判断結果.pdf',
-    image:{type:'jpeg',quality:1},
-    html2canvas:{scale:1.0,scrollY:0,windowWidth:1000},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-  };
-  html2pdf().set(opt).from(main).save().then(()=>{
-    main.style.transform=""; main.style.width=""; debugSec.style.display="";
-  });
+  window.print();
+  debugSec.style.display="";
 });
+
+// ✅ PDF 1ページ確定版
+document.getElementById("pdfBtn").addEventListener("click", () => {
+  const debugSec = document.getElementById("debugSection");
+  const main = document.querySelector("#result");
+  debugSec.style.display = "none";
+
+  main.style.transformOrigin = "top left";
+  main.style.transform = "scale(0.80)";
+  main.style.width = "125%";
+  main.style.height = "";
+
+  const opt = {
+    margin: [5, 5, 5, 5],
+    filename: '姓名判断結果.pdf',
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 1.0, scrollY: 0, windowWidth: 1000 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  html2pdf()
+    .set(opt)
+    .from(main)
+    .toPdf()
+    .get('pdf')
+    .then(pdf => {
+      const total = pdf.internal.getNumberOfPages();
+      if (total > 1) pdf.deletePage(total);
+    })
+    .save()
+    .then(() => {
+      main.style.transform = "";
+      main.style.width = "";
+      main.style.height = "";
+      debugSec.style.display = "";
+    });
+});
+
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
 </body>
