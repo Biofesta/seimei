@@ -3,29 +3,31 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>熊﨑式姓名判断（霊数補正式）</title>
+<title>熊﨑式姓名判断（罫線付き五格図）</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
+
   body {
-    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,monospace;
-    background:var(--bg);
+    font-family:"Yu Mincho","Hiragino Mincho ProN","Meiryo",serif;
     margin:0; padding:24px;
     color:#222; line-height:1.8;
+    background:url("A_digital_illustration_features_a_traditional_Japa.png") no-repeat center top / cover;
   }
-  .wrap { max-width:920px; margin:0 auto; }
-  header { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
-  h1 { font-size:20px; margin:0; }
+
+  .wrap { max-width:1100px; margin:0 auto; }
+
+  header { text-align:center; margin-bottom:18px; }
+  h1 { font-size:22px; margin:0; }
 
   .card {
-    background:var(--card);
+    background:rgba(255,255,255,0.88);
     padding:18px;
     border-radius:10px;
     box-shadow:0 6px 18px rgba(20,20,20,0.04);
   }
 
   label { display:block; margin:8px 0 4px; font-weight:600; }
-
   input[type="text"] {
     width:90%;
     padding:10px;
@@ -40,11 +42,9 @@
     align-items:start;
     row-gap:1em;
   }
+
   .zenkaku-gap { width:2em; min-width:2em; height:1px; }
-  @media(max-width:640px){
-    .grid { grid-template-columns:1fr; }
-    .zenkaku-gap { display:none; }
-  }
+  @media(max-width:640px){ .grid { grid-template-columns:1fr; } .zenkaku-gap { display:none; } }
 
   .btns { display:flex; gap:10px; margin-top:12px; }
   button {
@@ -53,36 +53,96 @@
   }
   button:disabled { opacity:0.5; cursor:not-allowed; }
 
+  /* 結果表示の左右構成 */
+  .result-flex {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:16px;
+  }
+  @media(max-width:900px){ .result-flex{flex-direction:column; align-items:center;} }
+
+  /* 左側の五格図 */
+  .name-chart {
+    flex:0 0 280px;
+    background:rgba(255,255,255,0.9);
+    border-radius:12px;
+    padding:30px 12px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    text-align:center;
+    position:relative;
+  }
+  .name-chart .rei span {
+    background:#2ecc71; color:#fff;
+    border-radius:50%;
+    display:inline-block;
+    width:30px; height:30px;
+    line-height:30px;
+    font-weight:bold;
+    font-size:16px;
+  }
+  .name-chart .kanji {
+    writing-mode:vertical-rl;
+    font-size:42px;
+    line-height:1.4;
+    margin:12px auto;
+    display:inline-block;
+  }
+  .name-chart .kaku-left, .name-chart .kaku-right {
+    position:absolute;
+    top:50%; transform:translateY(-50%);
+    font-size:14px;
+    color:#222;
+    line-height:1.6;
+    white-space:nowrap;
+  }
+  .name-chart .kaku-left { left:6px; text-align:left; }
+  .name-chart .kaku-right { right:6px; text-align:right; }
+
+  /* 罫線装飾（かっこ風） */
+  .name-chart::before,
+  .name-chart::after {
+    content:"";
+    position:absolute;
+    width:4px;
+    height:60%;
+    top:20%;
+    background:linear-gradient(to bottom, #bfa24a 0%, #d7c67f 100%);
+    border-radius:2px;
+  }
+  .name-chart::before { left:36px; box-shadow:-6px 0 0 0 #bfa24a inset; }
+  .name-chart::after { right:36px; box-shadow:6px 0 0 0 #bfa24a inset; }
+
+  .kaku-line-top, .kaku-line-bottom {
+    position:absolute;
+    height:2px;
+    width:50%;
+    background:#bfa24a;
+    left:25%;
+  }
+  .kaku-line-top { top:18%; }
+  .kaku-line-bottom { bottom:18%; }
+
+  /* 右側の診断結果 */
   #result {
-    white-space: normal;
-    word-break: break-word;
-    max-width: 40em;
-    background:#fafafa;
-    padding:12px;
+    flex:1;
+    max-width:720px;
+    background:rgba(255,255,255,0.9);
+    padding:16px;
     border-radius:8px;
     border:1px dashed #eee;
     line-height:1.8;
     font-size:16px;
-    margin-top:8px;
+    white-space:normal;
+    word-break:break-word;
   }
+
   p { margin:0; padding:0; }
-  .expr {
-    display:block;
-    color:#8B4513;
-    font-size:14px;
-    line-height:1.8;
-    margin:4px 0 0;
-    font-family:monospace;
-  }
+  .expr { color:#8B4513; font-size:14px; line-height:1.8; margin:4px 0 0; font-family:monospace; }
   .section-title { font-size:20px; font-weight:bold; margin:20px 0 8px; }
   .kaku-title { font-size:18px; font-weight:bold; }
-  .compat-subtitle {
-    display:block;
-    font-size:16px;
-    font-weight:bold;
-    margin-top:10px;
-    margin-bottom:2px;
-  }
+  .compat-subtitle { display:block; font-size:16px; font-weight:bold; margin-top:10px; margin-bottom:2px; }
   .warn { color:red; font-weight:bold; }
   .compat-block { margin-bottom:10px; }
 
@@ -105,7 +165,7 @@
 
   @page { size:A4; margin:8mm; }
   @media print {
-    body { zoom:0.80 !important; }
+    body { zoom:0.80 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     form, .print-controls, header, #debugSection, #debug { display:none !important; }
     #result { max-width:none; }
   }
@@ -118,15 +178,9 @@
   <section class="card">
     <form id="form" onsubmit="event.preventDefault(); calculate();">
       <div class="grid">
-        <div>
-          <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：木村" autocomplete="off" />
-        </div>
+        <div><label for="sei">姓（苗字）</label><input id="sei" type="text" placeholder="例：堺" autocomplete="off" /></div>
         <div class="zenkaku-gap" aria-hidden="true"></div>
-        <div>
-          <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：友昭" autocomplete="off" />
-        </div>
+        <div><label for="mei">名（名前）</label><input id="mei" type="text" placeholder="例：雅人" autocomplete="off" /></div>
       </div>
       <div class="btns">
         <button id="runBtn" type="submit">診断する</button>
@@ -136,7 +190,18 @@
   </section>
 
   <section style="margin-top:8px" class="card">
-    <div id="result">まだ診断されていません。</div>
+    <div class="result-flex">
+      <div class="name-chart" id="chartArea">
+        <div class="kaku-line-top"></div>
+        <div class="kaku-line-bottom"></div>
+        <div class="rei">霊数<br><span id="reiVal">-</span></div>
+        <div class="kanji" id="kanjiName">姓<br>名</div>
+        <div class="kaku-left" id="leftKaku"></div>
+        <div class="kaku-right" id="rightKaku"></div>
+      </div>
+
+      <div id="result">まだ診断されていません。</div>
+    </div>
 
     <div class="print-controls">
       <button class="print-btn print" id="printBtn">印刷</button>
@@ -152,7 +217,6 @@
 
 <script>
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
-
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
@@ -161,92 +225,64 @@ async function loadData(){
       fetch("diagnosis_compatibility.json")
     ]);
     strokes=await r1.json(); diagnosis=await r2.json(); compatibility=await r3.json();
-    const totalChars = Object.keys(strokes || {}).length;
-    document.getElementById('debug').textContent =
-      `データ読み込みOK。熊﨑式登録文字数：${totalChars}字`;
-  }catch(e){
-    document.getElementById('debug').textContent='読み込みエラー：'+e.message;
-    document.getElementById('runBtn').disabled=true;
-  }
+    const totalChars=Object.keys(strokes||{}).length;
+    document.getElementById('debug').textContent=`データ読み込みOK：${totalChars}字`;
+  }catch(e){document.getElementById('debug').textContent='読み込みエラー：'+e.message;}
 }
 
 function splitChars(s){return Array.from(String(s).trim());}
-
-function charVal(ch, prevChar=null){
-  if(!strokes)return 0;
-  if(ch==="々" && prevChar && prevChar in strokes){
-    return strokes[prevChar] || 0;
-  }
-  if(ch in strokes)return strokes[ch]||0;
-  missingInfo.push(ch+"：未登録");
-  return 0;
-}
-
-function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(good.has(n))return'吉';if(n===0)return'不明';return'凶';}
+function charVal(ch,prev=null){if(!strokes)return 0;if(ch==="々"&&prev&&prev in strokes)return strokes[prev];if(ch in strokes)return strokes[ch];missingInfo.push(ch+"：未登録");return 0;}
+function kikkou(n){const g=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(g.has(n))return'吉';if(n===0)return'不明';return'凶';}
 function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
 function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
-
-function wrapZenkaku(t){
-  if(!t) return '';
-  const red = '<span style="color:red;">【要注意】</span>';
-  return String(t)
-    .replace(/\n+/g, '')                    
-    .replace(/【要注意】/g, red)
-    .replace(/【\s*注\s*】/g, red)
-    .replace(/（\s*注\s*）/g, red)
-    .replace(/(^|[。．、,\s])注[:：]/g, `$1${red} `)
-    .replace(/(^|[。．、,\s])※\s*注/g, `$1${red} `);
-}
-
-const mark = sym => sym === "×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
-function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
-function calcExpr(chars,rei=false){const p=chars.map((c,i)=>`${c}(${charVal(c,chars[i-1])})`);if(rei)p.push('霊数1');return `<div class="expr">［ ${p.join('＋')} ］</div>`;}
+const mark=sym=>sym==="×"?`${sym}&emsp;<span class='warn'>【要注意】</span>`:sym;
+function pickCompat(cat,main,other){const key=main+other;return compatibility[cat][key]||{symbol:'',text:'',advice:''};}
+function calcExpr(c,rei=false){const p=c.map((ch,i)=>`${ch}(${charVal(ch,c[i-1])})`);if(rei)p.push('霊数1');return `<div class='expr'>［ ${p.join('＋')} ］</div>`;}
+function wrapZenkaku(t){if(!t)return'';return t.replace(/【要注意】/g,"<span style='color:red;font-weight:bold;'>【要注意】</span>");}
 
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
   const mei=splitChars(document.getElementById('mei').value||'');
   if(!sei.length||!mei.length){alert('姓と名を入力してください。');return;}
-
   const s1=sei.map((c,i)=>charVal(c,sei[i-1])).reduce((a,b)=>a+b,0);
   const s2=mei.map((c,i)=>charVal(c,mei[i-1])).reduce((a,b)=>a+b,0);
   const jin=charVal(sei[sei.length-1],sei[sei.length-2])+charVal(mei[0]);
   const ten=s1,chi=s2,gai=(s1+s2)-jin,sou=s1+s2;
+
+  // 五格図更新
+  document.getElementById("kanjiName").innerHTML = sei.join("<br>") + "<br>" + mei.join("<br>");
+  document.getElementById("reiVal").textContent = "1";
+  document.getElementById("leftKaku").innerHTML = `外格<br>${gai}<br>総格<br>${sou}`;
+  document.getElementById("rightKaku").innerHTML = `天格<br>${ten}<br>人格<br>${jin}<br>地格<br>${chi}`;
+
+  // 五行診断
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
   const sOver=pickCompat('total',jinG,souG);
 
+  // 診断結果
   const out=[];
-  out.push('<div class="section-title">【五格診断結果】</div>');
-  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
-  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei)}<p>※天格単独での診断はございません。</p>`);
-  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
-  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
-  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
+  out.push(`<div class='section-title'>【五格診断結果】</div>`);
+  out.push(`<div class='kaku-title'>総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
+  out.push(`<div class='kaku-title'>天格：${ten}</div>${calcExpr(sei)}<p>※天格単独診断は省略。</p>`);
+  out.push(`<div class='kaku-title'>主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
+  out.push(`<div class='kaku-title'>地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
+  out.push(`<div class='kaku-title'>外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
-  out.push('<div class="section-title">【主格相性診断】</div>');
-  const addCompat=(title,sym,txt,adv)=>{
-    out.push(`
-      <div class="compat-block">
-        <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
-        <p>${wrapZenkaku(txt)}</p>
-        <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g,'')}</p>
-      </div>`);
-  };
+  out.push(`<div class='section-title'>【主格相性診断】</div>`);
+  const addCompat=(t,sym,txt,adv)=>{out.push(`<div class='compat-block'><span class='compat-subtitle'>${t}⇒${mark(sym)}</span><p>${wrapZenkaku(txt)}</p><p><span style='color:#007bff;font-weight:bold;'>［アドバイス］</span>${adv}</p></div>`);}
   addCompat('成功・発展運（主格⇔天格）',sSucc.symbol,sSucc.text,sSucc.advice);
   addCompat('基礎運（主格⇔地格）',sFoun.symbol,sFoun.text,sFoun.advice);
   addCompat('対人・職業運（主格⇔外格）',sRela.symbol,sRela.text,sRela.advice);
   addCompat('総合バランス（主格⇔総画）',sOver.symbol,sOver.text,sOver.advice);
 
   document.getElementById('result').innerHTML =
-    `<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;">
-       姓名判断（簡易型）by biofesta
-     </div>` + out.join('') +
-    `<div style="text-align:center;margin-top:30px;">
-       <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
-     </div>`;
+    `<div style='text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;'>姓名判断（簡易型）by biofesta</div>` +
+    out.join('') +
+    `<div style='text-align:center;margin-top:30px;'><img src='logo_biofesta.jpg' alt='biofesta logo' style='width:30mm;height:auto;'/></div>`;
 
   if(missingInfo.length)
     document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
@@ -256,52 +292,11 @@ function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
+  document.getElementById('kanjiName').innerHTML='姓<br>名';
+  document.getElementById('leftKaku').innerHTML='';
+  document.getElementById('rightKaku').innerHTML='';
+  document.getElementById('reiVal').textContent='-';
 }
-
-document.getElementById("printBtn").addEventListener("click",()=>{
-  const debugSec=document.getElementById("debugSection");
-  debugSec.style.display="none";
-  window.print();
-  debugSec.style.display="";
-});
-
-// ✅ PDF 1ページ確定版
-document.getElementById("pdfBtn").addEventListener("click", () => {
-  const debugSec = document.getElementById("debugSection");
-  const main = document.querySelector("#result");
-  debugSec.style.display = "none";
-
-  main.style.transformOrigin = "top left";
-  main.style.transform = "scale(0.80)";
-  main.style.width = "125%";
-  main.style.height = "";
-
-  const opt = {
-    margin: [5, 5, 5, 5],
-    filename: '姓名判断結果.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 1.0, scrollY: 0, windowWidth: 1000 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-
-  html2pdf()
-    .set(opt)
-    .from(main)
-    .toPdf()
-    .get('pdf')
-    .then(pdf => {
-      const total = pdf.internal.getNumberOfPages();
-      if (total > 1) pdf.deletePage(total);
-    })
-    .save()
-    .then(() => {
-      main.style.transform = "";
-      main.style.width = "";
-      main.style.height = "";
-      debugSec.style.display = "";
-    });
-});
 
 document.addEventListener('DOMContentLoaded',loadData);
 </script>
