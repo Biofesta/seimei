@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>熊﨑式姓名判断（霊数補正式）</title>
+<title>熊﨑式姓名判断（霊数補正式・完全版）</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
@@ -120,12 +120,12 @@
       <div class="grid">
         <div>
           <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：木村" autocomplete="off" />
+          <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
         </div>
         <div class="zenkaku-gap" aria-hidden="true"></div>
         <div>
           <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：友昭" autocomplete="off" />
+          <input id="mei" type="text" placeholder="例：亨" autocomplete="off" />
         </div>
       </div>
       <div class="btns">
@@ -200,7 +200,12 @@ function wrapZenkaku(t){
 
 const mark = sym => sym === "×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
 function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
-function calcExpr(chars,rei=false){const p=chars.map((c,i)=>`${c}(${charVal(c,chars[i-1])})`);if(rei)p.push('霊数1');return `<div class="expr">［ ${p.join('＋')} ］</div>`;}
+function calcExpr(chars,reiTop=false,reiBottom=false){
+  const p=chars.map((c,i)=>`${c}(${charVal(c,chars[i-1])})`);
+  if(reiTop)p.unshift('霊数1');
+  if(reiBottom)p.push('霊数1');
+  return `<div class="expr">［ ${p.join('＋')} ］</div>`;
+}
 
 function calculate(){
   missingInfo=[];
@@ -208,33 +213,45 @@ function calculate(){
   const mei=splitChars(document.getElementById('mei').value||'');
   if(!sei.length||!mei.length){alert('姓と名を入力してください。');return;}
 
-  const s1=sei.map((c,i)=>charVal(c,sei[i-1])).reduce((a,b)=>a+b,0);
-  const s2=mei.map((c,i)=>charVal(c,mei[i-1])).reduce((a,b)=>a+b,0);
-  const jin=charVal(sei[sei.length-1],sei[sei.length-2])+charVal(mei[0]);
-  const ten=s1,chi=s2,gai=(s1+s2)-jin,sou=s1+s2;
+  // === 霊数処理 ===
+  const reiTop = (sei.length === 1);
+  const reiBottom = (mei.length === 1);
+
+  // 各画数
+  const s1 = sei.map((c,i)=>charVal(c,sei[i-1])).reduce((a,b)=>a+b,0);
+  const s2 = mei.map((c,i)=>charVal(c,mei[i-1])).reduce((a,b)=>a+b,0);
+
+  // 五格計算（霊数加算ルール）
+  const ten = s1 + (reiTop ? 1 : 0);      // 姓1字なら+1
+  const chi = s2 + (reiBottom ? 1 : 0);   // 名1字なら+1
+  const jin = charVal(sei[sei.length-1],sei[sei.length-2]) + charVal(mei[0]);
+  const sou = s1 + s2;                    // 総格は霊数を加えない
+  const gai = (sou - jin) + (reiTop ? 1 : 0) + (reiBottom ? 1 : 0); // 外格
+
+  // 五行
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
+  // 相性診断
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
   const sOver=pickCompat('total',jinG,souG);
 
+  // 出力
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
-  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
-  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei)}<p>※天格単独での診断はございません。</p>`);
-  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
-  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
-  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)])}${wrapZenkaku(getDiagnosis('gai',gai))}`);
+  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei],false,false)}${wrapZenkaku(getDiagnosis('sou',sou))}`);
+  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei,reiTop,false)}<p>※天格単独での診断はございません。</p>`);
+  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]],false,false)}${wrapZenkaku(getDiagnosis('jin',jin))}`);
+  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei,false,reiBottom)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
+  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)],reiTop,reiBottom)}${wrapZenkaku(getDiagnosis('gai',gai))}`);
 
   out.push('<div class="section-title">【主格相性診断】</div>');
-  const addCompat=(title,sym,txt,adv)=>{
-    out.push(`
-      <div class="compat-block">
-        <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
-        <p>${wrapZenkaku(txt)}</p>
-        <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g,'')}</p>
-      </div>`);
-  };
+  const addCompat=(title,sym,txt,adv)=>out.push(`
+    <div class="compat-block">
+      <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
+      <p>${wrapZenkaku(txt)}</p>
+      <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g,'')}</p>
+    </div>`);
   addCompat('成功・発展運（主格⇔天格）',sSucc.symbol,sSucc.text,sSucc.advice);
   addCompat('基礎運（主格⇔地格）',sFoun.symbol,sFoun.text,sFoun.advice);
   addCompat('対人・職業運（主格⇔外格）',sRela.symbol,sRela.text,sRela.advice);
@@ -270,12 +287,9 @@ document.getElementById("pdfBtn").addEventListener("click", () => {
   const debugSec = document.getElementById("debugSection");
   const main = document.querySelector("#result");
   debugSec.style.display = "none";
-
   main.style.transformOrigin = "top left";
   main.style.transform = "scale(0.80)";
   main.style.width = "125%";
-  main.style.height = "";
-
   const opt = {
     margin: [5, 5, 5, 5],
     filename: '姓名判断結果.pdf',
@@ -284,7 +298,6 @@ document.getElementById("pdfBtn").addEventListener("click", () => {
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
-
   html2pdf()
     .set(opt)
     .from(main)
@@ -298,7 +311,6 @@ document.getElementById("pdfBtn").addEventListener("click", () => {
     .then(() => {
       main.style.transform = "";
       main.style.width = "";
-      main.style.height = "";
       debugSec.style.display = "";
     });
 });
