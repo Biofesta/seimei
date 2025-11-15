@@ -39,9 +39,11 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:16px;     /* h1 より 1サイズ小さく */
+    font-size:14px;  /* もう1サイズ小さく */
+    font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
+    line-height:1.2;
   }
 
   .card {
@@ -334,7 +336,7 @@ function makeKakuLabel(idBase, cx, cy, title, value){
 }
 
 /* ===========================================================
-   五格ビジュアル（不変構造＋背景画像）
+   五格ビジュアル（不変構造＋背景画像：画面表示用）
    =========================================================== */
 function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
@@ -373,7 +375,7 @@ function renderKakusu(sei, mei, flags, scores){
                  xmlns="http://www.w3.org/2000/svg"
                  preserveAspectRatio="xMidYMid meet">
 
-    <!-- ★ 五格ビジュアル背景画像（最背面） -->
+    <!-- ★ 五格ビジュアル背景画像（画面表示用） -->
     <image href="haikei.png"
            x="0" y="0"
            width="600"
@@ -547,6 +549,9 @@ function calculate(){
   document.getElementById('svgWrap').innerHTML = svg;
 
   const out=[];
+  const fullName = sei.join('') + mei.join('');
+  out.push(`<div style="font-size:18px;font-weight:bold;margin-bottom:8px;">お名前：${fullName}</div>`);
+
   out.push('<div class="section-title">【五格診断結果】</div>');
   out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
   out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei,addReiTop)}<p>※天格単独での診断はございません。</p>`);
@@ -602,7 +607,7 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果を画像保存（診断/クリアボタン除外） ---------- */
+/* ---------- 診断結果を画像保存（診断/クリアボタン除外＆背景付き） ---------- */
 function setupSaveImage(){
   const btn = document.getElementById("saveImageBtn");
   if(!btn) return;
@@ -612,7 +617,7 @@ function setupSaveImage(){
     const seiVal = document.getElementById("sei").value.trim();
     const meiVal = document.getElementById("mei").value.trim();
 
-    // ★ 姓・名が空なら保存させない
+    // ★ 姓・名が空なら保存させない（＝診断していない）
     if(!seiVal || !meiVal){
       alert("姓と名を入力して、診断を実行してください。");
       return;
@@ -624,20 +629,45 @@ function setupSaveImage(){
       return;
     }
 
-    const filename = (seiVal + meiVal) + "_診断結果.png";
+    // ★ ファイル名は必ず「入力された名前」ベース
+    const rawName  = seiVal + meiVal;
+    const safeName = rawName.replace(/[\\\/:*?"<>|]/g, "＋");
+    const filename = safeName + "_診断結果.png";
 
-    // ★ 表題〜入力〜診断結果（ロゴまで）を画像化
-    const target = document.getElementById("saveArea");
+    // ★ 表題〜入力〜診断結果（ロゴまで）を丸ごとクローン
+    const original = document.getElementById("saveArea");
+    const clone    = original.cloneNode(true);
 
-    // ★ 画像に含めたくない「診断する・クリア」ボタン
-    const btns = document.querySelector(".btns");
+    clone.id = "saveAreaClone";
+    clone.style.position = "fixed";
+    clone.style.left     = "-10000px";
+    clone.style.top      = "0";
+    clone.style.zIndex   = "-1";
+    clone.style.margin   = "0";
 
-    // 一時的に非表示
-    if(btns) btns.style.visibility = "hidden";
+    // ★ 保存用クローン側の診断カードに背景を敷く
+    const cloneDiagnosis = clone.querySelector("#diagnosisCard");
+    if (cloneDiagnosis) {
+      cloneDiagnosis.style.backgroundImage    = "url('haikei.png')";
+      cloneDiagnosis.style.backgroundSize     = "cover";
+      cloneDiagnosis.style.backgroundRepeat   = "no-repeat";
+      cloneDiagnosis.style.backgroundPosition = "center top";
+    }
 
-    html2canvas(target, { scale: 2 }).then(canvas => {
-      // 画像生成後に戻す
-      if(btns) btns.style.visibility = "visible";
+    // ★ クローン側の「診断する・クリア」ボタンは非表示
+    const cloneBtns = clone.querySelector(".btns");
+    if (cloneBtns) {
+      cloneBtns.style.display = "none";
+    }
+
+    document.body.appendChild(clone);
+
+    html2canvas(clone, {
+      // scale は指定しない → devicePixelRatio を素直に使う（スマホでくっきり）
+      useCORS: true,
+      backgroundColor: null
+    }).then(canvas => {
+      document.body.removeChild(clone);
 
       const link = document.createElement("a");
       link.href = canvas.toDataURL("image/png");
