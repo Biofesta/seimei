@@ -3,19 +3,46 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>熊﨑式姓名判断（霊数補正式・完全版）</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<title>姓名判断【簡易版】（診断画像保存付き・アドバイス・注意提起型）</title>
+
+<!-- 診断画面を画像化するライブラリ -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
+
   body {
     font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,monospace;
     background:var(--bg);
-    margin:0; padding:24px;
-    color:#222; line-height:1.8;
+    margin:0;
+    padding:24px;
+    color:#222;
+    line-height:1.8;
   }
-  .wrap { max-width:920px; margin:0 auto; }
-  header { display:flex; gap:12px; align-items:center; margin-bottom:18px; }
-  h1 { font-size:20px; margin:0; }
+
+  .wrap {
+    width:100%;
+    max-width:480px;
+    margin:0 auto;
+  }
+  @media (min-width: 900px){
+    .wrap { max-width:640px !important; }
+  }
+
+  /* ★ タイトル：センタリング＋2段構成 */
+  header {
+    text-align:center;
+    margin-bottom:18px;
+  }
+  h1 {
+    font-size:20px;
+    margin:0;
+  }
+  .subtitle-en {
+    font-size:16px;     /* h1 より 1サイズ小さく */
+    display:block;
+    margin-top:4px;
+  }
 
   .card {
     background:var(--card);
@@ -34,6 +61,7 @@
     border-radius:6px;
   }
 
+  /* ★ PC版の横並びをスマホにもそのまま適用 */
   .grid {
     display:grid;
     grid-template-columns:1fr minmax(2em,2em) 1fr;
@@ -41,22 +69,46 @@
     row-gap:1em;
   }
   .zenkaku-gap { width:2em; min-width:2em; height:1px; }
-  @media(max-width:640px){
-    .grid { grid-template-columns:1fr; }
-    .zenkaku-gap { display:none; }
-  }
 
-  .btns { display:flex; gap:10px; margin-top:12px; }
-  button {
-    background:#1f8ef1; color:#fff; border:0; padding:10px 14px;
-    border-radius:8px; cursor:pointer; font-weight:700;
+  /* ★ ボタン：左クリア／右診断する */
+  .btns {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:12px;
   }
-  button:disabled { opacity:0.5; cursor:not-allowed; }
+  .btns button[type="button"] {
+    order:1;            /* クリアボタンを左側に */
+  }
+  #runBtn {
+    order:2;            /* 診断ボタンを右側に */
+    margin-left:auto;   /* 右端寄せ */
+    background:#4caf50;
+    color:#fff;
+    border:0;
+    padding:10px 28px;  /* 少し横幅を大きく */
+    min-width:140px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+  }
+  button { font-weight:700; }
+
+  #svgWrap {
+    text-align:center;
+    margin:8px 0 12px;
+  }
+  /* ★ PC・スマホともカード幅いっぱいに表示 */
+  #svgWrap svg {
+    width:100%;
+    height:auto;
+    display:block;
+    margin:0 auto;
+  }
 
   #result {
     white-space: normal;
     word-break: break-word;
-    max-width: 40em;
     background:#fafafa;
     padding:12px;
     border-radius:8px;
@@ -65,7 +117,7 @@
     font-size:16px;
     margin-top:8px;
   }
-  p { margin:0; padding:0; }
+
   .expr {
     display:block;
     color:#8B4513;
@@ -74,76 +126,96 @@
     margin:4px 0 0;
     font-family:monospace;
   }
-  .section-title { font-size:20px; font-weight:bold; margin:20px 0 8px; }
-  .kaku-title { font-size:18px; font-weight:bold; }
-  .compat-subtitle {
-    display:block;
-    font-size:16px;
-    font-weight:bold;
-    margin-top:10px;
-    margin-bottom:2px;
-  }
-  .warn { color:red; font-weight:bold; }
-  .compat-block { margin-bottom:10px; }
 
-  .print-controls {
-    display:flex;
-    justify-content:center;
-    gap:160px;
-    margin-top:40px;
-  }
-  .print-btn {
-    width:160px;
-    padding:10px;
-    border-radius:8px;
+  .section-title { font-size:20px; font-weight:bold; margin:20px 0 8px; }
+  .kaku-title    { font-size:18px; font-weight:bold; }
+
+  /* ★ 主格相性診断のタイトル行用 */
+  .compat-subtitle {
     font-weight:bold;
-    cursor:pointer;
-    border:none;
+    font-size:16px;   /* 通常行（対人・総合）はこのサイズ */
   }
-  .print-btn.print { background:#4caf50; color:#fff; }
-  .print-btn.pdf { background:#2196f3; color:#fff; }
+  .compat-subtitle--main {
+    font-size:18px;   /* 成功・発展運／基礎運だけ一段大きく */
+  }
+  .warn {
+    color:red;
+    font-weight:bold;
+  }
+
+  .save-controls {
+    text-align:center;
+    margin:24px 0 4px;
+  }
+  .save-btn {
+    min-width:220px;
+    padding:10px 20px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+    font-size:18px;
+    font-weight:bold;
+    background:#2196f3;
+    color:#fff;
+  }
 
   @page { size:A4; margin:8mm; }
   @media print {
     body { zoom:0.80 !important; }
-    form, .print-controls, header, #debugSection, #debug { display:none !important; }
+    header, #debugSection, #debug, form, .save-controls { display:none !important; }
     #result { max-width:none; }
   }
 </style>
 </head>
+
 <body>
 <div class="wrap">
-  <header><h1>姓名判断 by Biofesta</h1></header>
 
-  <section class="card">
-    <form id="form" onsubmit="event.preventDefault(); calculate();">
-      <div class="grid">
-        <div>
-          <label for="sei">姓（苗字）</label>
-          <input id="sei" type="text" placeholder="例：矢﨑" autocomplete="off" />
+  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包む保存対象エリア -->
+  <div id="saveArea">
+
+    <header>
+      <h1>
+        姓名判断［簡易版］<br>
+        <span class="subtitle-en">The mysterious guiding energy of names</span>
+      </h1>
+    </header>
+
+    <!-- 入力エリア -->
+    <section class="card">
+      <form id="form" onsubmit="event.preventDefault(); calculate();">
+        <div class="grid">
+          <div>
+            <label for="sei">姓（苗字）</label>
+            <input id="sei" type="text" placeholder="木村" autocomplete="off" />
+          </div>
+          <div class="zenkaku-gap" aria-hidden="true"></div>
+          <div>
+            <label for="mei">名（名前）</label>
+            <input id="mei" type="text" placeholder="友昭" autocomplete="off" />
+          </div>
         </div>
-        <div class="zenkaku-gap" aria-hidden="true"></div>
-        <div>
-          <label for="mei">名（名前）</label>
-          <input id="mei" type="text" placeholder="例：亨" autocomplete="off" />
+        <div class="btns">
+          <button id="runBtn" type="submit">診断する</button>
+          <button type="button" onclick="clearForm()">クリア</button>
         </div>
-      </div>
-      <div class="btns">
-        <button id="runBtn" type="submit">診断する</button>
-        <button type="button" onclick="clearForm()">クリア</button>
-      </div>
-    </form>
-  </section>
+      </form>
+    </section>
 
-  <section style="margin-top:8px" class="card">
-    <div id="result">まだ診断されていません。</div>
+    <!-- ★ 五格ビジュアル＋結果（保存対象内） -->
+    <section style="margin-top:8px" class="card" id="diagnosisCard">
+      <div id="svgWrap"></div>
+      <div id="result">まだ診断されていません。</div>
+    </section>
 
-    <div class="print-controls">
-      <button class="print-btn print" id="printBtn">印刷</button>
-      <button class="print-btn pdf" id="pdfBtn">PDF保存</button>
-    </div>
-  </section>
+  </div><!-- /saveArea -->
 
+  <!-- ★ 診断結果を画像保存 -->
+  <div class="save-controls">
+    <button class="save-btn" id="saveImageBtn">診断結果を画像保存</button>
+  </div>
+
+  <!-- デバッグ -->
   <section style="margin-top:16px" class="card" id="debugSection">
     <div>デバッグ情報</div>
     <pre id="debug">-</pre>
@@ -153,6 +225,7 @@
 <script>
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
 
+/* ---------- データ読み込み ---------- */
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
@@ -160,37 +233,49 @@ async function loadData(){
       fetch("diagnosis_data.json"),
       fetch("diagnosis_compatibility.json")
     ]);
-    strokes=await r1.json(); diagnosis=await r2.json(); compatibility=await r3.json();
+    strokes       = await r1.json();
+    diagnosis     = await r2.json();
+    compatibility = await r3.json();
+
     const totalChars = Object.keys(strokes || {}).length;
     document.getElementById('debug').textContent =
-      `データ読み込みOK。熊﨑式登録文字数：${totalChars}字`;
+      `データ読み込みOK。登録文字数：${totalChars}字`;
   }catch(e){
     document.getElementById('debug').textContent='読み込みエラー：'+e.message;
     document.getElementById('runBtn').disabled=true;
   }
 }
 
-function splitChars(s){return Array.from(String(s).trim());}
+function splitChars(s){ return Array.from(String(s).trim()); }
 
-function charVal(ch, prevChar=null){
-  if(!strokes)return 0;
-  if(ch==="々" && prevChar && prevChar in strokes){
-    return strokes[prevChar] || 0;
-  }
-  if(ch in strokes)return strokes[ch]||0;
+function charVal(ch, prev=null){
+  if(!strokes) return 0;
+  if(ch==="々" && prev && prev in strokes) return strokes[prev] || 0;
+  if(ch in strokes) return strokes[ch] || 0;
   missingInfo.push(ch+"：未登録");
   return 0;
 }
 
-function kikkou(n){const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);if(good.has(n))return'吉';if(n===0)return'不明';return'凶';}
-function toGogyo(n){const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};return m[n%10];}
-function getDiagnosis(t,n){if(!diagnosis||!diagnosis[t])return'診断データなし';return diagnosis[t][String(n)]||'該当する診断文がありません。';}
+function kikkou(n){
+  const good=new Set([1,3,5,6,7,8,11,13,15,16,17,18,21,23,24,25,31,32,33,35,37,38,39,41,45,47,48,52]);
+  if(good.has(n)) return '吉';
+  if(n===0) return '不明';
+  return '凶';
+}
+function toGogyo(n){
+  const m={1:'木',2:'木',3:'火',4:'火',5:'土',6:'土',7:'金',8:'金',9:'水',0:'水'};
+  return m[n%10];
+}
+function getDiagnosis(t,n){
+  if(!diagnosis || !diagnosis[t]) return '診断データなし';
+  return diagnosis[t][String(n)] || '該当する診断文がありません。';
+}
 
 function wrapZenkaku(t){
   if(!t) return '';
-  const red = '<span style="color:red;">【要注意】</span>';
+  const red='<span style="color:red;">【要注意】</span>';
   return String(t)
-    .replace(/\n+/g, '')                    
+    .replace(/\n+/g,'')
     .replace(/【要注意】/g, red)
     .replace(/【\s*注\s*】/g, red)
     .replace(/（\s*注\s*）/g, red)
@@ -198,69 +283,309 @@ function wrapZenkaku(t){
     .replace(/(^|[。．、,\s])※\s*注/g, `$1${red} `);
 }
 
-const mark = sym => sym === "×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
-function pickCompat(cat,main,other){const key=main+other;const o=compatibility[cat][key]||{symbol:'',text:'',advice:''};return o;}
+const mark = sym =>
+  sym==="×" ? `${sym}&emsp;<span class="warn">【要注意】</span>` : sym;
+
+function pickCompat(cat,main,other){
+  const key=main+other;
+  return (compatibility[cat]||{})[key] || {symbol:'',text:'',advice:''};
+}
+
 function calcExpr(chars,reiTop=false,reiBottom=false){
   const p=chars.map((c,i)=>`${c}(${charVal(c,chars[i-1])})`);
-  if(reiTop)p.unshift('霊数1');
+  if(reiTop)   p.unshift('霊数1');
   if(reiBottom)p.push('霊数1');
   return `<div class="expr">［ ${p.join('＋')} ］</div>`;
 }
 
+/* ---------- 五格ラベル ---------- */
+function makeKakuLabel(idBase, cx, cy, title, value){
+  const size = 120;
+  const x = cx - size/2;
+  const y = cy - size/2;
+  const clipId = `kaku_clip_${idBase}`;
+  return `
+    <defs>
+      <clipPath id="${clipId}">
+        <rect x="${x}" y="${y}" width="${size}" height="${size}" rx="18" ry="18"/>
+      </clipPath>
+    </defs>
+    <g class="kaku-label">
+      <rect x="${x}" y="${y}" width="${size}" height="${size}"
+            rx="18" ry="18"
+            fill="#fff4c2" stroke="#e0cf70" stroke-width="2"/>
+      <rect x="${x}" y="${y}" width="${size}" height="${size/2}"
+            clip-path="url(#${clipId})" fill="#0a8833"/>
+
+      <text x="${cx}" 
+            y="${y + size*0.33}"
+            text-anchor="middle"
+            fill="#fff" font-size="24" font-weight="bold"
+            font-family="Yu Gothic,Meiryo,sans-serif">${title}</text>
+
+      <text x="${cx}" 
+            y="${y + size*0.75 + 16}"
+            text-anchor="middle"
+            fill="#333" font-size="32"
+            font-family="Yu Gothic,Meiryo,sans-serif"
+            font-weight="bold">${value}</text>
+    </g>
+  `;
+}
+
+/* ===========================================================
+   五格ビジュアル（不変構造＋背景画像）
+   =========================================================== */
+function renderKakusu(sei, mei, flags, scores){
+  const { addReiTop, addReiBottom } = flags;
+  const { ten, jin, chi, gai, sou } = scores;
+
+  const box = 75;
+  const gap = 60;
+  const yBase = 80;
+  const startX = 230;
+  const xRight = 380;
+  const xLeft  = 180;
+  const H = 16;
+
+  const yOf  = i => yBase + i*(box+gap);
+  const y1_3 = i => yOf(i) + box/3;
+  const y2_3 = i => yOf(i) + box*2/3;
+  const cy   = i => yOf(i) + box/2;
+
+  const blocks=[];
+  if(addReiTop) blocks.push({t:'rei'});
+  sei.forEach(ch=>blocks.push({t:'ch',ch}));
+  mei.forEach(ch=>blocks.push({t:'ch',ch}));
+  if(addReiBottom) blocks.push({t:'rei'});
+
+  const total=blocks.length;
+  const firstS = addReiTop?1:0;
+  const lastS  = firstS + sei.length - 1;
+  const firstM = lastS + 1;
+  const lastM  = firstM + mei.length - 1;
+  const topIdx = 0;
+  const bottomIdx = total-1;
+
+  const totalHeight = yBase + total*(box+gap) + 260;
+
+  let svg = `<svg viewBox="0 0 600 ${totalHeight}"
+                 xmlns="http://www.w3.org/2000/svg"
+                 preserveAspectRatio="xMidYMid meet">
+
+    <!-- ★ 五格ビジュアル背景画像（最背面） -->
+    <image href="haikei.png"
+           x="0" y="0"
+           width="600"
+           height="${totalHeight}"
+           preserveAspectRatio="xMidYMid slice"
+           opacity="0.8" />
+
+    <style>
+      .line{stroke:#000;stroke-width:2;fill:none;}
+      .dash{stroke:#0066cc;stroke-width:2;stroke-dasharray:6,4;}
+      .small{font-size:14px;fill:#5577aa;}
+      .kaku-label{filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));}
+    </style>`;
+
+  /* --- 文字枠／霊数枠 --- */
+  blocks.forEach((b,i)=>{
+    const y=yOf(i);
+    if(b.t==='rei'){
+      svg += `
+        <rect x="${startX}" y="${y}" width="${box}" height="${box}"
+              fill="#0a8833" stroke="#080" stroke-width="2"/>
+        <text x="${startX+box/2}" y="${y+box/2+8}"
+              text-anchor="middle"
+              font-size="22"
+              font-family="Yu Gothic,Meiryo,sans-serif"
+              font-weight="bold" fill="#fff">霊数1</text>
+        <text x="${startX+box+28}" y="${y+box-6}"
+              class="small"
+              font-family="Yu Gothic,Meiryo,sans-serif"
+              font-weight="bold">1</text>
+      `;
+    } else {
+      const s = (strokes && b.ch in strokes) ? strokes[b.ch] : "？";
+      svg += `
+        <rect x="${startX}" y="${y}" width="${box}" height="${box}"
+              fill="#fff" stroke="black" stroke-width="2"/>
+
+        <!-- 名前（明朝太字） -->
+        <text x="${startX+box/2}" y="${y+box/2+8}"
+              text-anchor="middle"
+              font-size="26"
+              font-family="Yu Mincho,'Hiragino Mincho ProN',serif"
+              font-weight="bold">${b.ch}</text>
+
+        <!-- 画数（ゴシック） -->
+        <text x="${startX+box+28}" y="${y+box-6}"
+              class="small"
+              font-family="Yu Gothic,Meiryo,sans-serif"
+              font-weight="bold">${s}</text>
+      `;
+    }
+  });
+
+  /* ========= 外格 ========= */
+  const extIdx=[];
+  if(addReiTop) extIdx.push(topIdx);
+  for(let i=firstS;i<=lastS-1;i++) extIdx.push(i);
+  for(let i=firstM+1;i<=lastM;i++) extIdx.push(i);
+  if(addReiBottom) extIdx.push(bottomIdx);
+  const extSet=new Set(extIdx);
+
+  svg += `<line x1="${xLeft}" y1="${cy(topIdx)}"
+                x2="${xLeft}" y2="${cy(bottomIdx)}"
+                class="line"/>`;
+  for(let i=topIdx;i<=bottomIdx;i++){
+    if(extSet.has(i)){
+      svg += `<line x1="${xLeft}" y1="${cy(i)}"
+                    x2="${xLeft+H}" y2="${cy(i)}"
+                    class="line"/>`;
+    }
+  }
+  const yGaiCenter = (cy(topIdx)+cy(bottomIdx))/2;
+  const xGaiCenter = xLeft - 80;
+  svg += makeKakuLabel("gai", xGaiCenter, yGaiCenter, "外格", gai);
+
+  /* ========= 天格 ========= */
+  const idxTenStart = addReiTop ? 0 : firstS;
+  const yT1 = y2_3(idxTenStart);
+  const yT2 = y1_3(lastS);
+  svg += `
+    <line x1="${xRight-H}" y1="${yT1}" x2="${xRight}" y2="${yT1}" class="line"/>
+    <line x1="${xRight-H}" y1="${yT2}" x2="${xRight}" y2="${yT2}" class="line"/>
+    <line x1="${xRight}"   y1="${yT1}" x2="${xRight}" y2="${yT2}" class="line"/>
+  `;
+  for(let i=idxTenStart+1;i<=lastS-1;i++){
+    svg += `<line x1="${xRight-H}" y1="${cy(i)}"
+                  x2="${xRight}"   y2="${cy(i)}"
+                  class="line"/>`;
+  }
+  const yTenCenter = (yT1+yT2)/2;
+  const xTenCenter = xRight + 80;
+  svg += makeKakuLabel("ten", xTenCenter, yTenCenter, "天格", ten);
+
+  /* ========= 主格 ========= */
+  const yJ1 = y2_3(lastS);
+  const yJ2 = y1_3(firstM);
+  svg += `
+    <line x1="${xRight-H}" y1="${yJ1}" x2="${xRight}" y2="${yJ1}" class="line"/>
+    <line x1="${xRight-H}" y1="${yJ2}" x2="${xRight}" y2="${yJ2}" class="line"/>
+    <line x1="${xRight}"   y1="${yJ1}" x2="${xRight}" y2="${yJ2}" class="line"/>
+  `;
+  const yJinCenter = (yJ1+yJ2)/2;
+  svg += makeKakuLabel("jin", xTenCenter, yJinCenter, "主格", jin);
+
+  /* ========= 地格（逆Z対策済） ========= */
+  const lastBlockForChi = addReiBottom ? bottomIdx : lastM;
+
+  let yC1 = y2_3(firstM);
+  let yC2 = y1_3(lastBlockForChi);
+  if (yC1 > yC2) {
+    const tmp = yC1;
+    yC1 = yC2;
+    yC2 = tmp;
+  }
+
+  svg += `
+    <line x1="${xRight-H}" y1="${yC1}" x2="${xRight}" y2="${yC1}" class="line"/>
+    <line x1="${xRight-H}" y1="${yC2}" x2="${xRight}" y2="${yC2}" class="line"/>
+    <line x1="${xRight}"   y1="${yC1}" x2="${xRight}" y2="${yC2}" class="line"/>
+  `;
+  for(let i=firstM+1;i<=lastBlockForChi-1;i++){
+    svg += `<line x1="${xRight-H}" y1="${cy(i)}"
+                  x2="${xRight}"   y2="${cy(i)}"
+                  class="line"/>`;
+  }
+  const yChiCenter = (yC1+yC2)/2;
+  svg += makeKakuLabel("chi", xTenCenter, yChiCenter, "地格", chi);
+
+  /* ========= 総格（青点線・非接触） ========= */
+  const yLastBoxBottom = yOf(bottomIdx) + box;
+  const ySumLine = yLastBoxBottom + 44;
+  const xSouCenter = startX + box/2;
+
+  svg += `<line x1="${xSouCenter - 60}" y1="${ySumLine}"
+                x2="${xSouCenter + 60}" y2="${ySumLine}"
+                class="dash"/>`;
+
+  const ySouCenter = ySumLine + 76;
+  svg += makeKakuLabel("sou", xSouCenter, ySouCenter, "総格", sou);
+
+  svg += `</svg>`;
+  return svg;
+}
+
+/* ===========================================================
+   計算
+   =========================================================== */
 function calculate(){
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
   const mei=splitChars(document.getElementById('mei').value||'');
-  if(!sei.length||!mei.length){alert('姓と名を入力してください。');return;}
 
-  // === 霊数処理 ===
-  const reiTop = (sei.length === 1);
-  const reiBottom = (mei.length === 1);
+  if(!sei.length || !mei.length){
+    alert('姓と名を入力してください。');
+    return;
+  }
 
-  // 各画数
+  const addReiTop    = (sei.length===1);
+  const addReiBottom = (mei.length===1);
+
   const s1 = sei.map((c,i)=>charVal(c,sei[i-1])).reduce((a,b)=>a+b,0);
   const s2 = mei.map((c,i)=>charVal(c,mei[i-1])).reduce((a,b)=>a+b,0);
 
-  // 五格計算（霊数加算ルール）
-  const ten = s1 + (reiTop ? 1 : 0);      // 姓1字なら+1
-  const chi = s2 + (reiBottom ? 1 : 0);   // 名1字なら+1
+  const ten = s1 + (addReiTop?1:0);
+  const chi = s2 + (addReiBottom?1:0);
   const jin = charVal(sei[sei.length-1],sei[sei.length-2]) + charVal(mei[0]);
-  const sou = s1 + s2;                    // 総格は霊数を加えない
-  const gai = (sou - jin) + (reiTop ? 1 : 0) + (reiBottom ? 1 : 0); // 外格
+  const sou = s1 + s2;
+  const gai = (sou - jin) + (addReiTop?1:0) + (addReiBottom?1:0);
 
-  // 五行
+  const svg = renderKakusu(sei,mei,{addReiTop,addReiBottom},{ten,jin,chi,gai,sou});
+  document.getElementById('svgWrap').innerHTML = svg;
+
+  const out=[];
+  out.push('<div class="section-title">【五格診断結果】</div>');
+  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
+  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei,addReiTop)}<p>※天格単独での診断はございません。</p>`);
+  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]])}${wrapZenkaku(getDiagnosis('jin',jin))}`);
+  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei,false,addReiBottom)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
+  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)],addReiTop,addReiBottom)}${wrapZenkaku(getDiagnosis('gai',gai))}`);
+
   const tenG=toGogyo(ten),jinG=toGogyo(jin),chiG=toGogyo(chi),gaiG=toGogyo(gai),souG=toGogyo(sou);
-  // 相性診断
   const sSucc=pickCompat('success',jinG,tenG);
   const sFoun=pickCompat('foundation',jinG,chiG);
   const sRela=pickCompat('relation',jinG,gaiG);
   const sOver=pickCompat('total',jinG,souG);
 
-  // 出力
-  const out=[];
-  out.push('<div class="section-title">【五格診断結果】</div>');
-  out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei],false,false)}${wrapZenkaku(getDiagnosis('sou',sou))}`);
-  out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei,reiTop,false)}<p>※天格単独での診断はございません。</p>`);
-  out.push(`<div class="kaku-title">主格：${jin}（${kikkou(jin)}）</div>${calcExpr([sei[sei.length-1],mei[0]],false,false)}${wrapZenkaku(getDiagnosis('jin',jin))}`);
-  out.push(`<div class="kaku-title">地格：${chi}（${kikkou(chi)}）</div>${calcExpr(mei,false,reiBottom)}${wrapZenkaku(getDiagnosis('chi',chi))}`);
-  out.push(`<div class="kaku-title">外格：${gai}（${kikkou(gai)}）</div>${calcExpr([...sei.slice(0,-1),...mei.slice(1)],reiTop,reiBottom)}${wrapZenkaku(getDiagnosis('gai',gai))}`);
-
   out.push('<div class="section-title">【主格相性診断】</div>');
-  const addCompat=(title,sym,txt,adv)=>out.push(`
-    <div class="compat-block">
-      <span class="compat-subtitle">${title}診断⇒${mark(sym)}</span>
-      <p>${wrapZenkaku(txt)}</p>
-      <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${adv.replace(/【要注意】/g,'')}</p>
-    </div>`);
+
+  /* ★ タイトルごとに見出しサイズを変える */
+  const addCompat = (title, sym, txt, adv) => {
+    const isMain =
+      title === '成功・発展運（主格⇔天格）' ||
+      title === '基礎運（主格⇔地格）';
+
+    const extraClass = isMain ? ' compat-subtitle--main' : '';
+
+    out.push(`
+      <div class="compat-block">
+        <span class="compat-subtitle${extraClass}">${title}診断⇒${mark(sym)}</span>
+        <p>${wrapZenkaku(txt)}</p>
+        <p><span style="color:#007bff; font-weight:bold;">［アドバイス］</span> ${String(adv||'').replace(/【要注意】/g,'')}</p>
+      </div>
+    `);
+  };
+
   addCompat('成功・発展運（主格⇔天格）',sSucc.symbol,sSucc.text,sSucc.advice);
   addCompat('基礎運（主格⇔地格）',sFoun.symbol,sFoun.text,sFoun.advice);
   addCompat('対人・職業運（主格⇔外格）',sRela.symbol,sRela.text,sRela.advice);
   addCompat('総合バランス（主格⇔総画）',sOver.symbol,sOver.text,sOver.advice);
 
   document.getElementById('result').innerHTML =
-    `<div style="text-align:center;font-weight:700;font-size:18px;margin-bottom:6px;">
-       姓名判断（簡易型）by biofesta
-     </div>` + out.join('') +
+    out.join('') +
     `<div style="text-align:center;margin-top:30px;">
        <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
      </div>`;
@@ -269,53 +594,66 @@ function calculate(){
     document.getElementById('debug').textContent='【未登録】 '+missingInfo.join(' / ');
 }
 
+/* ---------- クリア ---------- */
 function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
+  document.getElementById('svgWrap').innerHTML='';
 }
 
-document.getElementById("printBtn").addEventListener("click",()=>{
-  const debugSec=document.getElementById("debugSection");
-  debugSec.style.display="none";
-  window.print();
-  debugSec.style.display="";
-});
+/* ---------- 診断結果を画像保存（診断/クリアボタン除外） ---------- */
+function setupSaveImage(){
+  const btn = document.getElementById("saveImageBtn");
+  if(!btn) return;
 
-// ✅ PDF 1ページ確定版
-document.getElementById("pdfBtn").addEventListener("click", () => {
-  const debugSec = document.getElementById("debugSection");
-  const main = document.querySelector("#result");
-  debugSec.style.display = "none";
-  main.style.transformOrigin = "top left";
-  main.style.transform = "scale(0.80)";
-  main.style.width = "125%";
-  const opt = {
-    margin: [5, 5, 5, 5],
-    filename: '姓名判断結果.pdf',
-    image: { type: 'jpeg', quality: 1 },
-    html2canvas: { scale: 1.0, scrollY: 0, windowWidth: 1000 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-  html2pdf()
-    .set(opt)
-    .from(main)
-    .toPdf()
-    .get('pdf')
-    .then(pdf => {
-      const total = pdf.internal.getNumberOfPages();
-      if (total > 1) pdf.deletePage(total);
-    })
-    .save()
-    .then(() => {
-      main.style.transform = "";
-      main.style.width = "";
-      debugSec.style.display = "";
+  btn.addEventListener("click", () => {
+
+    const seiVal = document.getElementById("sei").value.trim();
+    const meiVal = document.getElementById("mei").value.trim();
+
+    // ★ 姓・名が空なら保存させない
+    if(!seiVal || !meiVal){
+      alert("姓と名を入力して、診断を実行してください。");
+      return;
+    }
+
+    // ★ 診断結果（SVG）がなければ保存させない
+    if(!document.querySelector("#svgWrap svg")){
+      alert("診断結果がありません。『診断する』ボタンで診断を実行してください。");
+      return;
+    }
+
+    const filename = (seiVal + meiVal) + "_診断結果.png";
+
+    // ★ 表題〜入力〜診断結果（ロゴまで）を画像化
+    const target = document.getElementById("saveArea");
+
+    // ★ 画像に含めたくない「診断する・クリア」ボタン
+    const btns = document.querySelector(".btns");
+
+    // 一時的に非表示
+    if(btns) btns.style.visibility = "hidden";
+
+    html2canvas(target, { scale: 2 }).then(canvas => {
+      // 画像生成後に戻す
+      if(btns) btns.style.visibility = "visible";
+
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = filename;
+      link.click();
+
+      alert("診断結果画像を保存しました。\nスマホの写真またはダウンロードから確認できます。");
     });
-});
+  });
+}
 
-document.addEventListener('DOMContentLoaded',loadData);
+/* ---------- 初期化 ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  setupSaveImage();
+});
 </script>
 </body>
 </html>
