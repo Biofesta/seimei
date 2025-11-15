@@ -39,7 +39,7 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* もう1サイズ小さく */
+    font-size:12px;  /* ← さらに1サイズ小さく */
     font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
@@ -336,7 +336,7 @@ function makeKakuLabel(idBase, cx, cy, title, value){
 }
 
 /* ===========================================================
-   五格ビジュアル（不変構造＋背景画像：画面表示用）
+   五格ビジュアル（不変構造＋背景画像）
    =========================================================== */
 function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
@@ -549,9 +549,6 @@ function calculate(){
   document.getElementById('svgWrap').innerHTML = svg;
 
   const out=[];
-  const fullName = sei.join('') + mei.join('');
-  out.push(`<div style="font-size:18px;font-weight:bold;margin-bottom:8px;">お名前：${fullName}</div>`);
-
   out.push('<div class="section-title">【五格診断結果】</div>');
   out.push(`<div class="kaku-title">総格：${sou}（${kikkou(sou)}）</div>${calcExpr([...sei,...mei])}${wrapZenkaku(getDiagnosis('sou',sou))}`);
   out.push(`<div class="kaku-title">天格：${ten}（－）</div>${calcExpr(sei,addReiTop)}<p>※天格単独での診断はございません。</p>`);
@@ -607,7 +604,7 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果を画像保存（診断/クリアボタン除外＆背景付き） ---------- */
+/* ---------- 診断結果を画像保存（診断カードのみ・高解像度） ---------- */
 function setupSaveImage(){
   const btn = document.getElementById("saveImageBtn");
   if(!btn) return;
@@ -634,39 +631,28 @@ function setupSaveImage(){
     const safeName = rawName.replace(/[\\\/:*?"<>|]/g, "＋");
     const filename = safeName + "_診断結果.png";
 
-    // ★ 表題〜入力〜診断結果（ロゴまで）を丸ごとクローン
-    const original = document.getElementById("saveArea");
+    // ★ 保存対象は「診断カード」だけに絞る（五格ビジュアル＋文章）
+    const original = document.getElementById("diagnosisCard");
     const clone    = original.cloneNode(true);
 
-    clone.id = "saveAreaClone";
+    // 画面に見えない位置に退避して配置
+    clone.id = "diagnosisCardClone";
     clone.style.position = "fixed";
     clone.style.left     = "-10000px";
     clone.style.top      = "0";
     clone.style.zIndex   = "-1";
     clone.style.margin   = "0";
-
-    // ★ 保存用クローン側の診断カードに背景を敷く
-    const cloneDiagnosis = clone.querySelector("#diagnosisCard");
-    if (cloneDiagnosis) {
-      cloneDiagnosis.style.backgroundImage    = "url('haikei.png')";
-      cloneDiagnosis.style.backgroundSize     = "cover";
-      cloneDiagnosis.style.backgroundRepeat   = "no-repeat";
-      cloneDiagnosis.style.backgroundPosition = "center top";
-    }
-
-    // ★ クローン側の「診断する・クリア」ボタンは非表示
-    const cloneBtns = clone.querySelector(".btns");
-    if (cloneBtns) {
-      cloneBtns.style.display = "none";
-    }
+    clone.style.width    = original.offsetWidth + "px";
 
     document.body.appendChild(clone);
 
     html2canvas(clone, {
-      // scale は指定しない → devicePixelRatio を素直に使う（スマホでくっきり）
+      // ★ 端末のピクセル密度に合わせて高解像度キャプチャ
+      scale: window.devicePixelRatio ? window.devicePixelRatio : 2,
       useCORS: true,
-      backgroundColor: null
+      backgroundColor: "#ffffff"
     }).then(canvas => {
+      // 後片付け
       document.body.removeChild(clone);
 
       const link = document.createElement("a");
