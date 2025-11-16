@@ -39,8 +39,8 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* ← 1サイズ小さく */
-    font-family:"Century","Century Schoolbook",serif; /* ← Century系 */
+    font-size:12px;  /* 1サイズ小さく＋Century */
+    font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
     line-height:1.2;
@@ -190,13 +190,13 @@
           <div>
             <label for="sei">姓（苗字）</label>
             <!-- ★ プレースホルダに「例）」 -->
-            <input id="sei" type="text" placeholder="例）木村" autocomplete="off" />
+            <input id="sei" type="text" placeholder="例）美濃田" autocomplete="off" />
           </div>
           <div class="zenkaku-gap" aria-hidden="true"></div>
           <div>
             <label for="mei">名（名前）</label>
             <!-- ★ プレースホルダに「例）」 -->
-            <input id="mei" type="text" placeholder="例）友昭" autocomplete="off" />
+            <input id="mei" type="text" placeholder="例）浩" autocomplete="off" />
           </div>
         </div>
         <div class="btns">
@@ -605,7 +605,7 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果をPDF保存（表示されたまま） ---------- */
+/* ---------- 診断結果をPDF保存（画面で見えているそのまま1ページ） ---------- */
 function setupSavePdf(){
   const btn = document.getElementById("savePdfBtn");
   if(!btn) return;
@@ -633,12 +633,20 @@ function setupSavePdf(){
 
     const element = document.getElementById("saveArea");
 
+    // 画面に表示されている要素サイズをそのままPDFサイズにする
+    const width  = element.scrollWidth;
+    const height = element.scrollHeight;
+
     const opt = {
-      margin:       10,
-      filename:     filename,
-      image:        { type: "jpeg", quality: 0.98 },
-      html2canvas:  { scale: 2, useCORS: true },
-      jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+      margin:      0,
+      filename:    filename,
+      image:       { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: {
+        unit: "px",
+        format: [width, height],
+        orientation: (height >= width) ? "portrait" : "landscape"
+      }
     };
 
     html2pdf().set(opt).from(element).save();
