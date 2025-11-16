@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>姓名判断【簡易版】（診断結果テキストダウンロード付き・アドバイス・注意提起型）</title>
+<title>姓名判断【簡易版】（診断PDF保存付き・アドバイス・注意提起型）</title>
 
-<!-- （現在は使っていませんが、そのまま残しています） -->
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<!-- ★ PDF保存用ライブラリ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
@@ -39,8 +39,8 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* ← 元の16pxからさらに1サイズ小さく */
-    font-family:"Century","Century Schoolbook",serif; /* ← センチュリー系 */
+    font-size:12px;  /* ← 1サイズ小さく */
+    font-family:"Century","Century Schoolbook",serif; /* ← Century系 */
     display:block;
     margin-top:4px;
     line-height:1.2;
@@ -173,7 +173,7 @@
 <body>
 <div class="wrap">
 
-  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包む保存対象エリア -->
+  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包むPDF対象エリア -->
   <div id="saveArea">
 
     <header>
@@ -189,13 +189,13 @@
         <div class="grid">
           <div>
             <label for="sei">姓（苗字）</label>
-            <!-- ★ プレースホルダに「例）」を付けた -->
+            <!-- ★ プレースホルダに「例）」 -->
             <input id="sei" type="text" placeholder="例）木村" autocomplete="off" />
           </div>
           <div class="zenkaku-gap" aria-hidden="true"></div>
           <div>
             <label for="mei">名（名前）</label>
-            <!-- ★ プレースホルダに「例）」を付けた -->
+            <!-- ★ プレースホルダに「例）」 -->
             <input id="mei" type="text" placeholder="例）友昭" autocomplete="off" />
           </div>
         </div>
@@ -206,7 +206,7 @@
       </form>
     </section>
 
-    <!-- ★ 五格ビジュアル＋結果（保存対象内） -->
+    <!-- ★ 五格ビジュアル＋結果（PDFにはここまで丸ごと入る） -->
     <section style="margin-top:8px" class="card" id="diagnosisCard">
       <div id="svgWrap"></div>
       <div id="result">まだ診断されていません。</div>
@@ -214,9 +214,9 @@
 
   </div><!-- /saveArea -->
 
-  <!-- ★ 診断結果をテキストでダウンロード -->
+  <!-- ★ 診断結果をPDF保存 -->
   <div class="save-controls">
-    <button class="save-btn" id="saveImageBtn">診断結果をダウンロード</button>
+    <button class="save-btn" id="savePdfBtn">診断結果をPDF保存</button>
   </div>
 
   <!-- デバッグ -->
@@ -605,9 +605,9 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果をテキストでダウンロード ---------- */
-function setupDownloadText(){
-  const btn = document.getElementById("saveImageBtn");
+/* ---------- 診断結果をPDF保存（表示されたまま） ---------- */
+function setupSavePdf(){
+  const btn = document.getElementById("savePdfBtn");
   if(!btn) return;
 
   btn.addEventListener("click", () => {
@@ -615,7 +615,7 @@ function setupDownloadText(){
     const seiVal = document.getElementById("sei").value.trim();
     const meiVal = document.getElementById("mei").value.trim();
 
-    // ★ 姓・名が空＝診断していない
+    // ★ 姓・名が空なら保存させない
     if(!seiVal || !meiVal){
       alert("姓と名を入力して、診断を実行してください。");
       return;
@@ -627,48 +627,28 @@ function setupDownloadText(){
       return;
     }
 
-    const fullName  = seiVal + meiVal;
-    const safeName  = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
-    const filename  = safeName + "_診断結果.txt";
+    const fullName = seiVal + meiVal;
+    const safeName = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
+    const filename = safeName + "_診断結果.pdf";
 
-    const resultElem = document.getElementById("result");
-    let text = "";
-    if(resultElem){
-      text = resultElem.innerText; // HTMLタグ除去後の表示テキスト
-    }else{
-      text = "診断結果が取得できませんでした。";
-    }
+    const element = document.getElementById("saveArea");
 
-    const now = new Date();
-    const headerLines = [
-      "【姓名判断 簡易版】診断結果",
-      "お名前：" + fullName,
-      "日時：" + now.toLocaleString(),
-      "",
-      "----------------------------------------",
-      "",
-    ];
+    const opt = {
+      margin:       10,
+      filename:     filename,
+      image:        { type: "jpeg", quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: "mm", format: "a4", orientation: "portrait" }
+    };
 
-    const fileContent = headerLines.join("\n") + text + "\n";
-
-    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
-    const url  = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-
-    URL.revokeObjectURL(url);
-
-    alert("診断結果のテキストファイルをダウンロードしました。\nPC・スマホのダウンロード一覧から、名前で探せます。");
+    html2pdf().set(opt).from(element).save();
   });
 }
 
 /* ---------- 初期化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
-  setupDownloadText();
+  setupSavePdf();
 });
 </script>
 </body>
