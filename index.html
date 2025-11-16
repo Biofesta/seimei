@@ -36,7 +36,7 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* さらに1サイズ小さく・Century */
+    font-size:12px;  /* 小さめ＋Century */
     font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
@@ -93,28 +93,29 @@
   }
   button { font-weight:700; }
 
+  /* ★ 五格ビジュアル用ラッパ（診断前は背景なし） */
   #svgWrap {
     text-align:center;
     margin:8px 0 12px;
+    padding-top:8px;
+    padding-bottom:8px;
   }
- /* ★ 五格ビジュアル用の背景画像 */
-  background-image:url("haikei.png");          /* ← ファイル名はお好みで */
-  background-size:cover;
-  background-position:center top;
-  background-repeat:no-repeat;
+  /* ★ 診断後（SVGあり）のときだけ背景を付ける */
+  #svgWrap.has-svg {
+    background-image:url("haikei.png");  /* ← 同じフォルダに haikei.png を置く */
+    background-size:cover;
+    background-position:center top;
+    background-repeat:no-repeat;
+  }
 
-  /* 上下に少し余白を入れて、背景が見えやすく */
-  padding-top:8px;
-  padding-bottom:8px;
-}
- /* ★ PC・スマホともカード幅いっぱいに表示 */
+  /* ★ PC・スマホともカード幅いっぱいに表示 */
   #svgWrap svg {
     width:100%;
     height:auto;
     display:block;
     margin:0 auto;
-  background:transparent;   /* SVG側は透過にしておく */
-}
+    background:transparent;
+  }
 
   #result {
     white-space: normal;
@@ -545,7 +546,10 @@ function calculate(){
   const gai = (sou - jin) + (addReiTop?1:0) + (addReiBottom?1:0);
 
   const svg = renderKakusu(sei,mei,{addReiTop,addReiBottom},{ten,jin,chi,gai,sou});
-  document.getElementById('svgWrap').innerHTML = svg;
+
+  const svgWrap = document.getElementById('svgWrap');
+  svgWrap.innerHTML = svg;
+  svgWrap.classList.add('has-svg');  // ★ 診断後だけ背景ON
 
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
@@ -599,7 +603,10 @@ function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
-  document.getElementById('svgWrap').innerHTML='';
+
+  const svgWrap = document.getElementById('svgWrap');
+  svgWrap.innerHTML='';
+  svgWrap.classList.remove('has-svg'); // ★ 背景も非表示に戻す
 }
 
 /* ---------- 診断結果をテキストでダウンロード ---------- */
@@ -626,54 +633,4 @@ function setupDownloadText(){
     }
 
     const fullName = seiVal + meiVal;
-    const safeName = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
-    const filename = safeName + "_診断結果.txt";
-
-    // ★ 画面に表示されている診断文をテキストとして取り出す
-    const resultElem = document.getElementById("result");
-    let text = "";
-
-    if(resultElem){
-      // innerTextなら、HTMLタグを抜いた「表示どおりの文字列」が取れる
-      text = resultElem.innerText;
-    }else{
-      text = "診断結果が取得できませんでした。";
-    }
-
-    // ヘッダー情報（名前・日時など）を付ける
-    const now = new Date();
-    const headerLines = [
-      "【姓名判断 簡易版】診断結果",
-      "お名前：" + fullName,
-      "日時：" + now.toLocaleString(),
-      "",
-      "----------------------------------------",
-      "",
-    ];
-
-    const fileContent = headerLines.join("\n") + text + "\n";
-
-    // ★ テキストファイルを生成してダウンロード
-    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
-    const url  = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-
-    // 後片付け
-    URL.revokeObjectURL(url);
-
-    alert("診断結果のテキストファイルをダウンロードしました。\nPC・スマホのダウンロード一覧から、名前で探せます。");
-  });
-}
-
-/* ---------- 初期化 ---------- */
-document.addEventListener('DOMContentLoaded', () => {
-  loadData();
-  setupDownloadText();
-});
-</script>
-</body>
-</html>
+    const safeName = fullName.replace(/[\\\/:*?"<>|]/g*]()
