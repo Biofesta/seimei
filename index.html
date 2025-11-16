@@ -3,10 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>姓名判断【簡易版】（診断画像保存付き・アドバイス・注意提起型）</title>
-
-<!-- 診断画面を画像化するライブラリ -->
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<title>姓名判断【簡易版】（診断結果テキストダウンロード付き・アドバイス・注意提起型）</title>
 
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
@@ -39,7 +36,7 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* ← さらに1サイズ小さく */
+    font-size:12px;  /* さらに1サイズ小さく・Century */
     font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
@@ -100,13 +97,24 @@
     text-align:center;
     margin:8px 0 12px;
   }
-  /* ★ PC・スマホともカード幅いっぱいに表示 */
+ /* ★ 五格ビジュアル用の背景画像 */
+  background-image:url("haikei.png");          /* ← ファイル名はお好みで */
+  background-size:cover;
+  background-position:center top;
+  background-repeat:no-repeat;
+
+  /* 上下に少し余白を入れて、背景が見えやすく */
+  padding-top:8px;
+  padding-bottom:8px;
+}
+ /* ★ PC・スマホともカード幅いっぱいに表示 */
   #svgWrap svg {
     width:100%;
     height:auto;
     display:block;
     margin:0 auto;
-  }
+  background:transparent;   /* SVG側は透過にしておく */
+}
 
   #result {
     white-space: normal;
@@ -173,7 +181,7 @@
 <body>
 <div class="wrap">
 
-  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包む保存対象エリア -->
+  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包むエリア -->
   <div id="saveArea">
 
     <header>
@@ -189,12 +197,12 @@
         <div class="grid">
           <div>
             <label for="sei">姓（苗字）</label>
-            <input id="sei" type="text" placeholder="木村" autocomplete="off" />
+            <input id="sei" type="text" placeholder="例）木村" autocomplete="off" />
           </div>
           <div class="zenkaku-gap" aria-hidden="true"></div>
           <div>
             <label for="mei">名（名前）</label>
-            <input id="mei" type="text" placeholder="友昭" autocomplete="off" />
+            <input id="mei" type="text" placeholder="例）友昭" autocomplete="off" />
           </div>
         </div>
         <div class="btns">
@@ -204,7 +212,7 @@
       </form>
     </section>
 
-    <!-- ★ 五格ビジュアル＋結果（保存対象内） -->
+    <!-- ★ 五格ビジュアル＋結果 -->
     <section style="margin-top:8px" class="card" id="diagnosisCard">
       <div id="svgWrap"></div>
       <div id="result">まだ診断されていません。</div>
@@ -212,9 +220,9 @@
 
   </div><!-- /saveArea -->
 
-  <!-- ★ 診断結果を画像保存 -->
+  <!-- ★ 診断結果をテキストとしてダウンロード -->
   <div class="save-controls">
-    <button class="save-btn" id="saveImageBtn">診断結果を画像保存</button>
+    <button class="save-btn" id="downloadTextBtn">診断結果をダウンロード</button>
   </div>
 
   <!-- デバッグ -->
@@ -336,7 +344,7 @@ function makeKakuLabel(idBase, cx, cy, title, value){
 }
 
 /* ===========================================================
-   五格ビジュアル（不変構造＋背景画像）
+   五格ビジュアル（不変構造）
    =========================================================== */
 function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
@@ -374,15 +382,6 @@ function renderKakusu(sei, mei, flags, scores){
   let svg = `<svg viewBox="0 0 600 ${totalHeight}"
                  xmlns="http://www.w3.org/2000/svg"
                  preserveAspectRatio="xMidYMid meet">
-
-    <!-- ★ 五格ビジュアル背景画像（画面表示用） -->
-    <image href="haikei.png"
-           x="0" y="0"
-           width="600"
-           height="${totalHeight}"
-           preserveAspectRatio="xMidYMid slice"
-           opacity="0.8" />
-
     <style>
       .line{stroke:#000;stroke-width:2;fill:none;}
       .dash{stroke:#0066cc;stroke-width:2;stroke-dasharray:6,4;}
@@ -564,7 +563,6 @@ function calculate(){
 
   out.push('<div class="section-title">【主格相性診断】</div>');
 
-  /* ★ タイトルごとに見出しサイズを変える */
   const addCompat = (title, sym, txt, adv) => {
     const isMain =
       title === '成功・発展運（主格⇔天格）' ||
@@ -604,9 +602,9 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果を画像保存（診断カードのみ・高解像度） ---------- */
-function setupSaveImage(){
-  const btn = document.getElementById("saveImageBtn");
+/* ---------- 診断結果をテキストでダウンロード ---------- */
+function setupDownloadText(){
+  const btn = document.getElementById("downloadTextBtn");
   if(!btn) return;
 
   btn.addEventListener("click", () => {
@@ -614,61 +612,67 @@ function setupSaveImage(){
     const seiVal = document.getElementById("sei").value.trim();
     const meiVal = document.getElementById("mei").value.trim();
 
-    // ★ 姓・名が空なら保存させない（＝診断していない）
+    // ★ 姓・名が空＝診断していない
     if(!seiVal || !meiVal){
       alert("姓と名を入力して、診断を実行してください。");
       return;
     }
 
-    // ★ 診断結果（SVG）がなければ保存させない
-    if(!document.querySelector("#svgWrap svg")){
+    // ★ 診断結果（五格ビジュアル）がまだのときは止める
+    const svgExists = document.querySelector("#svgWrap svg");
+    if(!svgExists){
       alert("診断結果がありません。『診断する』ボタンで診断を実行してください。");
       return;
     }
 
-    // ★ ファイル名は必ず「入力された名前」ベース
-    const rawName  = seiVal + meiVal;
-    const safeName = rawName.replace(/[\\\/:*?"<>|]/g, "＋");
-    const filename = safeName + "_診断結果.png";
+    const fullName = seiVal + meiVal;
+    const safeName = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
+    const filename = safeName + "_診断結果.txt";
 
-    // ★ 保存対象は「診断カード」だけに絞る（五格ビジュアル＋文章）
-    const original = document.getElementById("diagnosisCard");
-    const clone    = original.cloneNode(true);
+    // ★ 画面に表示されている診断文をテキストとして取り出す
+    const resultElem = document.getElementById("result");
+    let text = "";
 
-    // 画面に見えない位置に退避して配置
-    clone.id = "diagnosisCardClone";
-    clone.style.position = "fixed";
-    clone.style.left     = "-10000px";
-    clone.style.top      = "0";
-    clone.style.zIndex   = "-1";
-    clone.style.margin   = "0";
-    clone.style.width    = original.offsetWidth + "px";
+    if(resultElem){
+      // innerTextなら、HTMLタグを抜いた「表示どおりの文字列」が取れる
+      text = resultElem.innerText;
+    }else{
+      text = "診断結果が取得できませんでした。";
+    }
 
-    document.body.appendChild(clone);
+    // ヘッダー情報（名前・日時など）を付ける
+    const now = new Date();
+    const headerLines = [
+      "【姓名判断 簡易版】診断結果",
+      "お名前：" + fullName,
+      "日時：" + now.toLocaleString(),
+      "",
+      "----------------------------------------",
+      "",
+    ];
 
-    html2canvas(clone, {
-      // ★ 端末のピクセル密度に合わせて高解像度キャプチャ
-      scale: window.devicePixelRatio ? window.devicePixelRatio : 2,
-      useCORS: true,
-      backgroundColor: "#ffffff"
-    }).then(canvas => {
-      // 後片付け
-      document.body.removeChild(clone);
+    const fileContent = headerLines.join("\n") + text + "\n";
 
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL("image/png");
-      link.download = filename;
-      link.click();
+    // ★ テキストファイルを生成してダウンロード
+    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
 
-      alert("診断結果画像を保存しました。\nスマホの写真またはダウンロードから確認できます。");
-    });
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    // 後片付け
+    URL.revokeObjectURL(url);
+
+    alert("診断結果のテキストファイルをダウンロードしました。\nPC・スマホのダウンロード一覧から、名前で探せます。");
   });
 }
 
 /* ---------- 初期化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
-  setupSaveImage();
+  setupDownloadText();
 });
 </script>
 </body>
