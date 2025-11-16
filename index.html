@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>姓名判断【簡易版】（診断結果テキストダウンロード付き・アドバイス・注意提起型）</title>
 
+<!-- （現在は使っていませんが、そのまま残しています） -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
 
@@ -36,8 +39,8 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* 小さめ＋Century */
-    font-family:"Century","Century Schoolbook",serif;
+    font-size:12px;  /* ← 元の16pxからさらに1サイズ小さく */
+    font-family:"Century","Century Schoolbook",serif; /* ← センチュリー系 */
     display:block;
     margin-top:4px;
     line-height:1.2;
@@ -93,28 +96,16 @@
   }
   button { font-weight:700; }
 
-  /* ★ 五格ビジュアル用ラッパ（診断前は背景なし） */
   #svgWrap {
     text-align:center;
     margin:8px 0 12px;
-    padding-top:8px;
-    padding-bottom:8px;
   }
-  /* ★ 診断後（SVGあり）のときだけ背景を付ける */
-  #svgWrap.has-svg {
-    background-image:url("haikei.png");  /* ← 同じフォルダに haikei.png を置く */
-    background-size:cover;
-    background-position:center top;
-    background-repeat:no-repeat;
-  }
-
   /* ★ PC・スマホともカード幅いっぱいに表示 */
   #svgWrap svg {
     width:100%;
     height:auto;
     display:block;
     margin:0 auto;
-    background:transparent;
   }
 
   #result {
@@ -182,7 +173,7 @@
 <body>
 <div class="wrap">
 
-  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包むエリア -->
+  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包む保存対象エリア -->
   <div id="saveArea">
 
     <header>
@@ -198,11 +189,13 @@
         <div class="grid">
           <div>
             <label for="sei">姓（苗字）</label>
+            <!-- ★ プレースホルダに「例）」を付けた -->
             <input id="sei" type="text" placeholder="例）木村" autocomplete="off" />
           </div>
           <div class="zenkaku-gap" aria-hidden="true"></div>
           <div>
             <label for="mei">名（名前）</label>
+            <!-- ★ プレースホルダに「例）」を付けた -->
             <input id="mei" type="text" placeholder="例）友昭" autocomplete="off" />
           </div>
         </div>
@@ -213,7 +206,7 @@
       </form>
     </section>
 
-    <!-- ★ 五格ビジュアル＋結果 -->
+    <!-- ★ 五格ビジュアル＋結果（保存対象内） -->
     <section style="margin-top:8px" class="card" id="diagnosisCard">
       <div id="svgWrap"></div>
       <div id="result">まだ診断されていません。</div>
@@ -221,9 +214,9 @@
 
   </div><!-- /saveArea -->
 
-  <!-- ★ 診断結果をテキストとしてダウンロード -->
+  <!-- ★ 診断結果をテキストでダウンロード -->
   <div class="save-controls">
-    <button class="save-btn" id="downloadTextBtn">診断結果をダウンロード</button>
+    <button class="save-btn" id="saveImageBtn">診断結果をダウンロード</button>
   </div>
 
   <!-- デバッグ -->
@@ -345,7 +338,7 @@ function makeKakuLabel(idBase, cx, cy, title, value){
 }
 
 /* ===========================================================
-   五格ビジュアル（不変構造）
+   五格ビジュアル（不変構造＋SVG内に背景画像）
    =========================================================== */
 function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
@@ -383,6 +376,15 @@ function renderKakusu(sei, mei, flags, scores){
   let svg = `<svg viewBox="0 0 600 ${totalHeight}"
                  xmlns="http://www.w3.org/2000/svg"
                  preserveAspectRatio="xMidYMid meet">
+
+    <!-- ★ 五格ビジュアル背景画像（最背面） -->
+    <image href="haikei.png"
+           x="0" y="0"
+           width="600"
+           height="${totalHeight}"
+           preserveAspectRatio="xMidYMid slice"
+           opacity="0.8" />
+
     <style>
       .line{stroke:#000;stroke-width:2;fill:none;}
       .dash{stroke:#0066cc;stroke-width:2;stroke-dasharray:6,4;}
@@ -546,10 +548,7 @@ function calculate(){
   const gai = (sou - jin) + (addReiTop?1:0) + (addReiBottom?1:0);
 
   const svg = renderKakusu(sei,mei,{addReiTop,addReiBottom},{ten,jin,chi,gai,sou});
-
-  const svgWrap = document.getElementById('svgWrap');
-  svgWrap.innerHTML = svg;
-  svgWrap.classList.add('has-svg');  // ★ 診断後だけ背景ON
+  document.getElementById('svgWrap').innerHTML = svg;
 
   const out=[];
   out.push('<div class="section-title">【五格診断結果】</div>');
@@ -603,15 +602,12 @@ function clearForm(){
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
-
-  const svgWrap = document.getElementById('svgWrap');
-  svgWrap.innerHTML='';
-  svgWrap.classList.remove('has-svg'); // ★ 背景も非表示に戻す
+  document.getElementById('svgWrap').innerHTML='';
 }
 
 /* ---------- 診断結果をテキストでダウンロード ---------- */
 function setupDownloadText(){
-  const btn = document.getElementById("downloadTextBtn");
+  const btn = document.getElementById("saveImageBtn");
   if(!btn) return;
 
   btn.addEventListener("click", () => {
@@ -625,12 +621,55 @@ function setupDownloadText(){
       return;
     }
 
-    // ★ 診断結果（五格ビジュアル）がまだのときは止める
-    const svgExists = document.querySelector("#svgWrap svg");
-    if(!svgExists){
+    // ★ 診断結果（SVG）がなければ保存させない
+    if(!document.querySelector("#svgWrap svg")){
       alert("診断結果がありません。『診断する』ボタンで診断を実行してください。");
       return;
     }
 
-    const fullName = seiVal + meiVal;
-    const safeName = fullName.replace(/[\\\/:*?"<>|]/g*]()
+    const fullName  = seiVal + meiVal;
+    const safeName  = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
+    const filename  = safeName + "_診断結果.txt";
+
+    const resultElem = document.getElementById("result");
+    let text = "";
+    if(resultElem){
+      text = resultElem.innerText; // HTMLタグ除去後の表示テキスト
+    }else{
+      text = "診断結果が取得できませんでした。";
+    }
+
+    const now = new Date();
+    const headerLines = [
+      "【姓名判断 簡易版】診断結果",
+      "お名前：" + fullName,
+      "日時：" + now.toLocaleString(),
+      "",
+      "----------------------------------------",
+      "",
+    ];
+
+    const fileContent = headerLines.join("\n") + text + "\n";
+
+    const blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    alert("診断結果のテキストファイルをダウンロードしました。\nPC・スマホのダウンロード一覧から、名前で探せます。");
+  });
+}
+
+/* ---------- 初期化 ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  setupDownloadText();
+});
+</script>
+</body>
+</html>
