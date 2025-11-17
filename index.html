@@ -714,26 +714,15 @@ function setupSavePdf(){
         return;
       }
 
-      const pdf = new jsPDFLib("p", "mm", "a4");
-      const pageWidth  = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const margin = 10;
-      const usableWidth  = pageWidth  - margin * 2;
-      const usableHeight = pageHeight - margin * 2;
-
+      // ★ ここを「フリーサイズPDF」に変更
       const imgWidthPx  = canvas.width;
       const imgHeightPx = canvas.height;
 
-      const ratio = Math.min(usableWidth / imgWidthPx, usableHeight / imgHeightPx);
+      // 単位 px・用紙サイズも [画像幅px, 画像高さpx]
+      const pdf = new jsPDFLib("p", "px", [imgWidthPx, imgHeightPx]);
 
-      const renderWidth  = imgWidthPx  * ratio;
-      const renderHeight = imgHeightPx * ratio;
-
-      const x = (pageWidth  - renderWidth)  / 2;
-      const y = (pageHeight - renderHeight) / 2;
-
-      pdf.addImage(imgData, "PNG", x, y, renderWidth, renderHeight);
+      // 余白なしでページ全体に貼り付け
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidthPx, imgHeightPx);
       pdf.save(filename);
 
     }catch(e){
