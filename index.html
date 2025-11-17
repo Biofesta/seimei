@@ -187,7 +187,8 @@
 
     <!-- 入力エリア -->
     <section class="card">
-      <form id="form" onsubmit="event.preventDefault(); calculate();">
+      <!-- ★ onsubmit は削除。JS 側でコントロール -->
+      <form id="form">
         <div class="grid">
           <div>
             <label for="sei">姓（苗字）</label>
@@ -635,10 +636,9 @@ function setupSavePdf(){
 
     try{
       // 五格ビジュアル＋診断文部分だけを高解像度でキャプチャ
-      const canvas = await html2canvas(target, { scale: 2 });
+      const canvas = await html2canvas(target, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
 
-      // jsPDF 本体の取得（UMD 版と古い版の両対応）
       const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
       if(!jsPDFLib){
         alert("PDFライブラリの読み込みに失敗しました。");
@@ -656,13 +656,11 @@ function setupSavePdf(){
       const imgWidthPx  = canvas.width;
       const imgHeightPx = canvas.height;
 
-      // 画像全体が1ページに収まるように縮小率を決定
       const ratio = Math.min(usableWidth / imgWidthPx, usableHeight / imgHeightPx);
 
       const renderWidth  = imgWidthPx  * ratio;
       const renderHeight = imgHeightPx * ratio;
 
-      // ページ中央に配置
       const x = (pageWidth  - renderWidth)  / 2;
       const y = (pageHeight - renderHeight) / 2;
 
@@ -675,9 +673,37 @@ function setupSavePdf(){
   });
 }
 
+/* ---------- Enter キーで勝手に診断させない設定 ---------- */
+function setupFormBehavior(){
+  const form = document.getElementById("form");
+  const runBtn = document.getElementById("runBtn");
+
+  // フォーム送信そのものは常にキャンセル
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+  });
+
+  // 診断ボタンをクリックしたときだけ calculate() を呼ぶ
+  runBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    calculate();
+  });
+
+  // 姓・名入力欄で Enter キーを押しても何もしない
+  ["sei","mei"].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+      }
+    });
+  });
+}
+
 /* ---------- 初期化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
+  setupFormBehavior();
   setupSavePdf();
 });
 </script>
