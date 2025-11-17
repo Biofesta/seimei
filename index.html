@@ -169,6 +169,11 @@
     header, #debugSection, #debug, form, .save-controls { display:none !important; }
     #result { max-width:none; }
   }
+
+  /* ★ PDF 専用の隠しエリア */
+  #pdfArea {
+    display:none;
+  }
 </style>
 </head>
 
@@ -226,6 +231,9 @@
     <pre id="debug">-</pre>
   </section>
 </div>
+
+<!-- PDF 用に組み立てる隠しエリア -->
+<div id="pdfArea"></div>
 
 <script>
 let strokes=null, diagnosis=null, compatibility=null, missingInfo=[];
@@ -606,7 +614,53 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果をPDF保存（診断カードを1枚画像にして貼る） ---------- */
+/* ---------- PDF 用レイアウト組み立て ---------- */
+function buildPdfArea(fullName){
+  const pdfArea   = document.getElementById('pdfArea');
+  const svgHtml   = document.getElementById('svgWrap').innerHTML;
+  const resultHtml= document.getElementById('result').innerHTML;
+
+  pdfArea.innerHTML = `
+    <div style="width:100%;max-width:620px;margin:0 auto;
+                font-family:'Yu Gothic','Hiragino Kaku Gothic ProN',Meiryo,monospace;">
+      <header style="text-align:center;margin-bottom:10px;">
+        <h1 style="font-size:20px;margin:0;">
+          姓名判断［簡易版］
+        </h1>
+        <span style="display:block;margin-top:4px;
+                     font-size:12px;
+                     font-family:Century,'Century Schoolbook',serif;">
+          The mysterious guiding energy of names
+        </span>
+      </header>
+
+      <section style="background:#ffffff;border-radius:10px;
+                      box-shadow:0 4px 12px rgba(0,0,0,0.06);
+                      padding:10px 14px;">
+        <div style="text-align:center;font-size:18px;font-weight:bold;margin-bottom:8px;">
+          氏名：${fullName}
+        </div>
+
+        <!-- 五格ビジュアル＋背景画像（PDF用） -->
+        <div style="position:relative;margin-bottom:8px;">
+          <img src="haikei.png"
+               alt=""
+               style="position:absolute;inset:0;width:100%;height:100%;
+                      object-fit:cover;opacity:0.8;" />
+          <div style="position:relative;">
+            ${svgHtml}
+          </div>
+        </div>
+
+        <div>
+          ${resultHtml}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+/* ---------- 診断結果をPDF保存（pdfAreaを1枚画像にして貼る） ---------- */
 function setupSavePdf(){
   const btn = document.getElementById("savePdfBtn");
   if(!btn) return;
@@ -616,13 +670,10 @@ function setupSavePdf(){
     const seiVal = document.getElementById("sei").value.trim();
     const meiVal = document.getElementById("mei").value.trim();
 
-    // ★ 姓・名が空なら保存させない
     if(!seiVal || !meiVal){
       alert("姓と名を入力して、診断を実行してください。");
       return;
     }
-
-    // ★ 診断結果（SVG）がなければ保存させない
     if(!document.querySelector("#svgWrap svg")){
       alert("診断結果がありません。『診断する』ボタンで診断を実行してください。");
       return;
@@ -632,11 +683,29 @@ function setupSavePdf(){
     const safeName = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
     const filename = safeName + "_診断結果.pdf";
 
-    const target = document.getElementById("diagnosisCard");
+    buildPdfArea(fullName);
+
+    const pdfArea = document.getElementById("pdfArea");
+
+    // 一時的に表示（画面上部に固定）
+    const prevDisplay  = pdfArea.style.display;
+    const prevPosition = pdfArea.style.position;
+    const prevTop      = pdfArea.style.top;
+    const prevLeft     = pdfArea.style.left;
+    const prevRight    = pdfArea.style.right;
+    const prevZ        = pdfArea.style.zIndex;
+
+    pdfArea.style.display  = "block";
+    pdfArea.style.position = "fixed";
+    pdfArea.style.top      = "0";
+    pdfArea.style.left     = "0";
+    pdfArea.style.right    = "0";
+    pdfArea.style.zIndex   = "-1";
+
+    window.scrollTo(0,0);
 
     try{
-      // 五格ビジュアル＋診断文部分だけを高解像度でキャプチャ
-      const canvas = await html2canvas(target, { scale: 2, useCORS: true });
+      const canvas = await html2canvas(pdfArea, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
 
       const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
@@ -669,6 +738,14 @@ function setupSavePdf(){
 
     }catch(e){
       alert("PDFの生成中にエラーが発生しました: " + e.message);
+    }finally{
+      // 元に戻す
+      pdfArea.style.display  = prevDisplay;
+      pdfArea.style.position = prevPosition;
+      pdfArea.style.top      = prevTop;
+      pdfArea.style.left     = prevLeft;
+      pdfArea.style.right    = prevRight;
+      pdfArea.style.zIndex   = prevZ;
     }
   });
 }
@@ -678,18 +755,15 @@ function setupFormBehavior(){
   const form = document.getElementById("form");
   const runBtn = document.getElementById("runBtn");
 
-  // フォーム送信そのものは常にキャンセル
   form.addEventListener("submit", (e) => {
     e.preventDefault();
   });
 
-  // 診断ボタンをクリックしたときだけ calculate() を呼ぶ
   runBtn.addEventListener("click", (e) => {
     e.preventDefault();
     calculate();
   });
 
-  // 姓・名入力欄で Enter キーを押しても何もしない
   ["sei","mei"].forEach(id => {
     const el = document.getElementById(id);
     el.addEventListener("keydown", (e) => {
