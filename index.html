@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>姓名判断【簡易版】（診断PDF保存付き・アドバイス・注意提起型）</title>
 
-<!-- ★ PDF保存用ライブラリ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- 診断画面を画像化するライブラリ -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<!-- PDF 生成用ライブラリ（jsPDF） -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
   :root { --bg:#fbfbfb; --card:#fff; --muted:#666; }
@@ -39,7 +41,7 @@
     margin:0;
   }
   .subtitle-en {
-    font-size:12px;  /* 1サイズ小さく＋Century */
+    font-size:12px;     /* 少し小さく＋Century */
     font-family:"Century","Century Schoolbook",serif;
     display:block;
     margin-top:4px;
@@ -173,7 +175,7 @@
 <body>
 <div class="wrap">
 
-  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包むPDF対象エリア -->
+  <!-- ★ 表題〜入力〜診断結果（ロゴまで）を包む表示エリア -->
   <div id="saveArea">
 
     <header>
@@ -189,14 +191,12 @@
         <div class="grid">
           <div>
             <label for="sei">姓（苗字）</label>
-            <!-- ★ プレースホルダに「例）」 -->
-            <input id="sei" type="text" placeholder="例）美濃田" autocomplete="off" />
+            <input id="sei" type="text" placeholder="例）木村" autocomplete="off" />
           </div>
           <div class="zenkaku-gap" aria-hidden="true"></div>
           <div>
             <label for="mei">名（名前）</label>
-            <!-- ★ プレースホルダに「例）」 -->
-            <input id="mei" type="text" placeholder="例）浩" autocomplete="off" />
+            <input id="mei" type="text" placeholder="例）友昭" autocomplete="off" />
           </div>
         </div>
         <div class="btns">
@@ -206,7 +206,7 @@
       </form>
     </section>
 
-    <!-- ★ 五格ビジュアル＋結果（PDFにはここまで丸ごと入る） -->
+    <!-- ★ 五格ビジュアル＋結果（保存対象内） -->
     <section style="margin-top:8px" class="card" id="diagnosisCard">
       <div id="svgWrap"></div>
       <div id="result">まだ診断されていません。</div>
@@ -338,7 +338,7 @@ function makeKakuLabel(idBase, cx, cy, title, value){
 }
 
 /* ===========================================================
-   五格ビジュアル（不変構造＋SVG内に背景画像）
+   五格ビジュアル（不変構造＋背景画像）
    =========================================================== */
 function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
@@ -605,12 +605,12 @@ function clearForm(){
   document.getElementById('svgWrap').innerHTML='';
 }
 
-/* ---------- 診断結果をPDF保存（画面で見えているそのまま1ページ） ---------- */
+/* ---------- 診断結果をPDF保存（診断カードを1枚画像にして貼る） ---------- */
 function setupSavePdf(){
   const btn = document.getElementById("savePdfBtn");
   if(!btn) return;
 
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
 
     const seiVal = document.getElementById("sei").value.trim();
     const meiVal = document.getElementById("mei").value.trim();
@@ -627,29 +627,51 @@ function setupSavePdf(){
       return;
     }
 
-    const fullName = seiVal + meiVal;
+    const fullName = (seiVal + meiVal);
     const safeName = fullName.replace(/[\\\/:*?"<>|]/g, "＋");
     const filename = safeName + "_診断結果.pdf";
 
-    const element = document.getElementById("saveArea");
+    const target = document.getElementById("diagnosisCard");
 
-    // 画面に表示されている要素サイズをそのままPDFサイズにする
-    const width  = element.scrollWidth;
-    const height = element.scrollHeight;
+    try{
+      // 五格ビジュアル＋診断文部分だけを高解像度でキャプチャ
+      const canvas = await html2canvas(target, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
 
-    const opt = {
-      margin:      0,
-      filename:    filename,
-      image:       { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: {
-        unit: "px",
-        format: [width, height],
-        orientation: (height >= width) ? "portrait" : "landscape"
+      // jsPDF 本体の取得（UMD 版と古い版の両対応）
+      const jsPDFLib = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+      if(!jsPDFLib){
+        alert("PDFライブラリの読み込みに失敗しました。");
+        return;
       }
-    };
 
-    html2pdf().set(opt).from(element).save();
+      const pdf = new jsPDFLib("p", "mm", "a4");
+      const pageWidth  = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const margin = 10;
+      const usableWidth  = pageWidth  - margin * 2;
+      const usableHeight = pageHeight - margin * 2;
+
+      const imgWidthPx  = canvas.width;
+      const imgHeightPx = canvas.height;
+
+      // 画像全体が1ページに収まるように縮小率を決定
+      const ratio = Math.min(usableWidth / imgWidthPx, usableHeight / imgHeightPx);
+
+      const renderWidth  = imgWidthPx  * ratio;
+      const renderHeight = imgHeightPx * ratio;
+
+      // ページ中央に配置
+      const x = (pageWidth  - renderWidth)  / 2;
+      const y = (pageHeight - renderHeight) / 2;
+
+      pdf.addImage(imgData, "PNG", x, y, renderWidth, renderHeight);
+      pdf.save(filename);
+
+    }catch(e){
+      alert("PDFの生成中にエラーが発生しました: " + e.message);
+    }
   });
 }
 
