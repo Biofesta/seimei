@@ -338,7 +338,7 @@ function formatStarRating(n){
   for(let i=0;i<score;i++){
     stars += '★';
   }
-  const color = strong ? '#ff9800' : '#fbc02d';
+  const color = strong ? '#ff7a1a' : '#ffcc33';
   return `<span class="star-rating" style="color:${color};">${stars}</span>`;
 }
 
@@ -674,7 +674,7 @@ function calculate(){
   document.getElementById('svgWrap').innerHTML = svg;
 
   const out=[];
-  out.push('<div class="section-title">【五格診断結果】</div>');
+  out.push('<div class="section-title">【五格診断】</div>');
 
   out.push(
     `<div class="kaku-title">総格：${sou}　診断　${formatStarRating(sou)}</div>` +
@@ -706,7 +706,23 @@ function calculate(){
     `${wrapZenkaku(getDiagnosis('gai',gai))}`
   );
 
-  /* ---------- 三才（diagnosis_triad_free.json） ---------- */
+/* ★ 女性向け注釈メッセージ（五格診断の後に表示） */
+  out.push(`
+    <div style="margin-top:18px; background:#fff6f2; border-left:4px solid #ff9800; padding:10px 12px;">
+      <p style="margin:0; font-size:15px; line-height:1.7;">
+        ※オレンジ色の☆は、特に社会的なチャレンジや活躍の場面で、
+        強いエネルギーが働きやすい配置を示しています。<br>
+        姓名判断では、女性の場合、この強さが家庭やパートナーとの関係など
+        ライフバランスの面に影響しやすいとされるため、
+        少しだけ気をつけたい配置ともいわれます。<br>
+        具体的な傾向や、どこを意識して整えていくとよいかについては、
+        有料版の診断でくわしくお伝えしています。
+      </p>
+    </div>
+  `);
+  
+
+/* ---------- 三才（diagnosis_triad_free.json） ---------- */
   const sSucc = pickTriad('success',    jin, ten);
   const sFoun = pickTriad('foundation', jin, chi);
   const sRela = pickTriad('relation',   jin, gai);
