@@ -37,6 +37,15 @@
     .wrap { max-width:640px !important; }
   }
 
+  /* ★ スマホでは御身札を画面幅いっぱいに近づけて表示 */
+  @media (max-width: 600px){
+    body { padding:0; }
+    .wrap {
+      width:100%;
+      max-width:none !important;
+    }
+  }
+
   /* ★ タイトル：センタリング＋2段構成 */
   header {
     text-align:center;
