@@ -37,6 +37,15 @@
     .wrap { max-width:640px !important; }
   }
 
+  /* ★ スマホでは御身札を画面幅いっぱいに近づけて表示 */
+  @media (max-width: 600px){
+    body { padding:0; }
+    .wrap {
+      width:100%;
+      max-width:none !important;
+    }
+  }
+
   /* ★ タイトル：センタリング＋2段構成 */
   header {
     text-align:center;
@@ -416,7 +425,7 @@ function calcExpr(chars,reiTop=false,reiBottom=false){
 
 /* ---------- 五格ラベル ---------- */
 function makeKakuLabel(idBase, cx, cy, title, value){
-  const size = 120;
+  const size = 100;
   const x = cx - size/2;
   const y = cy - size/2;
   const clipId = `kaku_clip_${idBase}`;
@@ -436,13 +445,13 @@ function makeKakuLabel(idBase, cx, cy, title, value){
       <text x="${cx}" 
             y="${y + size*0.33}"
             text-anchor="middle"
-            fill="#fff" font-size="24" font-weight="bold"
+            fill="#fff" font-size="21" font-weight="bold"
             font-family="Yu Gothic,Meiryo,sans-serif">${title}</text>
 
       <text x="${cx}" 
             y="${y + size*0.75 + 16}"
             text-anchor="middle"
-            fill="#333" font-size="32"
+            fill="#333" font-size="28"
             font-family="Yu Gothic,Meiryo,sans-serif"
             font-weight="bold">${value}</text>
     </g>
@@ -456,13 +465,14 @@ function renderKakusu(sei, mei, flags, scores){
   const { addReiTop, addReiBottom } = flags;
   const { ten, jin, chi, gai, sou } = scores;
 
-  const box = 75;
-  const gap = 60;
-  const yBase = 80;
-  const startX = 230;
-  const xRight = 380;
-  const xLeft  = 180;
-  const H = 16;
+  /* ★ スマホ向け調整：枠を大きくしつつ縦方向を圧縮 */
+  const box = 90;
+  const gap = 24;
+  const yBase = 42;
+  const startX = 220;
+  const xRight = 390;
+  const xLeft  = 170;
+  const H = 18;
 
   const yOf  = i => yBase + i*(box+gap);
   const y1_3 = i => yOf(i) + box/3;
@@ -483,7 +493,7 @@ function renderKakusu(sei, mei, flags, scores){
   const topIdx = 0;
   const bottomIdx = total-1;
 
-  const totalHeight = yBase + total*(box+gap) + 260;
+  const totalHeight = yBase + total*(box+gap) + 190;
 
   let svg = `<svg viewBox="0 0 600 ${totalHeight}"
                  xmlns="http://www.w3.org/2000/svg"
@@ -511,7 +521,7 @@ function renderKakusu(sei, mei, flags, scores){
               fill="#0a8833" stroke="#080" stroke-width="2"/>
         <text x="${startX+box/2}" y="${y+box/2+8}"
               text-anchor="middle"
-              font-size="22"
+              font-size="24"
               font-family="Yu Gothic,Meiryo,sans-serif"
               font-weight="bold" fill="#fff">霊数1</text>
         <text x="${startX+box+28}" y="${y+box-6}"
@@ -527,12 +537,13 @@ function renderKakusu(sei, mei, flags, scores){
 
         <text x="${startX+box/2}" y="${y+box/2+8}"
               text-anchor="middle"
-              font-size="26"
+              font-size="32"
               font-family="Yu Mincho,'Hiragino Mincho ProN',serif"
               font-weight="bold">${b.ch}</text>
 
         <text x="${startX+box+28}" y="${y+box-6}"
               class="small"
+              font-size="16"
               font-family="Yu Gothic,Meiryo,sans-serif"
               font-weight="bold">${s}</text>
       `;
@@ -616,14 +627,14 @@ function renderKakusu(sei, mei, flags, scores){
 
   /* ========= 総格 ========= */
   const yLastBoxBottom = yOf(bottomIdx) + box;
-  const ySumLine = yLastBoxBottom + 44;
+  const ySumLine = yLastBoxBottom + 28;
   const xSouCenter = startX + box/2;
 
   svg += `<line x1="${xSouCenter - 60}" y1="${ySumLine}"
                 x2="${xSouCenter + 60}" y2="${ySumLine}"
                 class="dash"/>`;
 
-  const ySouCenter = ySumLine + 76;
+  const ySouCenter = ySumLine + 66;
   svg += makeKakuLabel("sou", xSouCenter, ySouCenter, "総格", sou);
 
   svg += `</svg>`;
