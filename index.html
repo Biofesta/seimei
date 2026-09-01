@@ -212,6 +212,21 @@
     font-size:16px;
     vertical-align:middle;
   }
+
+  /* ★ 無料診断・累計カウンター（既存レイアウトとは独立） */
+  .diagnosis-counter {
+    text-align:center;
+    margin:0 0 12px;
+    font-size:14px;
+    font-weight:700;
+    color:#555;
+    line-height:1.4;
+  }
+  .diagnosis-counter strong {
+    color:#0a8833;
+    font-size:18px;
+    margin:0 3px;
+  }
 </style>
 </head>
 
@@ -229,6 +244,11 @@
           <span class="subtitle-en">The mysterious guiding energy of names</span>
         </h1>
       </header>
+
+      <!-- ★ 無料診断・累計診断数 -->
+      <div class="diagnosis-counter" aria-live="polite">
+        累計診断数 <strong id="diagnosisCounterValue">---</strong> 件
+      </div>
 
       <form id="form">
         <div class="grid">
@@ -274,6 +294,56 @@
 
 <script>
 let strokes=null, diagnosis=null, triadFree=null, missingInfo=[];
+
+/* ---------- 無料診断・累計カウンター ----------
+   ※姓名などの入力内容は送信せず、数字だけを加算します。
+   ※無料の公開カウンターAPIを使用しています。
+------------------------------------------------ */
+const DIAGNOSIS_COUNTER_BASE = 'https://countapi.mileshilliard.com/api/v1';
+const DIAGNOSIS_COUNTER_KEY  = 'biofesta-omifuda-free-diagnosis-v1';
+
+function showDiagnosisCounter(value){
+  const el = document.getElementById('diagnosisCounterValue');
+  if(!el) return;
+  const n = Number(value);
+  el.textContent = Number.isFinite(n) ? n.toLocaleString('ja-JP') : '---';
+}
+
+async function loadDiagnosisCounter(){
+  try{
+    const r = await fetch(
+      `${DIAGNOSIS_COUNTER_BASE}/get/${encodeURIComponent(DIAGNOSIS_COUNTER_KEY)}`,
+      { cache:'no-store' }
+    );
+    if(!r.ok){
+      // まだ一度も診断されていない新規カウンターは 0 と表示
+      if(r.status === 404){
+        showDiagnosisCounter(0);
+        return;
+      }
+      throw new Error(`counter get: ${r.status}`);
+    }
+    const data = await r.json();
+    showDiagnosisCounter(data.value);
+  }catch(e){
+    // カウンター側に一時的な障害があっても、姓名診断本体はそのまま使用可能
+    showDiagnosisCounter('---');
+  }
+}
+
+async function incrementDiagnosisCounter(){
+  try{
+    const r = await fetch(
+      `${DIAGNOSIS_COUNTER_BASE}/hit/${encodeURIComponent(DIAGNOSIS_COUNTER_KEY)}`,
+      { cache:'no-store' }
+    );
+    if(!r.ok) throw new Error(`counter hit: ${r.status}`);
+    const data = await r.json();
+    showDiagnosisCounter(data.value);
+  }catch(e){
+    // カウンター失敗時も診断結果には影響させない
+  }
+}
 
 /* ---------- データ読み込み ---------- */
 async function loadData(){
@@ -723,11 +793,10 @@ function calculate(){
       <p style="margin:0; font-size:15px; line-height:1.7;">
         ※黄色の☆ではなくオレンジ色の☆は、特に社会的なチャレンジや活躍の場面で、
         強いエネルギーが働きやすいことを示しています。<br>
-        姓名判断では、女性の場合、この強さが家庭やパートナーとの関係など
-        ライフバランスの面に影響しやすいとされるため、
-        少しだけ気をつけたい配置ともいわれます。<br>
-        具体的な傾向や、どこを意識して整えていくとよいかについては、
-        有料版の診断でくわしくお伝えしています。
+        女性の場合、この強さが家庭やパートナーとの関係などの
+        ライフバランスに影響しますので注意が必要です。 <br>
+        具体的な傾向や対策については、
+        有料版の診断で詳しくお伝えしています。
       </p>
     </div>
   `);
@@ -768,6 +837,9 @@ function calculate(){
      <div style="text-align:center;margin-top:12px;">
        <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
      </div>`;
+
+  // ★ 正常に診断結果が生成された場合だけ、累計診断数を1件加算
+  incrementDiagnosisCounter();
 }
 
 /* ---------- クリア ---------- */
@@ -924,6 +996,7 @@ function setupFormBehavior(){
 /* ---------- 初期化 ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   loadData();
+  loadDiagnosisCounter();
   setupFormBehavior();
   setupSavePdf();
 });
