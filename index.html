@@ -551,8 +551,8 @@ function renderKakusu(sei, mei, flags, scores){
 
   const blocks=[];
   if(addReiTop) blocks.push({t:'rei'});
-  sei.forEach(ch=>blocks.push({t:'ch',ch}));
-  mei.forEach(ch=>blocks.push({t:'ch',ch}));
+  sei.forEach((ch,i)=>blocks.push({t:'ch',ch,stroke:charVal(ch,sei[i-1])}));
+  mei.forEach((ch,i)=>blocks.push({t:'ch',ch,stroke:charVal(ch,mei[i-1])}));
   if(addReiBottom) blocks.push({t:'rei'});
 
   const total=blocks.length;
@@ -600,7 +600,7 @@ function renderKakusu(sei, mei, flags, scores){
               font-weight="bold">1</text>
       `;
     } else {
-      const s = (strokes && b.ch in strokes) ? strokes[b.ch] : "？";
+      const s = b.stroke || "？";
       svg += `
         <rect x="${startX}" y="${y}" width="${box}" height="${box}"
               fill="#fff" stroke="black" stroke-width="2"/>
