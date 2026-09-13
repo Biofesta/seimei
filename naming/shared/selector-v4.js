@@ -242,14 +242,39 @@
     if(box) box.hidden=true;
   }
 
-  function rankingInputReady(){
+  function rankingFieldsReady(){
     const surname=$("surname").value.trim();
     const sex=$("sex").value;
-    if(!surname || (sex!=="male" && sex!=="female")){
-      showRankingMessage("姓と男女別を入力してください。");
-      if(!surname) $("surname").focus();
+    return !!surname && (sex==="male" || sex==="female");
+  }
+
+  function showRankingInputError(message){
+    let box=$("rankingRequiredMessage");
+    if(!box){
+      box=document.createElement("span");
+      box.id="rankingRequiredMessage";
+      box.style.cssText="display:none;margin-left:10px;color:#c62828;font-weight:700;font-size:.92em;";
+      const surnameInput=$("surname");
+      const label=surnameInput?.parentElement?.querySelector("label");
+      if(label) label.appendChild(box);
+    }
+    if(box){
+      box.textContent=message;
+      box.style.display="inline";
+    }
+  }
+
+  function clearRankingInputError(){
+    const box=$("rankingRequiredMessage");
+    if(box) box.style.display="none";
+  }
+
+  function rankingInputReady(){
+    if(!rankingFieldsReady()){
+      showRankingInputError("姓と男女別を入力してください。");
       return false;
     }
+    clearRankingInputError();
     clearRankingMessage();
     return true;
   }
@@ -403,22 +428,12 @@
       String(a?.name||"").localeCompare(String(b?.name||""),"ja");
   }
 
-  function updateMobileSearchMethodCards(){
-    const cards=[...document.querySelectorAll("[data-search-mode]")];
-    const isMobile=window.matchMedia("(max-width:600px)").matches;
-
-    cards.forEach(btn=>{
-      btn.style.display=(!isMobile || !state.searchMode || btn.dataset.searchMode===state.searchMode) ? "" : "none";
-    });
-  }
-
   function setSearchMode(mode){
     state.searchMode=mode;
     state.selectedImageTerms.clear();
     document.querySelectorAll("[data-search-mode]").forEach(btn=>{
       btn.classList.toggle("selected",btn.dataset.searchMode===mode);
     });
-    updateMobileSearchMethodCards();
     $("nameCandidatePanel").classList.add("hidden");
     $("nameDiagnosisPanel").classList.add("hidden");
     $("patternPanel").classList.add("hidden");
@@ -1140,8 +1155,13 @@
     $("finalPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
   }
 
+  $("surname").addEventListener("input",()=>{
+    if(rankingFieldsReady()) clearRankingInputError();
+  });
+
   $("sex").addEventListener("change",()=>{
     updateFemalePreference();
+    if(rankingFieldsReady()) clearRankingInputError();
     if(state.searchMode==="image" && state.selectedImageTerms.size) runImageSearch();
     if(state.searchMode==="kanji" && $("favoriteKanji")?.value.trim()) runKanjiSearch();
     if(state.searchMode==="name" && $("nameQuery")) runNameQuerySearch();
@@ -1160,7 +1180,6 @@
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
   });
-  window.addEventListener("resize",updateMobileSearchMethodCards);
 
   updateFemalePreference();
   loadData();
