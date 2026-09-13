@@ -241,5 +241,40 @@ body[data-product="BABY"] #resetBtn:hover{
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
 <script src="../shared/selector-v4.js?v=baby-20260913-02"></script>
+<script>
+(function(){
+  const cards=[...document.querySelectorAll('[data-search-mode]')];
+
+  function isBabyMobile(){
+    const vw=Math.min(
+      window.innerWidth || 9999,
+      document.documentElement.clientWidth || 9999,
+      (window.screen && window.screen.width) || 9999
+    );
+    return vw <= 760;
+  }
+
+  function showAllSearchCards(){
+    cards.forEach(card=>card.style.removeProperty('display'));
+  }
+
+  cards.forEach(card=>{
+    card.addEventListener('click',function(){
+      if(!isBabyMobile()) return;
+      cards.forEach(other=>{
+        if(other===card){
+          other.style.removeProperty('display');
+        }else{
+          other.style.setProperty('display','none','important');
+        }
+      });
+    });
+  });
+
+  window.addEventListener('resize',function(){
+    if(!isBabyMobile()) showAllSearchCards();
+  });
+})();
+</script>
 </body>
 </html>
