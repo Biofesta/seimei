@@ -66,6 +66,32 @@
     line-height:1.2;
   }
 
+  /* ★ 広告流入向け：無料であることを一目で伝える */
+  .free-title {
+    display:block;
+    margin-top:6px;
+    color:#d90000;
+    font-size:22px;
+    font-weight:800;
+    line-height:1.35;
+  }
+  .free-note {
+    margin:8px 0 4px;
+    text-align:center;
+    color:#d90000;
+    font-size:16px;
+    font-weight:800;
+    line-height:1.5;
+  }
+  .free-guide {
+    margin:2px 0 10px;
+    text-align:center;
+    color:#333;
+    font-size:14px;
+    font-weight:700;
+    line-height:1.6;
+  }
+
   .card {
     background:var(--card);
     padding:18px;
@@ -181,8 +207,12 @@
   }
 
   .save-controls {
+    display:none;
     text-align:center;
     margin:8px 0 4px;
+  }
+  .save-controls.is-visible {
+    display:block;
   }
   .save-btn {
     min-width:220px;
@@ -240,10 +270,14 @@
     <section class="card" id="inputCard">
       <header>
         <h1>
-          <span class="omifuda-title">御身札（おみふだ）</span><br>
+          <span class="omifuda-title">御身札（おみふだ）</span>
+          <span class="free-title">V1.0　無料姓名判断</span>
           <span class="subtitle-en">The mysterious guiding energy of names</span>
         </h1>
       </header>
+
+      <div class="free-note">登録不要・完全無料</div>
+      <div class="free-guide">姓と名前を入力するだけで、すぐに診断できます。</div>
 
       <!-- ★ 無料診断・累計診断数 -->
       <div class="diagnosis-counter" aria-live="polite">
@@ -263,7 +297,7 @@
           </div>
         </div>
         <div class="btns">
-          <button id="runBtn" type="submit">診断する</button>
+          <button id="runBtn" type="submit">無料で診断する</button>
           <button type="button" onclick="clearForm()">クリア</button>
         </div>
       </form>
@@ -742,6 +776,8 @@ function calculate(){
       <p>尚、診断ご希望の場合、問い合せメール、及び友達追加で内容を報告して頂ければ、１４日以内に診断できるように対応致します。</p>
     `;
     document.getElementById('svgWrap').innerHTML = '';
+    const saveControls = document.querySelector('.save-controls');
+    if(saveControls) saveControls.classList.remove('is-visible');
     return;
   }
 
@@ -838,6 +874,10 @@ function calculate(){
        <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
      </div>`;
 
+  // ★ 診断結果が出た後だけ PDF 保存ボタンを表示
+  const saveControls = document.querySelector('.save-controls');
+  if(saveControls) saveControls.classList.add('is-visible');
+
   // ★ 正常に診断結果が生成された場合だけ、累計診断数を1件加算
   incrementDiagnosisCounter();
 }
@@ -848,6 +888,8 @@ function clearForm(){
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
   document.getElementById('svgWrap').innerHTML='';
+  const saveControls = document.querySelector('.save-controls');
+  if(saveControls) saveControls.classList.remove('is-visible');
 }
 
 /* ---------- PDF 用レイアウト組み立て ---------- */
