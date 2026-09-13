@@ -1,0 +1,138 @@
+{
+  "木": {
+    "kumazaki_strokes": 4,
+    "readings": {
+      "on": [
+        "モク",
+        "ボク"
+      ],
+      "kun": [
+        "き"
+      ],
+      "nanori": []
+    }
+  },
+  "村": {
+    "kumazaki_strokes": 7,
+    "readings": {
+      "on": [
+        "ソン"
+      ],
+      "kun": [
+        "むら"
+      ],
+      "nanori": []
+    }
+  },
+  "陽": {
+    "kumazaki_strokes": 17,
+    "readings": {
+      "on": [
+        "ヨウ"
+      ],
+      "kun": [
+        "ひ"
+      ],
+      "nanori": [
+        "はる",
+        "あき"
+      ]
+    }
+  },
+  "愛": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "アイ"
+      ],
+      "kun": [
+        "いと.しい"
+      ],
+      "nanori": [
+        "あい",
+        "まな"
+      ]
+    }
+  },
+  "凪": {
+    "kumazaki_strokes": 6,
+    "readings": {
+      "on": [],
+      "kun": [
+        "なぎ"
+      ],
+      "nanori": [
+        "なぎ"
+      ]
+    }
+  },
+  "信": {
+    "kumazaki_strokes": 9,
+    "readings": {
+      "on": [
+        "シン"
+      ],
+      "kun": [],
+      "nanori": [
+        "のぶ"
+      ]
+    }
+  },
+  "和": {
+    "kumazaki_strokes": 8,
+    "readings": {
+      "on": [
+        "ワ"
+      ],
+      "kun": [
+        "やわ.らぐ"
+      ],
+      "nanori": [
+        "かず",
+        "なごみ"
+      ]
+    }
+  },
+  "智": {
+    "kumazaki_strokes": 12,
+    "readings": {
+      "on": [
+        "チ"
+      ],
+      "kun": [],
+      "nanori": [
+        "とも",
+        "さとし"
+      ]
+    }
+  },
+  "光": {
+    "kumazaki_strokes": 6,
+    "readings": {
+      "on": [
+        "コウ"
+      ],
+      "kun": [
+        "ひかり"
+      ],
+      "nanori": [
+        "ひかる",
+        "みつ"
+      ]
+    }
+  },
+  "新": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "シン"
+      ],
+      "kun": [
+        "あたら.しい"
+      ],
+      "nanori": [
+        "あらた"
+      ]
+    }
+  }
+}

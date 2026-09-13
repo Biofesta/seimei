@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>赤ちゃんの名付け｜名前を探す</title>
+<link rel="stylesheet" href="../shared/style.css">
+<link rel="stylesheet" href="../shared/selector-v4.css">
+
+<style>
+body[data-product="BABY"]{
+  background:#fff8f6 url("./assets/baby-cloud-light-background.png") center top / cover no-repeat fixed;
+}
+/* BABY 基本情報サイド天使 */
+body[data-product="BABY"] .baby-basic-stage{
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+}
+body[data-product="BABY"] .baby-basic-panel{
+  position:relative;
+  z-index:2;
+}
+body[data-product="BABY"] .baby-side-angel{
+  position:absolute;
+  z-index:1;
+  top:50%;
+  width:clamp(330px,34vw,480px);
+  height:auto;
+  transform:translateY(-50%);
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 12px 20px rgba(180,145,95,.16));
+}
+body[data-product="BABY"] .baby-side-angel-left{
+  left:calc(-1 * clamp(360px,33vw,470px));
+}
+body[data-product="BABY"] .baby-side-angel-right{
+  right:calc(-1 * clamp(360px,33vw,470px));
+}
+@media(max-width:1180px){
+  body[data-product="BABY"] .baby-side-angel{
+    width:clamp(255px,25vw,330px);
+    opacity:.76;
+  }
+  body[data-product="BABY"] .baby-side-angel-left{ left:-230px; }
+  body[data-product="BABY"] .baby-side-angel-right{ right:-230px; }
+}
+@media(max-width:760px){
+  body[data-product="BABY"] .baby-side-angel{ display:none; }
+}
+
+body[data-product="BABY"] #resetBtn{
+  border-width:3px;
+}
+body[data-product="BABY"] #resetBtn:hover{
+  background:#fff;
+  opacity:1;
+}
+
+</style>
+</head>
+<body data-product="BABY">
+<header class="hero baby-title-hero">
+  <div class="wrap">
+    <div class="baby-title-frame">
+      <picture class="baby-title-picture">
+        <source media="(max-width: 600px)" srcset="./assets/baby-naming-title-mobile.webp">
+        <img
+          class="baby-title-image"
+          src="./assets/baby-naming-title.webp"
+          alt="赤ちゃんの名付け"
+          width="2244"
+          height="701"
+        >
+      </picture>
+      <div class="baby-connection-strip" aria-label="データ接続状況">
+        <div class="baby-connection-label">
+          <span class="baby-db-icon" aria-hidden="true">●</span>
+          <strong>データ接続</strong>
+        </div>
+
+        <div class="baby-connection-paths">
+          <span>姓名判断：../data/kanjidic-naming.json / ../data/sansai.json</span>
+          <span>名前検索：../name/name-master.json</span>
+        </div>
+
+        <div class="status-row baby-connection-status">
+          <span id="dataStatus" class="status">漢字辞書 未読込</span>
+          <span id="triadStatus" class="status">陰陽五行確認中</span>
+          <span id="nameStatus" class="status">名前データ確認中</span>
+        </div>
+
+        <div id="loadError" class="notice bad hidden baby-connection-error"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="baby-basic-stage">
+    <img class="baby-side-angel baby-side-angel-left" src="./assets/baby-angel-left.png" alt="" aria-hidden="true">
+    <img class="baby-side-angel baby-side-angel-right" src="./assets/baby-angel-right.png" alt="" aria-hidden="true">
+
+    <section class="panel baby-basic-panel">
+      <h2>1. 基本情報</h2>
+      <div class="grid2">
+        <div>
+          <label>姓（必須）</label>
+          <input id="surname" type="text" placeholder="例：木村">
+          <div class="hint">必ず入力してください。</div>
+        </div>
+        <div>
+          <label>お子さまの性別</label>
+          <select id="sex">
+            <option value="">指定しない</option>
+            <option value="male">男の子</option>
+            <option value="female">女の子</option>
+            <option value="other">男女共通・指定しない</option>
+          </select>
+          <div class="hint">指定が無い場合、命名ランキングは確認出来なくなります。</div>
+        </div>
+        <div id="femalePreference" class="hidden">
+          <label>女性の社会的自立・活躍を積極的に重視</label>
+          <div class="check">
+            <label><input id="socialIndependence" type="checkbox"> 重視する</label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" id="searchMethodPanel">
+    <h2>2. 名前を探す方法</h2>
+    <div class="selector-intro">
+      最初から名の候補がある場合には、御身札V1.0の無料診断で名前を入力して診断してみてください。
+      名前を考える時に、下記の４つのポイントがあります。それぞれの選択をして名前の候補を検討してみてください。
+      最後に誘導エネルギー診断が出来ます。
+      過去３年の赤ちゃんの命名Best２０は、「イメージから」を選択すると特集で収録されています。
+    </div>
+
+    <div class="search-method-grid search-method-image-grid">
+      <button type="button" class="search-method-card search-method-image-card" data-search-mode="kanji" aria-label="気に入った漢字から">
+        <img src="./assets/search-card-kanji.webp" alt="気に入った漢字から">
+      </button>
+      <button type="button" class="search-method-card search-method-image-card" data-search-mode="image" aria-label="イメージから">
+        <img src="./assets/search-card-image.webp" alt="イメージから">
+      </button>
+      <button type="button" class="search-method-card search-method-image-card" data-search-mode="name" aria-label="名前・読みから">
+        <img src="./assets/search-card-name.webp" alt="名前・読みから">
+      </button>
+      <button type="button" class="search-method-card search-method-image-card" data-search-mode="stroke" aria-label="画数（姓名判断）から">
+        <img src="./assets/search-card-stroke.webp" alt="画数（姓名判断）から">
+      </button>
+    </div>
+
+    <div id="searchModePanel" class="search-mode-panel hidden"></div>
+  </section>
+
+  <section id="nameCandidatePanel" class="panel hidden">
+    <div class="panel-head">
+      <h2>名前候補</h2>
+      <span id="candidateSummary" class="small"></span>
+    </div>
+    <div id="activeSearchConditions" class="active-conditions"></div>
+    <div class="candidate-reading-note">※表示以外の読みはお客様の任意です。</div>
+    <div id="nameCandidateGrid" class="name-candidate-grid"></div>
+  </section>
+
+  <section id="nameDiagnosisPanel" class="panel hidden">
+    <h2>選んだ名前を姓名判断で確認</h2>
+    <div id="nameDiagnosisBox" class="final-preview"></div>
+  </section>
+
+  <section id="patternPanel" class="panel hidden">
+    <h2>画数配置を選ぶ</h2>
+
+    <div id="mobileSelectedPatternBar" class="notice hidden">
+      <strong id="mobileSelectedPatternLabel"></strong>
+      <div id="mobileSelectedPatternDetails" class="small"></div>
+      <div class="actions">
+        <button id="backToPatternListBtn" type="button" class="btn secondary">配置候補の選択に戻る</button>
+      </div>
+    </div>
+
+    <div id="patternSummary" class="notice"></div>
+    <div id="patternGrid" class="pattern-grid"></div>
+  </section>
+
+  <section id="selectorPanel" class="panel hidden">
+    <h2>漢字を1文字ずつ選ぶ</h2>
+    <div class="notice">
+      選択中の画数配置：
+      <strong id="selectedPatternText"></strong>
+    </div>
+    <div class="selector-note">
+      漢字または読みで検索できます。候補は、名乗り読みが登録されている漢字を優先して表示します。
+      音読み・訓読みしかない漢字も確認できます。
+    </div>
+    <div id="charSlots" class="char-slots"></div>
+  </section>
+
+  <section id="finalPanel" class="panel hidden">
+    <h2>選択した名前を確認</h2>
+
+    <div id="finalBox" class="final-preview">
+      <div id="finalName" class="name"></div>
+      <div id="finalYomi" class="yomi">読み未設定</div>
+
+      <div class="grid2" style="margin-top:16px;text-align:left">
+        <div>
+          <label>名前全体の読み</label>
+          <input id="finalReading" type="text" placeholder="例：はるき">
+          <div class="hint">
+            各漢字の読みをクリックすると仮入力します。最終的には自由に修正できます。
+          </div>
+        </div>
+        <div>
+          <label>選択漢字</label>
+          <div id="finalSelectedChars" class="stroke-pills"></div>
+        </div>
+      </div>
+
+      <div id="finalStats" class="final-grid"></div>
+      <div id="finalTriad" style="margin-top:12px"></div>
+    </div>
+
+    <div class="notice warn">
+      ここでは選ばれた漢字名の読みはお客様で決めてください。
+    </div>
+  </section>
+
+  <div class="actions page-reset-actions">
+    <button id="resetBtn" class="btn secondary">最初から</button>
+  </div>
+</main>
+
+<div class="footer">Baby Naming Selector V5</div>
+
+<script src="../shared/product-config.js"></script>
+<script src="../shared/naming-engine.js"></script>
+<script src="../shared/selector-v4.js"></script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+{
+  "version": "2.0",
+  "title": "命名Best20",
+  "selection_method": "明治安田生命・たまひよの各年男女別上位21位を照合し、両社共通掲載を優先、平均順位・最高順位で並べ、20名に満たない分を片方の上位から補充",
+  "years": {
+    "2025": {
+      "male": [
+        {
+          "rank": 1,
+          "name": "湊",
+          "reading": "みなと"
+        },
+        {
+          "rank": 2,
+          "name": "碧",
+          "reading": "あお"
+        },
+        {
+          "rank": 3,
+          "name": "結翔",
+          "reading": "ゆいと"
+        },
+        {
+          "rank": 4,
+          "name": "蓮",
+          "reading": "れん"
+        },
+        {
+          "rank": 5,
+          "name": "陽翔",
+          "reading": "はると"
+        },
+        {
+          "rank": 6,
+          "name": "朝陽",
+          "reading": "あさひ"
+        },
+        {
+          "rank": 7,
+          "name": "朔",
+          "reading": "さく"
+        },
+        {
+          "rank": 8,
+          "name": "琉生",
+          "reading": "るい"
+        },
+        {
+          "rank": 9,
+          "name": "凪",
+          "reading": "なぎ"
+        },
+        {
+          "rank": 10,
+          "name": "蒼空",
+          "reading": "そら"
+        },
+        {
+          "rank": 11,
+          "name": "晴",
+          "reading": "はる"
+        },
+        {
+          "rank": 12,
+          "name": "伊織",
+          "reading": "いおり"
+        },
+        {
+          "rank": 13,
+          "name": "湊斗",
+          "reading": "みなと"
+        },
+        {
+          "rank": 14,
+          "name": "陽向",
+          "reading": "ひなた"
+        },
+        {
+          "rank": 15,
+          "name": "暖",
+          "reading": "だん"
+        },
+        {
+          "rank": 16,
+          "name": "律",
+          "reading": "りつ"
+        },
+        {
+          "rank": 17,
+          "name": "大和",
+          "reading": "やまと"
+        },
+        {
+          "rank": 18,
+          "name": "陽",
+          "reading": "はる"
+        },
+        {
+          "rank": 19,
+          "name": "藍",
+          "reading": "らん"
+        },
+        {
+          "rank": 20,
+          "name": "颯真",
+          "reading": "そうま"
+        }
+      ],
+      "female": [
+        {
+          "rank": 1,
+          "name": "翠",
+          "reading": "すい"
+        },
+        {
+          "rank": 2,
+          "name": "陽葵",
+          "reading": "ひまり"
+        },
+        {
+          "rank": 3,
+          "name": "凛",
+          "reading": "りん"
+        },
+        {
+          "rank": 4,
+          "name": "陽菜",
+          "reading": "ひな"
+        },
+        {
+          "rank": 5,
+          "name": "紬",
+          "reading": "つむぎ"
+        },
+        {
+          "rank": 6,
+          "name": "茉白",
+          "reading": "ましろ"
+        },
+        {
+          "rank": 7,
+          "name": "琴葉",
+          "reading": "ことは"
+        },
+        {
+          "rank": 8,
+          "name": "葵",
+          "reading": "あおい"
+        },
+        {
+          "rank": 9,
+          "name": "結菜",
+          "reading": "ゆいな"
+        },
+        {
+          "rank": 10,
+          "name": "心陽",
+          "reading": "こはる"
+        },
+        {
+          "rank": 11,
+          "name": "彩葉",
+          "reading": "いろは"
+        },
+        {
+          "rank": 12,
+          "name": "澪",
+          "reading": "みお"
+        },
+        {
+          "rank": 13,
+          "name": "咲茉",
+          "reading": "えま"
+        },
+        {
+          "rank": 14,
+          "name": "咲良",
+          "reading": "さくら"
+        },
+        {
+          "rank": 15,
+          "name": "芽依",
+          "reading": "めい"
+        },
+        {
+          "rank": 16,
+          "name": "詩",
+          "reading": "うた"
+        },
+        {
+          "rank": 17,
+          "name": "結月",
+          "reading": "ゆづき"
+        },
+        {
+          "rank": 18,
+          "name": "乃愛",
+          "reading": "のあ"
+        },
+        {
+          "rank": 19,
+          "name": "凪咲",
+          "reading": "なぎさ"
+        },
+        {
+          "rank": 20,
+          "name": "紗菜",
+          "reading": "さな"
+        }
+      ]
+    },
+    "2024": {
+      "male": [
+        {
+          "rank": 1,
+          "name": "凪",
+          "reading": "なぎ"
+        },
+        {
+          "rank": 2,
+          "name": "陽翔",
+          "reading": "はると"
+        },
+        {
+          "rank": 3,
+          "name": "碧",
+          "reading": "あお"
+        },
+        {
+          "rank": 4,
+          "name": "蓮",
+          "reading": "れん"
+        },
+        {
+          "rank": 5,
+          "name": "朝陽",
+          "reading": "あさひ"
+        },
+        {
+          "rank": 6,
+          "name": "暖",
+          "reading": "だん"
+        },
+        {
+          "rank": 7,
+          "name": "律",
+          "reading": "りつ"
+        },
+        {
+          "rank": 8,
+          "name": "陽向",
+          "reading": "ひなた"
+        },
+        {
+          "rank": 9,
+          "name": "湊",
+          "reading": "みなと"
+        },
+        {
+          "rank": 10,
+          "name": "湊斗",
+          "reading": "みなと"
+        },
+        {
+          "rank": 11,
+          "name": "颯",
+          "reading": "そう"
+        },
+        {
+          "rank": 12,
+          "name": "颯真",
+          "reading": "そうま"
+        },
+        {
+          "rank": 13,
+          "name": "琉生",
+          "reading": "るい"
+        },
+        {
+          "rank": 14,
+          "name": "蒼",
+          "reading": "あおい"
+        },
+        {
+          "rank": 15,
+          "name": "陽",
+          "reading": "はる"
+        },
+        {
+          "rank": 16,
+          "name": "悠真",
+          "reading": "ゆうま"
+        },
+        {
+          "rank": 17,
+          "name": "蒼空",
+          "reading": "そら"
+        },
+        {
+          "rank": 18,
+          "name": "結翔",
+          "reading": "ゆいと"
+        },
+        {
+          "rank": 19,
+          "name": "陽大",
+          "reading": "ひなた"
+        },
+        {
+          "rank": 20,
+          "name": "大和",
+          "reading": "やまと"
+        }
+      ],
+      "female": [
+        {
+          "rank": 1,
+          "name": "凛",
+          "reading": "りん"
+        },
+        {
+          "rank": 2,
+          "name": "翠",
+          "reading": "すい"
+        },
+        {
+          "rank": 3,
+          "name": "陽葵",
+          "reading": "ひまり"
+        },
+        {
+          "rank": 4,
+          "name": "紬",
+          "reading": "つむぎ"
+        },
+        {
+          "rank": 5,
+          "name": "芽依",
+          "reading": "めい"
+        },
+        {
+          "rank": 6,
+          "name": "葵",
+          "reading": "あおい"
+        },
+        {
+          "rank": 7,
+          "name": "陽菜",
+          "reading": "ひな"
+        },
+        {
+          "rank": 8,
+          "name": "琴葉",
+          "reading": "ことは"
+        },
+        {
+          "rank": 9,
+          "name": "結愛",
+          "reading": "ゆあ"
+        },
+        {
+          "rank": 10,
+          "name": "莉子",
+          "reading": "りこ"
+        },
+        {
+          "rank": 11,
+          "name": "澪",
+          "reading": "みお"
+        },
+        {
+          "rank": 12,
+          "name": "杏",
+          "reading": "あん"
+        },
+        {
+          "rank": 13,
+          "name": "凪",
+          "reading": "なぎ"
+        },
+        {
+          "rank": 14,
+          "name": "咲茉",
+          "reading": "えま"
+        },
+        {
+          "rank": 15,
+          "name": "紗菜",
+          "reading": "さな"
+        },
+        {
+          "rank": 16,
+          "name": "紬希",
+          "reading": "つむぎ"
+        },
+        {
+          "rank": 17,
+          "name": "心陽",
+          "reading": "こはる"
+        },
+        {
+          "rank": 18,
+          "name": "結菜",
+          "reading": "ゆいな"
+        },
+        {
+          "rank": 19,
+          "name": "心晴",
+          "reading": "こはる"
+        },
+        {
+          "rank": 20,
+          "name": "結月",
+          "reading": "ゆづき"
+        }
+      ]
+    },
+    "2023": {
+      "male": [
+        {
+          "rank": 1,
+          "name": "碧",
+          "reading": "あお"
+        },
+        {
+          "rank": 2,
+          "name": "陽翔",
+          "reading": "はると"
+        },
+        {
+          "rank": 3,
+          "name": "蓮",
+          "reading": "れん"
+        },
+        {
+          "rank": 4,
+          "name": "蒼",
+          "reading": "あおい"
+        },
+        {
+          "rank": 5,
+          "name": "暖",
+          "reading": "だん"
+        },
+        {
+          "rank": 6,
+          "name": "湊",
+          "reading": "みなと"
+        },
+        {
+          "rank": 7,
+          "name": "律",
+          "reading": "りつ"
+        },
+        {
+          "rank": 8,
+          "name": "凪",
+          "reading": "なぎ"
+        },
+        {
+          "rank": 9,
+          "name": "湊斗",
+          "reading": "みなと"
+        },
+        {
+          "rank": 10,
+          "name": "颯真",
+          "reading": "そうま"
+        },
+        {
+          "rank": 11,
+          "name": "朝陽",
+          "reading": "あさひ"
+        },
+        {
+          "rank": 12,
+          "name": "蒼空",
+          "reading": "そら"
+        },
+        {
+          "rank": 13,
+          "name": "結翔",
+          "reading": "ゆいと"
+        },
+        {
+          "rank": 14,
+          "name": "颯",
+          "reading": "そう"
+        },
+        {
+          "rank": 15,
+          "name": "陽向",
+          "reading": "ひなた"
+        },
+        {
+          "rank": 16,
+          "name": "伊織",
+          "reading": "いおり"
+        },
+        {
+          "rank": 17,
+          "name": "樹",
+          "reading": "いつき"
+        },
+        {
+          "rank": 18,
+          "name": "大翔",
+          "reading": "ひろと"
+        },
+        {
+          "rank": 19,
+          "name": "想",
+          "reading": "そう"
+        },
+        {
+          "rank": 20,
+          "name": "翠",
+          "reading": "すい"
+        }
+      ],
+      "female": [
+        {
+          "rank": 1,
+          "name": "陽葵",
+          "reading": "ひまり"
+        },
+        {
+          "rank": 2,
+          "name": "凛",
+          "reading": "りん"
+        },
+        {
+          "rank": 3,
+          "name": "紬",
+          "reading": "つむぎ"
+        },
+        {
+          "rank": 4,
+          "name": "結菜",
+          "reading": "ゆいな"
+        },
+        {
+          "rank": 5,
+          "name": "芽依",
+          "reading": "めい"
+        },
+        {
+          "rank": 6,
+          "name": "翠",
+          "reading": "すい"
+        },
+        {
+          "rank": 7,
+          "name": "結愛",
+          "reading": "ゆあ"
+        },
+        {
+          "rank": 8,
+          "name": "陽菜",
+          "reading": "ひな"
+        },
+        {
+          "rank": 9,
+          "name": "澪",
+          "reading": "みお"
+        },
+        {
+          "rank": 10,
+          "name": "咲茉",
+          "reading": "えま"
+        },
+        {
+          "rank": 11,
+          "name": "結月",
+          "reading": "ゆづき"
+        },
+        {
+          "rank": 12,
+          "name": "莉子",
+          "reading": "りこ"
+        },
+        {
+          "rank": 13,
+          "name": "彩葉",
+          "reading": "いろは"
+        },
+        {
+          "rank": 14,
+          "name": "琴葉",
+          "reading": "ことは"
+        },
+        {
+          "rank": 15,
+          "name": "杏",
+          "reading": "あん"
+        },
+        {
+          "rank": 16,
+          "name": "咲良",
+          "reading": "さくら"
+        },
+        {
+          "rank": 17,
+          "name": "凪",
+          "reading": "なぎ"
+        },
+        {
+          "rank": 18,
+          "name": "心春",
+          "reading": "こはる"
+        },
+        {
+          "rank": 19,
+          "name": "葵",
+          "reading": "あおい"
+        },
+        {
+          "rank": 20,
+          "name": "愛",
+          "reading": "あい"
+        }
+      ]
+    }
+  }
+}

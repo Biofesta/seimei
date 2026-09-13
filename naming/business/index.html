@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>企業名・商品名 総画診断</title>
+<link rel="stylesheet" href="../shared/style.css">
+<style>
+:root{
+  --business-navy:#294d66;
+  --business-gold:#b99552;
+  --business-line:#cbd4db;
+  --business-blush:#fff8f7;
+  --business-blush-line:#efd8d5;
+  --business-coral:#f48691;
+  --business-coral-light:#ffa7ae;
+  --business-brown:#503a36;
+}
+body[data-product="BUSINESS"]{
+  background:#fff7f6 url("./assets/business-sky-rainbow-bg.png") center top / cover no-repeat fixed;
+  color:#3f3735;
+}
+body[data-product="BUSINESS"] .business-hero{
+  padding:24px 0 16px;
+}
+body[data-product="BUSINESS"] .business-header-image{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:18px;
+}
+body[data-product="BUSINESS"] .business-title{
+  border:1px solid #c5d0d8;
+  border-radius:18px;
+  padding:22px 24px;
+  background:linear-gradient(135deg,#1f3548,#315d79);
+  color:#fff;
+}
+body[data-product="BUSINESS"] .business-title h1{
+  margin:0;
+  font-size:clamp(1.55rem,3vw,2.15rem);
+}
+body[data-product="BUSINESS"] .business-title p{
+  margin:8px 0 0;
+  line-height:1.7;
+  color:#e8eef2;
+}
+
+body[data-product="BUSINESS"] .business-input-panel{
+  background:linear-gradient(180deg,#fffdfc 0%,var(--business-blush) 100%);
+  border:1px solid var(--business-blush-line);
+  box-shadow:0 10px 28px rgba(153,103,96,.08);
+}
+body[data-product="BUSINESS"] .business-input-panel h2,
+body[data-product="BUSINESS"] .business-input-panel label{
+  color:var(--business-brown);
+}
+body[data-product="BUSINESS"] .business-input-panel input{
+  border-color:#e7d8d4;
+  background:#fffefc;
+}
+body[data-product="BUSINESS"] .business-input-panel #nameLength{
+  background:#fffaf8;
+}
+body[data-product="BUSINESS"] .business-grid{
+  display:grid;
+  grid-template-columns:minmax(280px,1.6fr) minmax(180px,.7fr);
+  gap:14px;
+  align-items:end;
+}
+body[data-product="BUSINESS"] .business-grid input{
+  width:100%;
+  box-sizing:border-box;
+}
+body[data-product="BUSINESS"] .business-guide{
+  margin-top:16px;
+  padding:16px 18px;
+  border:2px solid #efdeda;
+  border-radius:14px;
+  background:#fffaf8;
+  line-height:1.75;
+}
+body[data-product="BUSINESS"] .business-guide strong{
+  color:#76504a;
+}
+body[data-product="BUSINESS"] .business-example-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+body[data-product="BUSINESS"] .business-example{
+  padding:12px 14px;
+  border:1px solid #eedfdb;
+  border-radius:10px;
+  background:#fffefd;
+}
+body[data-product="BUSINESS"] .business-example b{
+  display:block;
+  margin-bottom:5px;
+  color:#684842;
+}
+body[data-product="BUSINESS"] .business-actions{
+  margin-top:16px;
+}
+body[data-product="BUSINESS"] .business-actions .btn{
+  border-width:3px;
+}
+body[data-product="BUSINESS"] #diagnoseBtn{
+  background:linear-gradient(135deg,var(--business-coral-light),var(--business-coral));
+  border-color:#f48691;
+  color:#fff;
+  box-shadow:0 8px 18px rgba(244,134,145,.24);
+}
+body[data-product="BUSINESS"] #diagnoseBtn:not(:disabled):hover{
+  filter:brightness(1.03);
+}
+body[data-product="BUSINESS"] .business-input-footer{
+  display:block;
+  width:100%;
+  height:auto;
+  margin-top:18px;
+  border-radius:12px;
+}
+body[data-product="BUSINESS"] .business-error{
+  margin-top:12px;
+}
+body[data-product="BUSINESS"] .business-result{
+  text-align:center;
+  padding:22px;
+  border:2px solid var(--business-gold);
+  border-radius:16px;
+  background:#fff;
+}
+body[data-product="BUSINESS"] .result-name{
+  font-size:clamp(2rem,6vw,3rem);
+  font-weight:900;
+  letter-spacing:.08em;
+  color:#20394d;
+}
+body[data-product="BUSINESS"] .result-pills{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:14px;
+}
+body[data-product="BUSINESS"] .result-pills .pill{
+  padding:8px 12px;
+  border:1px solid #ccd6dd;
+  border-radius:999px;
+  background:#f7f9fa;
+  font-weight:700;
+}
+body[data-product="BUSINESS"] .total-result{
+  display:grid;
+  grid-template-columns:minmax(130px,.6fr) minmax(130px,.6fr) minmax(260px,1.8fr);
+  gap:12px;
+  margin-top:18px;
+  text-align:left;
+}
+body[data-product="BUSINESS"] .total-card{
+  border:1px solid #d2dce2;
+  border-radius:12px;
+  padding:14px;
+  background:#f8fafb;
+}
+body[data-product="BUSINESS"] .total-card .cap{
+  font-size:.78rem;
+  color:#70808a;
+  font-weight:700;
+}
+body[data-product="BUSINESS"] .total-number{
+  margin-top:4px;
+  font-size:1.7rem;
+  font-weight:900;
+  color:#20394d;
+}
+body[data-product="BUSINESS"] .rating-mark{
+  margin-top:4px;
+  font-size:2rem;
+  font-weight:900;
+}
+body[data-product="BUSINESS"] .feature-text{
+  margin-top:5px;
+  line-height:1.75;
+  font-weight:600;
+}
+
+body[data-product="BUSINESS"] .business-input-stage{
+  position:relative;
+  overflow:visible;
+}
+body[data-product="BUSINESS"] .business-dragon{
+  position:absolute;
+  z-index:0;
+  top:auto;
+  bottom:12px;
+  width:clamp(290px,30vw,430px);
+  height:auto;
+  opacity:.82;
+  pointer-events:none;
+  user-select:none;
+}
+body[data-product="BUSINESS"] .business-dragon-left{
+  left:0;
+  transform:translateX(calc(-100% - 20px));
+}
+body[data-product="BUSINESS"] .business-dragon-right{
+  right:0;
+  transform:translateX(calc(100% + 20px));
+}
+body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
+  position:relative;
+  z-index:1;
+}
+@media(max-width:1100px){
+  body[data-product="BUSINESS"] .business-dragon{
+    width:clamp(220px,24vw,330px);
+    opacity:.82;
+  }
+}
+@media(max-width:820px){
+  body[data-product="BUSINESS"] .business-dragon{ display:none; }
+}
+
+@media(max-width:760px){
+  body[data-product="BUSINESS"] .business-grid,
+  body[data-product="BUSINESS"] .business-example-grid,
+  body[data-product="BUSINESS"] .total-result{
+    grid-template-columns:1fr;
+  }
+  body[data-product="BUSINESS"] .business-actions .btn{
+    width:100%;
+    min-height:46px;
+  }
+  body[data-product="BUSINESS"] .business-result{
+    padding:16px 12px;
+  }
+}
+</style>
+</head>
+<body data-product="BUSINESS">
+
+<header class="business-hero">
+  <div class="wrap">
+    <img class="business-header-image" src="./assets/business-header.png" alt="商品名・企業名　成功への第一歩">
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel business-input-panel business-input-stage">
+    <img class="business-dragon business-dragon-left" src="./assets/business-dragon-left.png" alt="" aria-hidden="true">
+    <img class="business-dragon business-dragon-right" src="./assets/business-dragon-right.png" alt="" aria-hidden="true">
+    <h2>1. 診断する名称</h2>
+
+    <div class="business-grid">
+      <div>
+        <label>▽商品・企業等の名称を入力してください。英語等の場合、そのカタカナ表記で日本語的発音から捉えたイメージとして捉えてください。</label>
+        <input id="businessName" type="text" autocomplete="off" placeholder="例：未来">
+      </div>
+
+      <div>
+        <label>文字数（自動）</label>
+        <input id="nameLength" type="text" value="0" readonly aria-readonly="true">
+      </div>
+    </div>
+
+    <div class="business-guide">
+      <strong>診断する名称部分について</strong>
+      <div class="business-example-grid">
+        <div class="business-example">
+          <b>企業名</b>
+          〇〇〇株式会社 → 〇〇〇<br>
+          株式会社〇〇〇 → 〇〇〇<br>
+          〇〇〇証券・〇〇〇銀行・〇〇〇病院 → 業務を表す一般名称を除いた「〇〇〇」部分を診断します。
+        </div>
+        <div class="business-example">
+          <b>商品名</b>
+          〇〇〇〇D → 〇〇〇〇<br>
+          〇〇〇〇GTR → 〇〇〇〇<br>
+          英字・数字・記号が型式や分類を表す場合は、それらを除いた基本名称部分を診断します。
+        </div>
+      </div>
+    </div>
+
+    <div class="business-actions">
+      <button id="diagnoseBtn" class="btn" type="button" disabled>この名称の総画を診断</button>
+    </div>
+
+    <div id="inputMessage" class="notice warn hidden business-error"></div>
+
+    <img class="business-input-footer" src="./assets/business-input-footer.png" alt="いい名前が、ビジネスの未来をつくる。">
+  </section>
+
+  <section id="resultPanel" class="panel hidden">
+    <h2>2. 総画診断</h2>
+    <div class="business-result">
+      <div id="resultName" class="result-name"></div>
+      <div id="charBreakdown" class="result-pills"></div>
+
+      <div class="total-result">
+        <div class="total-card">
+          <div class="cap">総画数</div>
+          <div id="totalNumber" class="total-number"></div>
+        </div>
+
+        <div class="total-card">
+          <div class="cap">評価</div>
+          <div id="ratingMark" class="rating-mark"></div>
+        </div>
+
+        <div class="total-card">
+          <div class="cap">総画の特徴</div>
+          <div id="featureText" class="feature-text"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../shared/naming-engine.js"></script>
+<script src="./business.js?v=business-20260912-03"></script>
+</body>
+</html>

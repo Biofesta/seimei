@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="../shared/style.css">
+<title>命名</title>
+<style>
+
+body[data-product="GUARDIAN"]{
+  background:
+    linear-gradient(rgba(252,249,243,.84), rgba(252,249,243,.84)),
+    url("./assets/guardian-page-background.png") center top / cover no-repeat fixed;
+}
+body[data-product="GUARDIAN"] .guardian-title-frame{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
+}
+body[data-product="GUARDIAN"] .guardian-header-image{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  border-radius:0;
+}
+body[data-product="GUARDIAN"] .guardian-connection-strip{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:10px 18px;
+  padding:11px 18px 12px;
+  color:#202631;
+  background:linear-gradient(90deg,rgba(250,248,239,.94),rgba(255,255,255,.98) 45%,rgba(248,244,250,.95));
+}
+body[data-product="GUARDIAN"] .guardian-connection-label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  white-space:nowrap;
+  color:#202631;
+  font-size:.96rem;
+}
+body[data-product="GUARDIAN"] .guardian-db-icon{
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  color:transparent;
+  background:
+    linear-gradient(#a88658,#a88658) center 5px/13px 3px no-repeat,
+    linear-gradient(#a88658,#a88658) center 10px/13px 3px no-repeat,
+    linear-gradient(#a88658,#a88658) center 15px/13px 3px no-repeat;
+  border:1px solid #cfb993;
+  box-shadow:inset 0 0 0 4px #f5efe5;
+}
+body[data-product="GUARDIAN"] .guardian-connection-status{
+  display:flex;
+  flex-wrap:nowrap;
+  justify-content:flex-end;
+  gap:6px;
+  min-width:0;
+}
+body[data-product="GUARDIAN"] .guardian-connection-status .status{
+  white-space:nowrap;
+  padding:6px 9px;
+  border-radius:999px;
+  font-size:.74rem;
+  background:#ffffff;
+  color:#3c352e;
+  border:1px solid #d8cec2;
+}
+body[data-product="GUARDIAN"] .guardian-connection-status .status.ok{
+  background:#edf8f0;
+  color:#1d6b3a;
+  border-color:#b7d8c0;
+}
+body[data-product="GUARDIAN"] .guardian-connection-status .status.warn{
+  background:#fff6e5;
+  color:#9a6200;
+  border-color:#e4c98f;
+}
+body[data-product="GUARDIAN"] .guardian-connection-status .status.bad{
+  background:#fff0f0;
+  color:#a83a3a;
+  border-color:#e1b3b3;
+}
+body[data-product="GUARDIAN"] .guardian-connection-error{
+  grid-column:1 / -1;
+  margin-top:2px;
+}
+body[data-product="GUARDIAN"] header.hero #eyebrow,
+body[data-product="GUARDIAN"] header.hero #pageTitle,
+body[data-product="GUARDIAN"] header.hero #pageLead,
+body[data-product="GUARDIAN"] header.hero #productCode{
+  display:none;
+}
+@media(max-width:600px){
+  body[data-product="GUARDIAN"] .guardian-connection-strip{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:10px 12px 11px;
+  }
+  body[data-product="GUARDIAN"] .guardian-connection-status{
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+}
+
+/* ==========================================================
+   GUARDIAN input guardians — 阿形・吽形
+   入力パネルの左右に守護するように配置
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-entry-stage{
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+}
+body[data-product="GUARDIAN"] .guardian-entry-panel{
+  position:relative;
+  z-index:2;
+}
+body[data-product="GUARDIAN"] .guardian-figure{
+  position:absolute;
+  z-index:1;
+  bottom:8px;
+  width:clamp(300px,31vw,440px);
+  height:auto;
+  opacity:1;
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 12px 20px rgba(60,42,28,.18));
+}
+body[data-product="GUARDIAN"] .guardian-figure-agyo{
+  left:calc(-1 * clamp(275px,27vw,405px));
+}
+body[data-product="GUARDIAN"] .guardian-figure-ungyo{
+  right:calc(-1 * clamp(275px,27vw,405px));
+}
+@media(max-width:1180px){
+  body[data-product="GUARDIAN"] .guardian-figure{
+    width:clamp(235px,25vw,340px);
+    opacity:1;
+  }
+  body[data-product="GUARDIAN"] .guardian-figure-agyo{
+    left:-220px;
+  }
+  body[data-product="GUARDIAN"] .guardian-figure-ungyo{
+    right:-220px;
+  }
+}
+@media(max-width:760px){
+  body[data-product="GUARDIAN"] .guardian-figure{
+    display:none;
+  }
+}
+
+
+/* ==========================================================
+   GUARDIAN form visibility
+   入力欄を白くし、仮診断ボタンを明確に表示
+========================================================== */
+body[data-product="GUARDIAN"] input[type="text"]{
+  background:#ffffff;
+  color:#1f2832;
+  border-color:#d9d1c7;
+  box-shadow:inset 0 1px 2px rgba(40,32,24,.05);
+}
+body[data-product="GUARDIAN"] input[type="text"]::placeholder{
+  color:#7e8790;
+  opacity:1;
+}
+body[data-product="GUARDIAN"] #evaluateBtn{
+  min-height:48px;
+  padding:0 24px;
+  border:1px solid #b88b3e;
+  border-radius:12px;
+  background:linear-gradient(180deg,#e0bd70,#c99d4e);
+  color:#17202a;
+  font-weight:800;
+  box-shadow:0 5px 12px rgba(92,68,27,.22);
+}
+body[data-product="GUARDIAN"] #evaluateBtn:not(:disabled):hover{
+  transform:translateY(-1px);
+  box-shadow:0 7px 16px rgba(92,68,27,.28);
+}
+body[data-product="GUARDIAN"] #evaluateBtn:disabled{
+  opacity:.48;
+}
+
+
+body[data-product="GUARDIAN"] select{
+  background:#ffffff;
+  color:#1f2832;
+  border-color:#d9d1c7;
+}
+
+
+/* ==========================================================
+   GUARDIAN selected pattern / mobile return
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-pattern-rank{
+  display:inline-block;
+  margin-bottom:8px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#d4ad60;
+  color:#17202a;
+  font-size:.82rem;
+  font-weight:800;
+}
+body[data-product="GUARDIAN"] .guardian-selected-pattern{
+  position:sticky;
+  top:8px;
+  z-index:8;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin:10px 0 16px;
+  padding:12px 14px;
+  border:1px solid #caa75d;
+  border-radius:12px;
+  background:rgba(27,36,46,.97);
+  box-shadow:0 7px 18px rgba(0,0,0,.18);
+}
+body[data-product="GUARDIAN"] .guardian-selected-pattern.hidden{
+  display:none;
+}
+body[data-product="GUARDIAN"] .guardian-selected-pattern-text{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+body[data-product="GUARDIAN"] #selectedPatternLabel{
+  color:#f0cf82;
+  font-size:1rem;
+}
+body[data-product="GUARDIAN"] #selectedPatternDetails{
+  color:#f4f4f4;
+  font-size:.82rem;
+  line-height:1.5;
+}
+body[data-product="GUARDIAN"] #backToPatternsBtn{
+  flex:0 0 auto;
+  min-height:42px;
+  border-color:#caa75d;
+  color:#fff;
+}
+@media(max-width:600px){
+  body[data-product="GUARDIAN"] .guardian-selected-pattern{
+    top:6px;
+    align-items:stretch;
+    flex-direction:column;
+    gap:9px;
+    padding:10px 11px;
+  }
+  body[data-product="GUARDIAN"] #backToPatternsBtn{
+    width:100%;
+  }
+}
+
+
+/* ==========================================================
+   GUARDIAN baby-style stroke selection flow
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-char-selector{
+  margin-top:18px;
+}
+body[data-product="GUARDIAN"] .guardian-char-selector.hidden{
+  display:none;
+}
+body[data-product="GUARDIAN"] .guardian-selector-guide{
+  margin:10px 0 14px;
+}
+body[data-product="GUARDIAN"] .guardian-char-slots{
+  display:grid;
+  gap:14px;
+}
+body[data-product="GUARDIAN"] .guardian-char-slot{
+  min-width:0;
+  padding:14px;
+  border:1px solid #344253;
+  border-radius:14px;
+  background:#141f2b;
+}
+body[data-product="GUARDIAN"] .guardian-char-tools{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+}
+body[data-product="GUARDIAN"] .guardian-char-tools input{
+  flex:0 1 320px;
+  width:320px;
+  max-width:calc(100% - 92px);
+  min-width:0;
+  height:42px;
+  min-height:42px;
+  padding:8px 12px;
+  box-sizing:border-box;
+}
+body[data-product="GUARDIAN"] .guardian-char-tools .btn{
+  flex:0 0 82px;
+  width:82px;
+  min-width:82px;
+  height:42px;
+  min-height:42px;
+  padding:0 10px;
+  white-space:nowrap;
+  border:3px solid #8fa1b5;
+  box-sizing:border-box;
+}
+body[data-product="GUARDIAN"] .guardian-char-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  max-height:220px;
+  overflow:auto;
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+}
+body[data-product="GUARDIAN"] .guardian-char-btn{
+  min-width:42px;
+  min-height:42px;
+  padding:5px 8px;
+  border:1px solid #536174;
+  border-radius:9px;
+  background:#fff;
+  color:#202833;
+  font-size:1.14rem;
+  font-weight:700;
+  cursor:pointer;
+}
+body[data-product="GUARDIAN"] .guardian-char-btn.selected{
+  outline:3px solid #d4ad60;
+  border-color:#d4ad60;
+}
+body[data-product="GUARDIAN"] .guardian-selected-char{
+  margin-top:10px;
+  padding:11px;
+  border:1px solid #435064;
+  border-radius:10px;
+  background:#192431;
+}
+body[data-product="GUARDIAN"] .guardian-selected-char-main{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+body[data-product="GUARDIAN"] .guardian-selected-char-glyph{
+  font-size:2.1rem;
+  font-weight:800;
+  color:#f0cf82;
+}
+body[data-product="GUARDIAN"] .guardian-reading-group{
+  margin-top:10px;
+}
+body[data-product="GUARDIAN"] .guardian-reading-label{
+  margin-bottom:5px;
+  color:#d8dde5;
+  font-size:.78rem;
+  font-weight:700;
+}
+body[data-product="GUARDIAN"] .guardian-reading-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+body[data-product="GUARDIAN"] .guardian-reading-pill{
+  padding:5px 9px;
+  border:1px solid #536174;
+  border-radius:999px;
+  background:#25303b;
+  color:#fff;
+  cursor:pointer;
+}
+body[data-product="GUARDIAN"] .guardian-reading-pill.selected{
+  border-color:#d4ad60;
+  background:#d4ad60;
+  color:#17202a;
+}
+body[data-product="GUARDIAN"] .guardian-name-candidate-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+body[data-product="GUARDIAN"] .guardian-name-candidate-reading{
+  margin-top:5px;
+  color:#cfd6df;
+}
+body[data-product="GUARDIAN"] .guardian-gender-badge{
+  flex:0 0 auto;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid #596678;
+  font-size:.72rem;
+  color:#f5f5f5;
+}
+@media(max-width:700px){
+  body[data-product="GUARDIAN"] .guardian-char-slots{
+    grid-template-columns:1fr !important;
+  }
+  body[data-product="GUARDIAN"] .guardian-char-list{
+    max-height:180px;
+  }
+}
+
+
+/* ==========================================================
+   GUARDIAN final confirmation — BABY selector style
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-final-panel{
+  background:#17212d;
+  color:#f6f3ec;
+  border-color:#344253;
+}
+body[data-product="GUARDIAN"] .guardian-final-panel h2,
+body[data-product="GUARDIAN"] .guardian-final-panel label{
+  color:#f6f3ec;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview{
+  text-align:center;
+  padding:18px;
+  border:1px solid #c7a45b;
+  border-radius:16px;
+  background:#1d2936;
+  color:#f6f3ec;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview .name{
+  font-size:2.4rem;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:#e7c576;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview .yomi{
+  margin-top:4px;
+  color:#d5dbe3;
+}
+body[data-product="GUARDIAN"] .guardian-final-reading-grid{
+  margin-top:16px;
+  text-align:left;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview input[type="text"]{
+  background:#ffffff;
+  color:#202631;
+  border-color:#c7a45b;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview .hint{
+  color:#b9c1ca;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview .stroke-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+body[data-product="GUARDIAN"] .guardian-final-preview .pill{
+  background:#253240;
+  color:#f6f3ec;
+  border:1px solid #c7a45b;
+}
+body[data-product="GUARDIAN"] #finalSelectedChars{
+  margin-left:120px;
+  width:calc(100% - 120px);
+}
+body[data-product="GUARDIAN"] #finalSelectedChars .pill{
+  min-height:46px;
+  padding:10px 16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  font-weight:700;
+}
+body[data-product="GUARDIAN"] .final-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin-top:14px;
+}
+body[data-product="GUARDIAN"] .final-stat{
+  min-width:0;
+  padding:10px 7px;
+  border:1px solid #445264;
+  border-radius:10px;
+  background:#111b26;
+  color:#f6f3ec;
+}
+body[data-product="GUARDIAN"] .final-stat .small{
+  color:#b9c1ca;
+}
+body[data-product="GUARDIAN"] .final-stat b{
+  display:block;
+  margin:4px 0;
+  font-size:1.1rem;
+  color:#e7c576;
+}
+body[data-product="GUARDIAN"] .guardian-final-note{
+  margin-top:12px;
+  background:#25303b;
+  color:#f1eee7;
+  border-left-color:#c7a45b;
+}
+@media(max-width:600px){
+  body[data-product="GUARDIAN"] #finalSelectedChars{
+    margin-left:72px;
+    width:calc(100% - 72px);
+  }
+  body[data-product="GUARDIAN"] .guardian-final-preview{
+    padding:13px 10px;
+    border-radius:13px;
+  }
+  body[data-product="GUARDIAN"] .guardian-final-preview .name{
+    font-size:2rem;
+    letter-spacing:.06em;
+  }
+  body[data-product="GUARDIAN"] .guardian-final-reading-grid{
+    grid-template-columns:1fr;
+  }
+  body[data-product="GUARDIAN"] .final-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px;
+    margin-top:11px;
+  }
+  body[data-product="GUARDIAN"] .final-stat{
+    padding:7px 5px;
+  }
+  body[data-product="GUARDIAN"] .final-stat:last-child:nth-child(odd){
+    grid-column:1 / -1;
+  }
+  body[data-product="GUARDIAN"] #finalTriad .stroke-pills{
+    justify-content:center;
+  }
+}
+@media(max-width:380px){
+  body[data-product="GUARDIAN"] .guardian-final-preview .name{
+    font-size:1.75rem;
+  }
+}
+
+
+/* ==========================================================
+   GUARDIAN reset buttons — border visibility
+========================================================== */
+body[data-product="GUARDIAN"] #patternResetBtn,
+body[data-product="GUARDIAN"] #resetBtn,
+body[data-product="GUARDIAN"] #directResetBtn{
+  border:3px solid #8fa1b5;
+}
+
+
+/* ==========================================================
+   GUARDIAN naming condition lock
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-result-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:8px;
+}
+body[data-product="GUARDIAN"] .guardian-result-heading h2{
+  margin:0;
+}
+body[data-product="GUARDIAN"] #productFields.guardian-conditions-locked{
+  cursor:not-allowed;
+}
+body[data-product="GUARDIAN"] #productFields.guardian-conditions-locked input,
+body[data-product="GUARDIAN"] #productFields.guardian-conditions-locked select{
+  opacity:.72;
+  pointer-events:none;
+  cursor:not-allowed;
+}
+body[data-product="GUARDIAN"] #conditionLockNotice{
+  margin-top:10px;
+}
+@media(max-width:600px){
+  body[data-product="GUARDIAN"] .guardian-result-heading{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  body[data-product="GUARDIAN"] .guardian-result-heading #patternResetBtn{
+    width:100%;
+  }
+}
+
+
+body[data-product="GUARDIAN"] #patterns [data-pattern]{
+  border-width:3px;
+}
+
+</style>
+</head>
+<body data-product="GUARDIAN">
+<header class="hero">
+  <div class="wrap">
+    <div class="guardian-title-frame">
+      <img
+        class="guardian-header-image"
+        src="./assets/guardian-header.png"
+        alt="守護名（ペンネーム）"
+      >
+      <div class="guardian-connection-strip" aria-label="データ接続状況">
+        <div class="guardian-connection-label">
+          <span class="guardian-db-icon" aria-hidden="true">●</span>
+          <strong>データ接続</strong>
+        </div>
+        <div class="guardian-connection-status">
+          <span id="dataStatus" class="status">漢字辞書 未読込</span>
+          <span id="triadStatus" class="status">陰陽五行確認中</span>
+        </div>
+        <div id="loadError" class="notice bad hidden guardian-connection-error"></div>
+      </div>
+    </div>
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="pageTitle"></h1>
+    <p class="lead" id="pageLead"></p>
+    <span class="product-chip" id="productCode"></span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="guardian-entry-stage">
+    <img class="guardian-figure guardian-figure-agyo"
+         src="./assets/guardian-agyo.png"
+         alt=""
+         aria-hidden="true">
+    <section class="panel guardian-entry-panel">
+      <h2>1. 命名条件</h2>
+      <div id="productFields"></div>
+      <div id="conditionLockNotice" class="notice warn hidden"></div>
+      <div class="actions">
+        <button id="generateBtn" class="btn" disabled>画数・陰陽五行の配置候補を確認</button>
+        <button id="resetBtn" class="btn secondary">命名条件のリセット</button>
+      </div>
+    </section>
+    <img class="guardian-figure guardian-figure-ungyo"
+         src="./assets/guardian-ungyo.png"
+         alt=""
+         aria-hidden="true">
+  </div>
+
+  <section id="resultPanel" class="panel hidden">
+    <div class="guardian-result-heading">
+      <h2>2. 格数・陰陽五行の配置候補</h2>
+      <button id="patternResetBtn" class="btn secondary" type="button">配置候補クリア</button>
+    </div>
+    <div id="summary" class="notice"></div>
+    <h3 id="patternHeading">格数構成</h3>
+    <div id="patterns" class="patterns"></div>
+
+    <div id="selectedPatternBar" class="guardian-selected-pattern hidden">
+      <div class="guardian-selected-pattern-text">
+        <strong id="selectedPatternLabel"></strong>
+        <span id="selectedPatternDetails"></span>
+      </div>
+      <button id="backToPatternsBtn" class="btn secondary" type="button">配置候補の選択に戻る</button>
+    </div>
+
+    <h3 id="candidateHeading" class="hidden">登録済みの名前候補</h3>
+    <div id="candidates" class="candidates hidden"></div>
+
+    <div id="guardianCharSelector" class="guardian-char-selector hidden">
+      <h3>漢字を1文字ずつ選ぶ</h3>
+      <div class="notice">
+        選択中の画数配置：
+        <strong id="guardianSelectedPatternText"></strong>
+      </div>
+      <div class="small guardian-selector-guide">
+        赤ちゃんの名付け「画数から」と同じ方式です。各文字位置で、その画数に該当する漢字を選んでください。
+      </div>
+      <div id="guardianCharSlots" class="guardian-char-slots"></div>
+    </div>
+
+    <div class="notice warn">
+      登録済みの名前候補は、選択した性別と画数配置に一致する名前だけを表示します。
+      登録候補に無い場合でも、下の漢字選択から自由に組み合わせられます。
+    </div>
+  </section>
+
+  <section id="directEvalPanel" class="panel">
+    <h2>2. 任意の名を直接評価</h2>
+    <div class="grid2">
+      <div><label>候補名</label><input id="directName" type="text" placeholder="候補を入力"></div>
+      <div class="actions">
+        <button id="evaluateBtn" class="btn secondary" disabled>この名前で仮診断</button>
+        <button id="directResetBtn" class="btn secondary" type="button">リセット</button>
+      </div>
+    </div>
+    <div id="directResult" class="notice"></div>
+  </section>
+
+  <section id="finalPanel" class="panel hidden guardian-final-panel">
+    <h2>選択した名前を確認</h2>
+
+    <div id="finalBox" class="final-preview guardian-final-preview">
+      <div id="finalName" class="name"></div>
+      <div id="finalYomi" class="yomi">読み未設定</div>
+
+      <div class="grid2 guardian-final-reading-grid">
+        <div>
+          <label>名前全体の読み</label>
+          <input id="finalReading" type="text" placeholder="例：はるき">
+          <div class="hint">
+            各漢字の読みをクリックすると仮入力します。最終的には自由に修正できます。
+          </div>
+        </div>
+        <div>
+          <label>選択漢字</label>
+          <div id="finalSelectedChars" class="stroke-pills"></div>
+        </div>
+      </div>
+
+      <div id="finalStats" class="final-grid"></div>
+      <div id="finalTriad" style="margin-top:12px"></div>
+    </div>
+
+    <div class="notice warn guardian-final-note">
+      ここでは選ばれた漢字名の読みはお客様で決めてください。
+    </div>
+  </section>
+</main>
+
+<div class="footer">Common Naming Engine / Product GUARDIAN</div>
+<script>window.NAMING_PRODUCT="GUARDIAN";</script>
+<script src="../shared/product-config.js"></script>
+<script src="../shared/naming-engine.js"></script>
+<script src="../shared/app.js?v=guardian-20260912-08"></script>
+</body>
+</html>
