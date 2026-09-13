@@ -273,8 +273,8 @@
     const surname=$("surname").value.trim();
     if(!rankingFieldsReady()){
       showRankingMessage("姓と男女別を入力してください。");
-      showRankingInputError("姓と男女別を入力してください。");
       if(!surname) $("surname").focus();
+      showRankingInputError("姓と男女別を入力してください。");
       return false;
     }
     clearRankingInputError();
