@@ -403,12 +403,22 @@
       String(a?.name||"").localeCompare(String(b?.name||""),"ja");
   }
 
+  function updateMobileSearchMethodCards(){
+    const cards=[...document.querySelectorAll("[data-search-mode]")];
+    const isMobile=window.matchMedia("(max-width:600px)").matches;
+
+    cards.forEach(btn=>{
+      btn.style.display=(!isMobile || !state.searchMode || btn.dataset.searchMode===state.searchMode) ? "" : "none";
+    });
+  }
+
   function setSearchMode(mode){
     state.searchMode=mode;
     state.selectedImageTerms.clear();
     document.querySelectorAll("[data-search-mode]").forEach(btn=>{
       btn.classList.toggle("selected",btn.dataset.searchMode===mode);
     });
+    updateMobileSearchMethodCards();
     $("nameCandidatePanel").classList.add("hidden");
     $("nameDiagnosisPanel").classList.add("hidden");
     $("patternPanel").classList.add("hidden");
@@ -1150,6 +1160,7 @@
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
   });
+  window.addEventListener("resize",updateMobileSearchMethodCards);
 
   updateFemalePreference();
   loadData();
