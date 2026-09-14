@@ -1179,10 +1179,24 @@
   });
 
   $("finalReading").addEventListener("input",updateFinalReadingPreview);
-  $("resetBtn").addEventListener("click",()=>location.reload());
+  $("resetBtn").addEventListener("click",()=>{
+    const mobile=window.matchMedia?.("(max-width: 760px)")?.matches ||
+      ((window.screen && Number(window.screen.width)) || 9999) <= 760;
+    if(mobile) sessionStorage.setItem("baby-reset-scroll-top","1");
+    location.reload();
+  });
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
   });
+
+  if(sessionStorage.getItem("baby-reset-scroll-top")==="1"){
+    sessionStorage.removeItem("baby-reset-scroll-top");
+    if("scrollRestoration" in history) history.scrollRestoration="manual";
+    const resetScrollTop=()=>window.scrollTo(0,0);
+    resetScrollTop();
+    requestAnimationFrame(resetScrollTop);
+    window.addEventListener("load",resetScrollTop,{once:true});
+  }
 
   updateFemalePreference();
   loadData();
