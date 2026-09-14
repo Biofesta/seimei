@@ -335,7 +335,7 @@
 
   function renderPersonalPatterns(patterns,input,filterStats){
     if(!patterns.length){
-      showMessage("足切り条件を通過する画数構成を作れませんでした。条件を変えて再確認してください。",true);
+      showMessage("条件を通過する画数配置がありません。",true);
       return;
     }
 
@@ -343,13 +343,10 @@
     const excluded=Math.max(0,(fs.examined||0)-(fs.accepted||0));
 
     $("summary").innerHTML=
-      `${code==="GUARDIAN"?"格数・陰陽五行の配置候補":"画数・陰陽五行の配置候補"}を <strong>${patterns.length}</strong> 件抽出しました。`+
+      `候補画数配置 <strong>${patterns.length}</strong>件。`+
       (patterns.length>9 ? ` 評価上位<strong>9件</strong>を表示しています。` : "")+
-      ` 低評価・要注意構成を先に除外しています。`+
-      (excluded?`（足切り ${excluded.toLocaleString()}構成）`:"")+
-      (state.triad
-        ?" 陰陽五行に要注意判定がないものを残し、総格・主格・地格を優先して比較しています。"
-        :" 陰陽五行データ未接続のため、五格の足切りと評価で比較しています。");
+      (excluded?` 低評価・要注意・地格31以上を ${excluded.toLocaleString()}構成除外しました。`:"")+
+      ` <strong>ここでは名前は自動生成しません。</strong>`;
 
     $("patterns").innerHTML=patterns.slice(0,9).map((p,i)=>personalPatternCard(p,i)).join("");
 
@@ -400,22 +397,34 @@
   function personalPatternCard(p,i){
     const s=p.scores;
     const star=n=>"★".repeat(E.scoreInfo(n).score)||"—";
-    const triad=p.triad.available
-      ?p.triad.items.map(([,v])=>`陰陽五行:${esc(v?.symbol||"—")}`).join(" / ")
-      :"陰陽五行未接続";
+    const triadRating=p.triad?.available
+      ?(p.triad.rating || p.triad.items?.[0]?.[1]?.symbol || "")
+      :"";
+    const triadLabel=(()=>{
+      const v=String(triadRating||"");
+      if(v==="◎") return "◎最調和";
+      if(v==="〇" || v==="○") return "〇調和";
+      if(v.includes("要注意")) return "【要注意】";
+      return v || "データ未取得";
+    })();
+    const harmony=`陰陽五行：${esc(triadLabel)}`;
+    const sociability=(()=>{
+      const jinLast=Math.abs(Number(s.jin)||0)%10;
+      const gaiLast=Math.abs(Number(s.gai)||0)%10;
+      return `社交性：${((jinLast+4)%10)===gaiLast ? "やや不調和" : "普通"}`;
+    })();
 
     return `<div class="card">
       ${code==="GUARDIAN"?`<div class="guardian-pattern-rank">第${i+1}候補</div>`:""}
-      <div class="score">${p.strokes.join("＋")}画</div>
+      <div class="score">${p.strokes.join(" ＋ ")}画</div>
       <div class="pills">
         <span class="pill">主 ${s.jin} ${star(s.jin)}</span>
         <span class="pill">地 ${s.chi} ${star(s.chi)}</span>
         <span class="pill">外 ${s.gai} ${star(s.gai)}</span>
         <span class="pill">総 ${s.sou} ${star(s.sou)}</span>
       </div>
-      <div class="small">${triad}</div>
-      <div class="small">低評価数と陰陽五行の要注意構成は表示前に除外済み</div>
-      <div class="actions"><button class="btn secondary" data-pattern="${i}">${code==="GUARDIAN"?"この格数配置を選ぶ":"この画数配置を選ぶ"}</button></div>
+      <div class="small"><span>${harmony}</span><span style="margin-left:14px">${sociability}</span></div>
+      <div class="actions"><button class="btn secondary" data-pattern="${i}">この画数配置を選ぶ</button></div>
     </div>`;
   }
 

@@ -8,9 +8,7 @@
 <style>
 
 body[data-product="GUARDIAN"]{
-  background:
-    linear-gradient(rgba(252,249,243,.84), rgba(252,249,243,.84)),
-    url("./assets/guardian-page-background.png") center top / cover no-repeat fixed;
+  background:url("./assets/guardian-page-background.png") center top / cover no-repeat fixed;
 }
 body[data-product="GUARDIAN"] .guardian-title-frame{
   overflow:hidden;
@@ -649,11 +647,11 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
 
   <section id="resultPanel" class="panel hidden">
     <div class="guardian-result-heading">
-      <h2>2. 格数・陰陽五行の配置候補</h2>
+      <h2>画数配置を選ぶ</h2>
       <button id="patternResetBtn" class="btn secondary" type="button">配置候補クリア</button>
     </div>
     <div id="summary" class="notice"></div>
-    <h3 id="patternHeading">格数構成</h3>
+    <h3 id="patternHeading">画数配置</h3>
     <div id="patterns" class="patterns"></div>
 
     <div id="selectedPatternBar" class="guardian-selected-pattern hidden">
@@ -732,6 +730,52 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
 <script>window.NAMING_PRODUCT="GUARDIAN";</script>
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/app.js?v=guardian-20260912-08"></script>
+<script src="../shared/app.js?v=guardian-20260914-09"></script>
+<script>
+(function(){
+  const PX_PER_MM=96/25.4;
+  const EXTRA_DOWN=3*PX_PER_MM;
+  const BASE_BOTTOM=8;
+
+  function pinGuardianFigures(){
+    if(window.innerWidth<=760) return;
+
+    const stage=document.querySelector('.guardian-entry-stage');
+    const notice=document.getElementById('conditionLockNotice');
+    const figures=[...document.querySelectorAll('.guardian-entry-stage .guardian-figure')];
+    if(!stage || !notice || !figures.length) return;
+
+    const wasHidden=notice.classList.contains('hidden');
+    const oldText=notice.textContent;
+    const oldVisibility=notice.style.visibility;
+
+    if(wasHidden){
+      notice.textContent='命名条件を変更する場合は「配置候補クリア」を押してください。';
+      notice.style.visibility='hidden';
+      notice.classList.remove('hidden');
+    }
+
+    const lockedStageHeight=stage.getBoundingClientRect().height;
+
+    figures.forEach(fig=>{
+      const figureHeight=fig.getBoundingClientRect().height;
+      if(!figureHeight) return;
+      const top=lockedStageHeight-BASE_BOTTOM-figureHeight+EXTRA_DOWN;
+      fig.style.top=top+'px';
+      fig.style.bottom='auto';
+    });
+
+    if(wasHidden){
+      notice.classList.add('hidden');
+      notice.textContent=oldText;
+      notice.style.visibility=oldVisibility;
+    }
+  }
+
+  window.addEventListener('load',pinGuardianFigures);
+  window.addEventListener('resize',pinGuardianFigures);
+  setTimeout(pinGuardianFigures,0);
+})();
+</script>
 </body>
 </html>
