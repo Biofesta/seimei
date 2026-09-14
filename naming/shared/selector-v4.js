@@ -555,7 +555,8 @@
         state.selectedImageTerms.clear();
         if(!same) state.selectedImageTerms.add(label);
         renderImageGroups();
-        runImageSearch();
+        $("nameCandidatePanel").classList.add("hidden");
+        $("nameDiagnosisPanel").classList.add("hidden");
       });
     });
 
@@ -664,7 +665,6 @@
       return;
     }
 
-    // メインイメージだけでは候補名を表示しない。サブイメージ選択後に表示する。
     if(selectedMain && !selectedSub && !selectedFeature){
       $("nameCandidatePanel").classList.add("hidden");
       return;
@@ -1185,25 +1185,60 @@
   });
 
   $("finalReading").addEventListener("input",updateFinalReadingPreview);
-  const resetBabyToTop=()=>{
-    sessionStorage.setItem("baby-reset-scroll-top","1");
-    location.reload();
-  };
-  document.querySelectorAll("button").forEach(btn=>{
-    if(btn.textContent.trim()==="最初から") btn.addEventListener("click",resetBabyToTop);
+
+  $("basicInfoClearBtn")?.addEventListener("click",()=>{
+    $("surname").value="";
+    $("sex").value="";
+    $("socialIndependence").checked=false;
+    updateFemalePreference();
+    clearRankingInputError();
+    clearRankingMessage();
   });
+
+  $("resetBtn").addEventListener("click",()=>{
+    state.searchMode="";
+    state.selectedImageTerms.clear();
+    state.currentCandidates=[];
+    state.currentAllCandidates=[];
+    state.currentCandidateTitle="";
+    state.currentCandidateConditions=[];
+    state.candidateDisplayCount=60;
+    state.patterns=[];
+    state.selectedPatternIndex=null;
+    state.selectedChars=[];
+    state.selectedReadings=[];
+    state.slotFilters=[];
+
+    document.querySelectorAll("[data-search-mode]").forEach(btn=>{
+      btn.classList.remove("selected");
+      btn.style.removeProperty("display");
+    });
+
+    $("searchModePanel").classList.add("hidden");
+    $("searchModePanel").innerHTML="";
+    $("nameCandidatePanel").classList.add("hidden");
+    $("nameDiagnosisPanel").classList.add("hidden");
+    $("patternPanel").classList.add("hidden");
+    $("selectorPanel").classList.add("hidden");
+    $("finalPanel").classList.add("hidden");
+    $("mobileSelectedPatternBar")?.classList.add("hidden");
+    clearRankingMessage();
+
+    const vw=Math.min(
+      window.innerWidth || 9999,
+      document.documentElement.clientWidth || 9999,
+      (window.screen && window.screen.width) || 9999
+    );
+    if(vw<=760){
+      requestAnimationFrame(()=>{
+        $("searchMethodPanel").scrollIntoView({behavior:"smooth",block:"start"});
+      });
+    }
+  });
+
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
   });
-
-  if(sessionStorage.getItem("baby-reset-scroll-top")==="1"){
-    sessionStorage.removeItem("baby-reset-scroll-top");
-    if("scrollRestoration" in history) history.scrollRestoration="manual";
-    const resetScrollTop=()=>window.scrollTo(0,0);
-    resetScrollTop();
-    requestAnimationFrame(resetScrollTop);
-    window.addEventListener("load",resetScrollTop,{once:true});
-  }
 
   updateFemalePreference();
   loadData();
