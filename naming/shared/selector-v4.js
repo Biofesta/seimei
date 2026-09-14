@@ -664,6 +664,12 @@
       return;
     }
 
+    // メインイメージだけでは候補名を表示しない。サブイメージ選択後に表示する。
+    if(selectedMain && !selectedSub && !selectedFeature){
+      $("nameCandidatePanel").classList.add("hidden");
+      return;
+    }
+
     let rows=baseNameRecords();
     let title="";
     const conditions=[];
@@ -1179,11 +1185,12 @@
   });
 
   $("finalReading").addEventListener("input",updateFinalReadingPreview);
-  $("resetBtn").addEventListener("click",()=>{
-    const mobile=window.matchMedia?.("(max-width: 760px)")?.matches ||
-      ((window.screen && Number(window.screen.width)) || 9999) <= 760;
-    if(mobile) sessionStorage.setItem("baby-reset-scroll-top","1");
+  const resetBabyToTop=()=>{
+    sessionStorage.setItem("baby-reset-scroll-top","1");
     location.reload();
+  };
+  document.querySelectorAll("button").forEach(btn=>{
+    if(btn.textContent.trim()==="最初から") btn.addEventListener("click",resetBabyToTop);
   });
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
