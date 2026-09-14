@@ -63,12 +63,14 @@ body[data-product="BABY"] #resetBtn:hover{
   color:#c43b3b;
   opacity:1;
 }
-body[data-product="BABY"] #selectedNameResetBtn{
+body[data-product="BABY"] #selectedNameResetBtn,
+body[data-product="BABY"] #strokeSelectedNameResetBtn{
   background:#f4cf4f;
   color:#3b2b00;
   border-color:#d3ad26;
 }
-body[data-product="BABY"] #selectedNameResetBtn:hover{
+body[data-product="BABY"] #selectedNameResetBtn:hover,
+body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
   background:#f4cf4f;
   color:#3b2b00;
   opacity:1;
@@ -251,6 +253,9 @@ body[data-product="BABY"] #selectedNameResetBtn:hover{
     <div class="notice warn">
       ここでは選ばれた漢字名の読みはお客様で決めてください。
     </div>
+    <div class="actions">
+      <button id="strokeSelectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+    </div>
   </section>
 
   <div class="actions page-reset-actions">
@@ -262,7 +267,7 @@ body[data-product="BABY"] #selectedNameResetBtn:hover{
 
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/selector-v4.js?v=baby-20260914-11"></script>
+<script src="../shared/selector-v4.js?v=baby-20260914-12"></script>
 <script>
 (function(){
   const cards=[...document.querySelectorAll('[data-search-mode]')];

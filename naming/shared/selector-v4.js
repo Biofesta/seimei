@@ -1192,6 +1192,20 @@
     });
   });
 
+  $("strokeSelectedNameResetBtn")?.addEventListener("click",()=>{
+    const p=state.patterns[state.selectedPatternIndex];
+    const count=p?.strokes?.length || state.selectedChars.length;
+    state.selectedChars=Array(count).fill(null);
+    state.selectedReadings=Array(count).fill("");
+    $("finalReading").value="";
+    updateFinalReadingPreview();
+    $("finalPanel").classList.add("hidden");
+    if(p) renderSlots();
+    requestAnimationFrame(()=>{
+      $("selectorPanel").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+
   $("basicInfoClearBtn")?.addEventListener("click",()=>{
     $("surname").value="";
     $("sex").value="";
