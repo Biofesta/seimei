@@ -8,7 +8,11 @@
 <style>
 
 body[data-product="GUARDIAN"]{
-  background:url("./assets/guardian-page-background.png") center top / 100% auto no-repeat fixed;
+  background-image:url("./assets/guardian-page-background.png");
+  background-position:center top;
+  background-size:100% auto;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
 }
 body[data-product="GUARDIAN"] .guardian-title-frame{
   overflow:hidden;
@@ -124,7 +128,7 @@ body[data-product="GUARDIAN"] .guardian-entry-panel{
 body[data-product="GUARDIAN"] .guardian-figure{
   position:absolute;
   z-index:1;
-  bottom:-3px;
+  bottom:-41px;
   width:clamp(300px,31vw,440px);
   height:auto;
   opacity:1;
