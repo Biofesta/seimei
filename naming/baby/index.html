@@ -53,8 +53,24 @@ body[data-product="BABY"] .baby-side-angel-right{
 body[data-product="BABY"] #resetBtn{
   border-width:3px;
 }
+body[data-product="BABY"] #resetBtn{
+  background:#fff;
+  color:#c43b3b;
+  border-color:#c43b3b;
+}
 body[data-product="BABY"] #resetBtn:hover{
   background:#fff;
+  color:#c43b3b;
+  opacity:1;
+}
+body[data-product="BABY"] #selectedNameResetBtn{
+  background:#f4cf4f;
+  color:#3b2b00;
+  border-color:#d3ad26;
+}
+body[data-product="BABY"] #selectedNameResetBtn:hover{
+  background:#f4cf4f;
+  color:#3b2b00;
   opacity:1;
 }
 
@@ -174,6 +190,9 @@ body[data-product="BABY"] #resetBtn:hover{
   <section id="nameDiagnosisPanel" class="panel hidden">
     <h2>選んだ名前を姓名判断で確認</h2>
     <div id="nameDiagnosisBox" class="final-preview"></div>
+    <div class="actions">
+      <button id="selectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+    </div>
   </section>
 
   <section id="patternPanel" class="panel hidden">
@@ -243,7 +262,7 @@ body[data-product="BABY"] #resetBtn:hover{
 
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/selector-v4.js?v=baby-20260914-10"></script>
+<script src="../shared/selector-v4.js?v=baby-20260914-11"></script>
 <script>
 (function(){
   const cards=[...document.querySelectorAll('[data-search-mode]')];

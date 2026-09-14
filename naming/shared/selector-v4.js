@@ -740,7 +740,7 @@
             <div class="candidate-reading" title="${esc(reading)}"${rankingReadingStyle}>${esc(reading)}</div>
             <span class="gender-mini">${gender}</span>
           </div>
-          <button type="button" class="btn secondary diagnose-name" data-name-index="${i}">この名前を姓名判断する</button>
+          <button type="button" class="btn secondary diagnose-name" data-name-index="${i}">この名前を選択する</button>
         </article>`;
       }).join("");
       document.querySelectorAll(".diagnose-name").forEach(btn=>{
@@ -794,9 +794,8 @@
       socialIndependence:$("socialIndependence").checked
     });
     const reasons=(gate.reasons||[]).map(x=>String(x).replace(/三才/g,"陰陽五行"));
-    const main=(rec.main_image_tags||rec.tags||[]).slice(0,8);
-    const keywords=(rec.image_keywords||[]).slice(0,12);
-    const subtags=(rec.image_subtags||[]).slice(0,10);
+    const selectedMain=MAIN_IMAGE_TERMS.find(x=>state.selectedImageTerms.has(x))||"";
+    const selectedSub=SUB_IMAGE_TERMS.find(x=>state.selectedImageTerms.has(x))||"";
 
     $("nameDiagnosisBox").innerHTML=`
       <div class="name">${esc(surname+rec.name)}</div>
@@ -811,12 +810,11 @@
         <span class="pill">社交性 ${esc(sociabilityLabel(calc))}</span>
       </div>
       ${reasons.length?`<div class="notice warn diagnosis-note">確認：${esc(reasons.join("／"))}</div>`:`<div class="notice ok diagnosis-note">現在の名付け基準では候補条件を通過します。</div>`}
-      <div class="diagnosis-image-info">
+      ${(selectedMain||selectedSub)?`<div class="diagnosis-image-info">
         <strong>名前のイメージ</strong>
-        <div class="candidate-tags">${main.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
-        ${subtags.length?`<div class="small">サブイメージ：${esc(subtags.join("・"))}</div>`:""}
-        ${keywords.length?`<div class="small">連想：${esc(keywords.join("・"))}</div>`:""}
-      </div>`;
+        ${selectedMain?`<div class="small">メイン：${esc(selectedMain)}</div>`:""}
+        ${selectedSub?`<div class="small">サブ：${esc(selectedSub)}</div>`:""}
+      </div>`:""}`;
 
     $("nameDiagnosisPanel").classList.remove("hidden");
     $("nameDiagnosisPanel").scrollIntoView({behavior:"smooth",block:"start"});
@@ -1185,6 +1183,14 @@
   });
 
   $("finalReading").addEventListener("input",updateFinalReadingPreview);
+
+  $("selectedNameResetBtn")?.addEventListener("click",()=>{
+    $("nameDiagnosisPanel").classList.add("hidden");
+    $("nameDiagnosisBox").innerHTML="";
+    requestAnimationFrame(()=>{
+      $("nameCandidatePanel").scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
 
   $("basicInfoClearBtn")?.addEventListener("click",()=>{
     $("surname").value="";
