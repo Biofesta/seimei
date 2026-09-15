@@ -132,12 +132,10 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
         <div>
           <label>お子さまの性別</label>
           <select id="sex">
-            <option value="">指定しない</option>
+            <option value="" selected disabled>選択してください</option>
             <option value="male">男の子</option>
             <option value="female">女の子</option>
-            <option value="other">男女共通・指定しない</option>
           </select>
-          <div class="hint">指定が無い場合、命名ランキングは確認出来なくなります。</div>
         </div>
         <div id="femalePreference" class="hidden">
           <label>女性の社会的自立・活躍を積極的に重視</label>
@@ -267,7 +265,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
 
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/selector-v4.js?v=baby-20260914-12"></script>
+<script src="../shared/selector-v4.js?v=baby-20260915-star1"></script>
 <script>
 (function(){
   const cards=[...document.querySelectorAll('[data-search-mode]')];

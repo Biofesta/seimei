@@ -35,9 +35,27 @@
       .replaceAll("'","&#039;");
   }
 
+  function fixedStars(filled,total){
+    const max=Math.max(0,Number(total)||0);
+    const on=Math.max(0,Math.min(max,Number(filled)||0));
+    const off=Math.max(0,max-on);
+    return `<span style="white-space:nowrap;letter-spacing:0.08em;">`
+      +`<span style="background:linear-gradient(180deg,#ffe27a 0%,#f5a623 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;">${"★".repeat(on)}</span>`
+      +`<span style="color:#d3d3d3;">${"☆".repeat(off)}</span>`
+      +`</span>`;
+  }
+
   function stars(n){
     const s=E.scoreInfo(Number(n)).score;
-    return s ? "★".repeat(s) : "—";
+    return fixedStars(s,6);
+  }
+
+  function triadStars(rating){
+    const s=String(rating||"");
+    if(s==="◎") return fixedStars(10,10);
+    if(s==="〇" || s==="○") return fixedStars(8,10);
+    if(s.includes("要注意")) return '<span style="color:#b00020;font-weight:700;">【要注意】</span>';
+    return esc(s||"—");
   }
 
   function cleanReading(v){
@@ -806,7 +824,7 @@
         `).join("")}
       </div>
       <div class="stroke-pills diagnosis-summary-pills">
-        <span class="pill">陰陽五行 ${esc(triadDisplayLabel(rating))}</span>
+        <span class="pill">陰陽五行 ${triadStars(rating)}</span>
         <span class="pill">社交性 ${esc(sociabilityLabel(calc))}</span>
       </div>
       ${reasons.length?`<div class="notice warn diagnosis-note">確認：${esc(reasons.join("／"))}</div>`:`<div class="notice ok diagnosis-note">現在の名付け基準では候補条件を通過します。</div>`}
@@ -892,7 +910,7 @@
         p.triad?.items?.[0]?.[1]?.symbol ||
         "";
       const harmony=triadRating
-        ? `陰陽五行：${esc(triadDisplayLabel(triadRating))}`
+        ? `陰陽五行：${triadStars(triadRating)}`
         : "陰陽五行：データ未取得";
       const sociability=`社交性：${esc(sociabilityLabel(s))}`;
 
@@ -1133,7 +1151,7 @@
       "";
     const triadHTML=finalTriadRating
       ? `<div class="stroke-pills">
-          <span class="pill">陰陽五行 ${esc(triadDisplayLabel(finalTriadRating))}</span>
+          <span class="pill">陰陽五行 ${triadStars(finalTriadRating)}</span>
           <span class="pill">社交性 ${esc(sociabilityLabel(calc))}</span>
         </div>`
       : `<div class="small">陰陽五行データを取得できません</div>`;

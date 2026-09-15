@@ -45,6 +45,36 @@
     return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
   }
 
+  function fixedStars(filled,total){
+    const max=Math.max(0,Number(total)||0);
+    const on=Math.max(0,Math.min(max,Number(filled)||0));
+    const off=Math.max(0,max-on);
+    return `<span style="white-space:nowrap;letter-spacing:0.08em;">`
+      +`<span style="background:linear-gradient(180deg,#ffe27a 0%,#f5a623 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;">${"★".repeat(on)}</span>`
+      +`<span style="color:#d3d3d3;">${"☆".repeat(off)}</span>`
+      +`</span>`;
+  }
+
+  function scoreStars(n){
+    return fixedStars(E.scoreInfo(Number(n)).score,6);
+  }
+
+  function triadLabel(rating){
+    const v=String(rating||"");
+    if(v==="◎") return "◎最調和";
+    if(v==="〇" || v==="○") return "〇調和";
+    if(v.includes("要注意")) return "【要注意】";
+    return v || "データ未取得";
+  }
+
+  function triadStars(rating){
+    const v=String(rating||"");
+    if(v==="◎") return fixedStars(10,10);
+    if(v==="〇" || v==="○") return fixedStars(8,10);
+    if(v.includes("要注意")) return '<span style="color:#b00020;font-weight:700;">【要注意】</span>';
+    return esc(v||"—");
+  }
+
   async function fetchJSON(url,required=true){
     try{
       const r=await fetch(url,{cache:"no-store"});
@@ -396,18 +426,10 @@
 
   function personalPatternCard(p,i){
     const s=p.scores;
-    const star=n=>"★".repeat(E.scoreInfo(n).score)||"—";
-    const triadRating=p.triad?.available
+        const triadRating=p.triad?.available
       ?(p.triad.rating || p.triad.items?.[0]?.[1]?.symbol || "")
       :"";
-    const triadLabel=(()=>{
-      const v=String(triadRating||"");
-      if(v==="◎") return "◎最調和";
-      if(v==="〇" || v==="○") return "〇調和";
-      if(v.includes("要注意")) return "【要注意】";
-      return v || "データ未取得";
-    })();
-    const harmony=`陰陽五行：${esc(triadLabel)}`;
+    const harmony=`陰陽五行：${triadStars(triadRating)}`;
     const sociability=(()=>{
       const jinLast=Math.abs(Number(s.jin)||0)%10;
       const gaiLast=Math.abs(Number(s.gai)||0)%10;
@@ -418,10 +440,10 @@
       ${code==="GUARDIAN"?`<div class="guardian-pattern-rank">第${i+1}候補</div>`:""}
       <div class="score">${p.strokes.join(" ＋ ")}画</div>
       <div class="pills">
-        <span class="pill">主 ${s.jin} ${star(s.jin)}</span>
-        <span class="pill">地 ${s.chi} ${star(s.chi)}</span>
-        <span class="pill">外 ${s.gai} ${star(s.gai)}</span>
-        <span class="pill">総 ${s.sou} ${star(s.sou)}</span>
+        <span class="pill">主 ${s.jin} ${scoreStars(s.jin)}</span>
+        <span class="pill">地 ${s.chi} ${scoreStars(s.chi)}</span>
+        <span class="pill">外 ${s.gai} ${scoreStars(s.gai)}</span>
+        <span class="pill">総 ${s.sou} ${scoreStars(s.sou)}</span>
       </div>
       <div class="small"><span>${harmony}</span><span style="margin-left:14px">${sociability}</span></div>
       <div class="actions"><button class="btn secondary" data-pattern="${i}">この画数配置を選ぶ</button></div>
@@ -764,24 +786,12 @@
       t?.items?.[0]?.[1]?.symbol ||
       "";
 
-    const triadLabel=(()=>{
-      const s=String(triadRating||"");
-      if(s==="◎") return "◎最調和";
-      if(s==="〇" || s==="○") return "〇調和";
-      if(s.includes("要注意")) return "【要注意】";
-      return s || "—";
-    })();
-
+    
     const sociability=(()=>{
       const jinLast=Math.abs(Number(calc.jin)||0)%10;
       const gaiLast=Math.abs(Number(calc.gai)||0)%10;
       return ((jinLast+4)%10)===gaiLast ? "やや不調和" : "普通";
     })();
-
-    const stars=n=>{
-      const score=E.scoreInfo(Number(n)).score;
-      return score ? "★".repeat(score) : "—";
-    };
 
     $("finalPanel").classList.remove("hidden");
     $("finalName").textContent=input.surname+given;
@@ -798,13 +808,13 @@
       <div class="final-stat">
         <span class="small">${label}</span>
         <b>${n}</b>
-        <span>${label==="天格"?"—":stars(n)}</span>
+        <span>${label==="天格"?"—":scoreStars(n)}</span>
       </div>
     `).join("");
 
     $("finalTriad").innerHTML=triadRating
       ? `<div class="stroke-pills">
-          <span class="pill">陰陽五行 ${esc(triadLabel)}</span>
+          <span class="pill">陰陽五行 ${triadStars(triadRating)}</span>
           <span class="pill">社交性 ${esc(sociability)}</span>
         </div>`
       : `<div class="small">陰陽五行データを取得できません</div>`;
