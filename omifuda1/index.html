@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<base href="/seimei/omifuda1/">
 <title>御身札（おみふだ）</title>
 
 <!-- 診断画面を画像化するライブラリ -->
@@ -108,7 +109,7 @@
     content:"";
     position:absolute;
     inset:0;
-    background:url("haikei2.JPG") no-repeat center center;
+    background:url("./haikei2.JPG?v=20260920") no-repeat center center;
     background-size:cover;
     opacity:var(--input-bg-opacity);
     z-index:0;
@@ -383,9 +384,9 @@ async function incrementDiagnosisCounter(){
 async function loadData(){
   try{
     const [r1,r2,r3]=await Promise.all([
-      fetch("strokes_kumazaki_full.json"),
-      fetch("diagnosis_data.json"),
-      fetch("diagnosis_triad_free.json")  // ★ 新しい三才データ
+      fetch("./strokes_kumazaki_full.json?v=20260920", {cache:"no-store"}),
+      fetch("./diagnosis_data.json?v=20260920", {cache:"no-store"}),
+      fetch("./diagnosis_triad_free.json?v=20260920", {cache:"no-store"})  // ★ 新しい三才データ
     ]);
     strokes   = await r1.json();
     diagnosis = await r2.json();
@@ -603,7 +604,7 @@ function renderKakusu(sei, mei, flags, scores){
                  xmlns="http://www.w3.org/2000/svg"
                  preserveAspectRatio="xMidYMid meet">
 
-    <image href="haikei.png"
+    <image href="./haikei.png?v=20260920"
            x="0" y="0"
            width="600"
            height="${totalHeight}"
@@ -871,7 +872,7 @@ function calculate(){
     out.join('') +
     `<p style="text-align:center;margin-top:30px;font-weight:bold;">―― 御身札 ――</p>
      <div style="text-align:center;margin-top:12px;">
-       <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
+       <img src="./logo_biofesta.jpg?v=20260920" alt="biofesta logo" style="width:30mm;height:auto;"/>
      </div>`;
 
   // ★ 診断結果が出た後だけ PDF 保存ボタンを表示
@@ -920,7 +921,7 @@ function buildPdfArea(fullName){
         </div>
 
         <div style="position:relative;margin-bottom:8px;">
-          <img src="haikei.png"
+          <img src="./haikei.png?v=20260920"
                alt=""
                style="position:absolute;inset:0;width:100%;height:100%;
                       object-fit:cover;opacity:0.8;" />
