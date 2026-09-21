@@ -1,9 +1,0 @@
-@echo off
-cd /d "C:\Users\biofe\Documents\compa"
-echo サーバーを起動しています...
-start /b python -m http.server 8002
-echo サーバー起動待機中...
-timeout /t 3 >nul
-echo ブラウザを起動します...
-start "" "http://localhost:8002/index.html"
-pause
