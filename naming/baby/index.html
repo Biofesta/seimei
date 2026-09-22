@@ -1,15 +1,7 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7EFETXE8F"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-L7EFETXE8F');
-</script>
-  <meta charset="utf-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>赤ちゃんの名付け｜名前を探す</title>
 <link rel="stylesheet" href="../shared/style.css">
@@ -200,6 +192,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
     <div id="nameDiagnosisBox" class="final-preview"></div>
     <div class="actions">
       <button id="selectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+      <button id="omifudaFromNameBtn" type="button" class="btn">御身札V1.0で誘導エネルギー診断</button>
     </div>
   </section>
 
@@ -261,6 +254,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
     </div>
     <div class="actions">
       <button id="strokeSelectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+      <button id="omifudaFromStrokeBtn" type="button" class="btn">御身札V1.0で誘導エネルギー診断</button>
     </div>
   </section>
 
@@ -309,6 +303,48 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
 
   window.addEventListener('resize',function(){
     if(!isBabyMobile()) showAllSearchCards();
+  });
+
+  function openOmifudaFromSelectedName(nameSourceId){
+    const surname=(document.getElementById('surname')?.value || '').trim();
+    const source=document.getElementById(nameSourceId);
+    const fullName=(source?.querySelector('.name')?.textContent || '').trim();
+
+    if(!surname){
+      alert('先に姓を入力してください。');
+      document.getElementById('surname')?.focus();
+      return;
+    }
+
+    if(!fullName){
+      alert('先に診断する名前を選択してください。');
+      return;
+    }
+
+    const givenName=fullName.startsWith(surname)
+      ? fullName.slice(surname.length).trim()
+      : '';
+
+    if(!givenName){
+      alert('選択した名前を取得できませんでした。');
+      return;
+    }
+
+    const url=new URL('/seimei/omifuda1/', window.location.origin);
+    url.searchParams.set('sei', surname);
+    url.searchParams.set('mei', givenName);
+    url.searchParams.set('autostart', '1');
+
+    // 名付け画面を残したまま、御身札を別タブで開く
+    window.open(url.toString(), '_blank', 'noopener');
+  }
+
+  document.getElementById('omifudaFromNameBtn')?.addEventListener('click',function(){
+    openOmifudaFromSelectedName('nameDiagnosisBox');
+  });
+
+  document.getElementById('omifudaFromStrokeBtn')?.addEventListener('click',function(){
+    openOmifudaFromSelectedName('finalBox');
   });
 })();
 </script>
