@@ -395,6 +395,9 @@ async function loadData(){
     const totalChars = Object.keys(strokes || {}).length;
     document.getElementById('debug').textContent =
       `データ読み込み完了準備OK！　${totalChars}`;
+
+    // 名付け画面などから姓・名が渡された場合は、自動入力・自動診断
+    applyUrlDiagnosis();
   }catch(e){
     document.getElementById('debug').textContent='読み込みエラー：'+e.message;
     document.getElementById('runBtn').disabled=true;
@@ -1029,6 +1032,28 @@ function setupSavePdf(){
       pdfArea.style.zIndex   = prevZ;
     }
   });
+}
+
+/* ---------- URLから姓・名を受け取って自動診断 ---------- */
+function applyUrlDiagnosis(){
+  const params = new URLSearchParams(window.location.search);
+  const sei = (params.get('sei') || '').trim();
+  const mei = (params.get('mei') || '').trim();
+
+  if(!sei || !mei) return;
+
+  document.getElementById('sei').value = sei;
+  document.getElementById('mei').value = mei;
+
+  if(params.get('autostart') === '1'){
+    calculate();
+    requestAnimationFrame(() => {
+      document.getElementById('diagnosisCard')?.scrollIntoView({
+        behavior:'smooth',
+        block:'start'
+      });
+    });
+  }
 }
 
 /* ---------- Enter 抑制 ---------- */
