@@ -405,8 +405,27 @@ function splitChars(s){ return Array.from(String(s).trim()); }
 
 function charVal(ch, prev=null){
   if(!strokes) return 0;
-  if(ch==="々" && prev && prev in strokes) return strokes[prev] || 0;
-  if(ch in strokes) return strokes[ch] || 0;
+
+  const getStroke = (key) => {
+    const entry = strokes[key];
+
+    // 旧辞書（文字→数値）にも対応
+    if(typeof entry === "number"){
+      return entry || 0;
+    }
+
+    // shared/kanjidic-naming.json（文字→オブジェクト）に対応
+    if(entry && typeof entry === "object"){
+      const n = Number(entry.kumazaki_strokes);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    return 0;
+  };
+
+  if(ch==="々" && prev && prev in strokes) return getStroke(prev);
+  if(ch in strokes) return getStroke(ch);
+
   missingInfo.push(ch+"：未登録");
   return 0;
 }
