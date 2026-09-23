@@ -28,7 +28,7 @@ body{
   pointer-events:none;
   background:
     linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,.08)),
-    url("../images/love-background.png") center center / cover no-repeat;
+    url("../images/love-background.jpg") center center / cover no-repeat;
 }
 .romantic-bg::before{
   content:"";
@@ -213,11 +213,11 @@ button{width:100%;border:0;border-radius:10px;padding:13px 16px;font-family:inhe
 .legend{display:flex;flex-wrap:wrap;gap:9px 17px;padding:10px 12px;background:#faf8f4;border:1px solid #e5dfd5;border-radius:12px;margin-bottom:14px;font-size:12px}
 .legend span{display:flex;align-items:center;gap:7px} .sample{width:30px;height:0;border-top-style:solid}
 .map{position:relative;min-height:610px;border:1px solid #e6dfd5;border-radius:16px;background:#fff;overflow:hidden}
-.side{position:absolute;top:36px;width:31%;z-index:3} .side.a{left:3%} .side.b{right:3%}
+.side{position:absolute;top:36px;width:26%;z-index:3} .side.a{left:3%} .side.b{right:3%}
 .layer{height:124px;margin-bottom:15px;border-radius:15px;padding:10px 12px 11px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;align-items:center;column-gap:8px;row-gap:2px;border:1px solid rgba(0,0,0,.055);box-shadow:0 4px 12px rgba(0,0,0,.045)}
 .layer.total{background:linear-gradient(135deg,#f7dfe5,#faeef1)} .layer.main{background:linear-gradient(135deg,#f8e5b5,#fbf0d2)}
 .layer.ground{background:linear-gradient(135deg,#dff1e6,#edf8f1)} .layer.outer{background:linear-gradient(135deg,#dfe8f8,#eef4fc)}
-.meta{display:contents} .lab{grid-column:1;grid-row:1;align-self:center;font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap} .desc{grid-column:1 / -1;grid-row:2;font-size:11px;color:#6d665f;white-space:nowrap}
+.meta{display:contents} .lab{grid-column:1;grid-row:1;align-self:center;font-size:22px;font-weight:700;line-height:1.2;white-space:nowrap} .desc{grid-column:1 / -1;grid-row:2;font-size:11px;color:#6d665f;white-space:nowrap}
 .number{grid-column:2;grid-row:1;justify-self:end;font-size:38px;line-height:1;padding:4px 8px;border-radius:10px;transition:background .18s ease,box-shadow .18s ease}
 .kaku-value{display:contents}
 .kaku-stars{grid-column:1 / -1;grid-row:3;justify-self:center;display:inline-flex;align-items:center;justify-content:center;gap:1px;margin-top:3px;padding:3px 4px;background:#fff;border:0;border-radius:0;line-height:1;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-weight:800}
@@ -303,8 +303,8 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 @media(max-width:1000px){.input-wrap,.result-wrap{max-width:100%}}
 @media(max-width:700px){
  .page{padding:10px} .result{padding:10px} .map{min-height:520px}
- .side{width:36%;top:34px} .side.a{left:2%} .side.b{right:2%}
- .layer{height:98px;padding:7px 6px;margin-bottom:12px;column-gap:4px;row-gap:1px} .lab{font-size:14px} .desc{display:none} .number{font-size:29px;padding:3px 5px}
+ .side{width:34%;top:34px} .side.a{left:1.5%} .side.b{right:1.5%}
+ .layer{height:98px;padding:7px 6px;margin-bottom:12px;column-gap:4px;row-gap:1px} .lab{font-size:17px} .desc{display:none} .number{font-size:29px;padding:3px 5px}
  .kaku-stars{margin-top:2px;padding:2px} .kaku-stars .star-unit{font-size:14px}
 
 
@@ -457,7 +457,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 <div class="layout">
 <div id="inputScreen" class="screen">
   <div class="input-hero">
-    <img src="../images/love-header.png" alt="恋愛・結婚相性診断">
+    <img src="../images/love-header.jpg" alt="恋愛・結婚相性診断">
   </div>
   <div class="input-wrap">
 <section class="panel inputs">
