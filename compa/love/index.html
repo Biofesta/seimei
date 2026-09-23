@@ -148,7 +148,7 @@ button{width:100%;border:0;border-radius:10px;padding:13px 16px;font-family:inhe
 .primary{background:linear-gradient(#c89b3e,#996912);color:white;box-shadow:0 4px 12px rgba(153,105,18,.22)}
 .secondary{margin-top:8px;background:#f1ede6;color:#5c554d}
 .smallnote{font-size:12px;line-height:1.65;color:#7a726a;margin:10px 2px 0}
-.errorbox{display:none;margin:10px 0 0;padding:10px 12px;border:1px solid #e6b2af;background:#fff4f3;color:#9b3431;border-radius:9px;font-size:13px;line-height:1.6}.errorbox.show{display:block}
+.errorbox{display:none;margin:0 0 10px;padding:10px 12px;border:1px solid #e6b2af;background:#fff4f3;color:#9b3431;border-radius:9px;font-size:13px;line-height:1.6}.errorbox.show{display:block}
 .result{padding:18px;min-width:0}
 .names{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;text-align:center;margin-bottom:12px}
 .names{grid-template-columns:minmax(0,1fr) minmax(330px,430px) minmax(0,1fr);gap:10px}
@@ -214,13 +214,13 @@ button{width:100%;border:0;border-radius:10px;padding:13px 16px;font-family:inhe
 .legend span{display:flex;align-items:center;gap:7px} .sample{width:30px;height:0;border-top-style:solid}
 .map{position:relative;min-height:610px;border:1px solid #e6dfd5;border-radius:16px;background:#fff;overflow:hidden}
 .side{position:absolute;top:36px;width:31%;z-index:3} .side.a{left:3%} .side.b{right:3%}
-.layer{height:124px;margin-bottom:15px;border-radius:15px;padding:10px 12px 11px;display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start;border:1px solid rgba(0,0,0,.055);box-shadow:0 4px 12px rgba(0,0,0,.045)}
+.layer{height:124px;margin-bottom:15px;border-radius:15px;padding:10px 12px 11px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;align-items:center;column-gap:8px;row-gap:2px;border:1px solid rgba(0,0,0,.055);box-shadow:0 4px 12px rgba(0,0,0,.045)}
 .layer.total{background:linear-gradient(135deg,#f7dfe5,#faeef1)} .layer.main{background:linear-gradient(135deg,#f8e5b5,#fbf0d2)}
 .layer.ground{background:linear-gradient(135deg,#dff1e6,#edf8f1)} .layer.outer{background:linear-gradient(135deg,#dfe8f8,#eef4fc)}
-.meta{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;text-align:center} .lab{font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap} .desc{font-size:11px;color:#6d665f;white-space:nowrap}
-.number{font-size:38px;line-height:1;padding:4px 8px;border-radius:10px;transition:background .18s ease,box-shadow .18s ease}
-.kaku-value{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;width:100%}
-.kaku-stars{display:inline-flex;align-items:center;justify-content:center;gap:1px;margin-top:3px;padding:3px 4px;background:#fff;border:0;border-radius:0;line-height:1;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-weight:800}
+.meta{display:contents} .lab{grid-column:1;grid-row:1;align-self:center;font-size:19px;font-weight:700;line-height:1.2;white-space:nowrap} .desc{grid-column:1 / -1;grid-row:2;font-size:11px;color:#6d665f;white-space:nowrap}
+.number{grid-column:2;grid-row:1;justify-self:end;font-size:38px;line-height:1;padding:4px 8px;border-radius:10px;transition:background .18s ease,box-shadow .18s ease}
+.kaku-value{display:contents}
+.kaku-stars{grid-column:1 / -1;grid-row:3;justify-self:center;display:inline-flex;align-items:center;justify-content:center;gap:1px;margin-top:3px;padding:3px 4px;background:#fff;border:0;border-radius:0;line-height:1;white-space:nowrap;font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-weight:800}
 .kaku-stars .star-unit{font-size:17px;line-height:1}
 .kaku-stars.normal .star-unit.filled{color:#e6a400}
 .kaku-stars.strong .star-unit.filled{color:#ff6f00}
@@ -304,7 +304,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 @media(max-width:700px){
  .page{padding:10px} .result{padding:10px} .map{min-height:520px}
  .side{width:36%;top:34px} .side.a{left:2%} .side.b{right:2%}
- .layer{height:98px;padding:7px 5px;margin-bottom:12px} .lab{font-size:14px} .desc{display:none} .number{font-size:29px}
+ .layer{height:98px;padding:7px 6px;margin-bottom:12px;column-gap:4px;row-gap:1px} .lab{font-size:14px} .desc{display:none} .number{font-size:29px;padding:3px 5px}
  .kaku-stars{margin-top:2px;padding:2px} .kaku-stars .star-unit{font-size:14px}
 
 
@@ -437,7 +437,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .birth-compat-items{display:block;margin-top:4px;font-size:12px;line-height:1.7;color:#766b70}
 @media(max-width:700px){.birth-compat-label{display:flex;margin:0 0 6px 0;width:fit-content}}
 @media(max-width:700px){.birth-grid,.birth-summary{grid-template-columns:1fr}}
-@media(max-width:700px){.kaku-value{min-width:0}.number{font-size:29px}.kaku-stars{font-size:13px;letter-spacing:0}.kaku-stars .star-unit{font-size:14px}}
+@media(max-width:700px){.number{font-size:29px}.kaku-stars{font-size:13px;letter-spacing:0}.kaku-stars .star-unit{font-size:14px}}
 </style>
 </head>
 <body>
@@ -505,10 +505,10 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     </div>
   </div>
 
+  <div id="inputError" class="errorbox"></div>
   <button class="primary" id="run">診断する</button>
   <button class="secondary" id="clear">保存した本人情報を解除</button>
   <p class="smallnote">姓・名を入力し、性別を選んで「診断する」を押してください。「生年月日からも相性を見る」を選んだ場合だけ、四柱推命の追加情報も表示します。本人情報の保存は姓名・性別のみで、生年月日は保存しません。結婚後の同姓比較は診断結果から必要な場合だけ確認できます。</p>
-  <div id="inputError" class="errorbox"></div>
 </section>
   </div>
 </div>
