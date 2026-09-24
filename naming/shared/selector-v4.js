@@ -1,4 +1,3 @@
-```
 (function(){
   "use strict";
 
@@ -1283,4 +1282,3 @@
   updateFemalePreference();
   loadData();
 })();
-```
