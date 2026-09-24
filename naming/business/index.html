@@ -17,7 +17,7 @@
   --business-brown:#503a36;
 }
 body[data-product="BUSINESS"]{
-  background:#fff7f6 url("./assets/business-sky-rainbow-bg.png") center top / 100% auto no-repeat fixed;
+  background:#fff7f6;
   color:#3f3735;
 }
 body[data-product="BUSINESS"] .business-hero{
@@ -181,6 +181,13 @@ body[data-product="BUSINESS"] .rating-mark{
   font-size:2rem;
   font-weight:900;
 }
+body[data-product="BUSINESS"] .feature-keywords{
+  margin-top:6px;
+  font-size:1.05rem;
+  line-height:1.5;
+  font-weight:900;
+  color:#684842;
+}
 body[data-product="BUSINESS"] .feature-text{
   margin-top:5px;
   line-height:1.75;
@@ -195,8 +202,8 @@ body[data-product="BUSINESS"] .business-dragon{
   position:absolute;
   z-index:0;
   top:auto;
-  bottom:12px;
-  width:clamp(290px,30vw,430px);
+  bottom:18px;
+  width:clamp(180px,19.5vw,285px);
   height:auto;
   opacity:.82;
   pointer-events:none;
@@ -204,11 +211,11 @@ body[data-product="BUSINESS"] .business-dragon{
 }
 body[data-product="BUSINESS"] .business-dragon-left{
   left:0;
-  transform:translateX(calc(-100% - 20px));
+  transform:translateX(calc(-100% - 12px));
 }
 body[data-product="BUSINESS"] .business-dragon-right{
   right:0;
-  transform:translateX(calc(100% + 20px));
+  transform:translateX(calc(100% + 12px));
 }
 body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
   position:relative;
@@ -216,8 +223,8 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
 }
 @media(max-width:1100px){
   body[data-product="BUSINESS"] .business-dragon{
-    width:clamp(220px,24vw,330px);
-    opacity:.82;
+    width:clamp(144px,16.5vw,225px);
+    opacity:.72;
   }
 }
 @media(max-width:820px){
@@ -285,7 +292,7 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
     </div>
 
     <div class="business-actions">
-      <button id="diagnoseBtn" class="btn" type="button" disabled>この名称の総画を診断</button>
+      <button id="diagnoseBtn" class="btn" type="button" disabled>この名称を診断</button>
     </div>
 
     <div id="inputMessage" class="notice warn hidden business-error"></div>
@@ -294,24 +301,25 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
   </section>
 
   <section id="resultPanel" class="panel hidden">
-    <h2>2. 総画診断</h2>
+    <h2>2. 診断結果</h2>
     <div class="business-result">
       <div id="resultName" class="result-name"></div>
       <div id="charBreakdown" class="result-pills"></div>
 
       <div class="total-result">
         <div class="total-card">
-          <div class="cap">総画数</div>
+          <div class="cap">画数</div>
           <div id="totalNumber" class="total-number"></div>
         </div>
 
         <div class="total-card">
-          <div class="cap">評価</div>
+          <div class="cap">評価記号</div>
           <div id="ratingMark" class="rating-mark"></div>
         </div>
 
         <div class="total-card">
-          <div class="cap">総画の特徴</div>
+          <div class="cap">特徴</div>
+          <div id="featureKeywords" class="feature-keywords" hidden></div>
           <div id="featureText" class="feature-text"></div>
         </div>
       </div>
@@ -321,5 +329,111 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
 
 <script src="../shared/naming-engine.js"></script>
 <script src="./business.js?v=business-20260912-03"></script>
+<script>
+/* 画数別キーワード見出し：既存診断処理には触れず、結果の画数表示だけを参照 */
+const BUSINESS_DIAGNOSIS_KEYWORDS = {
+  1:"創始・独立・発展",
+  2:"分離・迷い・不安定",
+  3:"才知・明朗・人気",
+  4:"不安定・挫折・崩れ",
+  5:"調和・安定・信用",
+  6:"人望・援助・発展",
+  7:"独立・決断・突破",
+  8:"勤勉・忍耐・堅実",
+  9:"才能・浮沈・不安定",
+  10:"空転・中断・停滞",
+  11:"成長・再生・縁",
+  12:"繊細・発想・孤立",
+  13:"才知・人気・発展",
+  14:"変動・離散・不安定",
+  15:"人徳・信用・協力",
+  16:"統率・人望・成功",
+  17:"意志・行動力・決断",
+  18:"意志・実行力・粘り",
+  19:"才能・洞察・障害",
+  20:"停滞・迷走・不安定",
+  21:"自立・統率・発展",
+  22:"意欲・中断・不安定",
+  23:"勢い・発展・成功",
+  24:"蓄財・繁栄・信用",
+  25:"才知・個性・専門性",
+  26:"波乱万丈・衝突・不安定",
+  27:"自我・批判・摩擦",
+  28:"変動・別離・挑戦",
+  29:"知略・行動力・野心",
+  30:"浮沈・変動・不安定",
+  31:"判断力・社交性・円満",
+  32:"好機・援助・柔軟",
+  33:"発展・統率・勢い",
+  34:"破綻・損失・危機",
+  35:"温和・調整・信用",
+  36:"義理・責任・負担",
+  37:"誠実・信念・信用",
+  38:"芸術性・技術・専門性",
+  39:"富貴・栄達・発展",
+  40:"浮沈・失速・不安定",
+  41:"徳望・才能・名声",
+  42:"多才・分散・迷い",
+  43:"華やか・散財・信用低下",
+  44:"破綻・廃絶・危機",
+  45:"判断力・順調・信用",
+  46:"盛衰・失速・継続力",
+  47:"努力・開花・幸運",
+  48:"知恵・分析・専門性",
+  49:"変動・吉凶混在・不安定",
+  50:"盛衰・変動・慎重",
+  51:"順調・停滞・波",
+  52:"先見性・計画・好機",
+  53:"外順内難・課題・改善",
+  54:"災禍・損失・危機",
+  55:"外華内苦・負担・実質重視",
+  56:"意欲低下・計画倒れ・停滞",
+  57:"晩成・努力・信用",
+  58:"晩成・経験・安定",
+  59:"損失・失意・停滞",
+  60:"混乱・迷走・停滞",
+  61:"自立・繁栄・名声",
+  62:"孤立・信用低下・協力不足",
+  63:"順調・繁栄・安定",
+  64:"損失・破綻・危機",
+  65:"繁栄・安定・長期継続",
+  66:"信用低下・苦悩・再建",
+  67:"自主独立・実業・成功",
+  68:"創意工夫・改良・技術",
+  69:"停滞・衰退・再建",
+  70:"空転・暗転・危機",
+  71:"進取・迷い・堅実",
+  72:"外好内弱・ギャップ・点検",
+  73:"堅実・安定・継続",
+  74:"徒労・停滞・集中",
+  75:"守成・安定・堅実",
+  76:"対立・離散・不和",
+  77:"中庸・変動・調整",
+  78:"前半発展・後半失速・備え",
+  79:"不遇・批判・信用回復",
+  80:"停滞・衰退・整理",
+  81:"創始・発展・大成"
+};
+
+function updateBusinessDiagnosisKeywords(){
+  const numberEl=document.getElementById("totalNumber");
+  const keywordEl=document.getElementById("featureKeywords");
+  if(!numberEl || !keywordEl) return;
+  const m=String(numberEl.textContent||"").match(/\d+/);
+  const key=m ? Number(m[0]) : 0;
+  const text=BUSINESS_DIAGNOSIS_KEYWORDS[key] || "";
+  keywordEl.textContent=text;
+  keywordEl.hidden=!text;
+}
+
+const businessTotalNumberEl=document.getElementById("totalNumber");
+if(businessTotalNumberEl){
+  new MutationObserver(updateBusinessDiagnosisKeywords).observe(
+    businessTotalNumberEl,
+    {childList:true,subtree:true,characterData:true}
+  );
+  updateBusinessDiagnosisKeywords();
+}
+</script>
 </body>
 </html>
