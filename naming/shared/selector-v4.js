@@ -828,7 +828,7 @@
         <span class="pill">適応性 ${esc(sociabilityLabel(calc))}</span>
       </div>
       ${reasons.length?`<div class="notice warn diagnosis-note">確認：${esc(reasons.join("／"))}</div>`:`<div class="notice ok diagnosis-note">現在の名付け基準では候補条件を通過します。</div>`}
-      <div class="small" style="margin-top:8px;">陰陽五行で要確認は思わぬアクシデントの可能性がありますので注意してください。</div>
+      ${String(rating||"").includes("要注意")?`<div class="small" style="margin-top:8px;color:#b00020;font-weight:700;">陰陽五行で【要注意】は思わぬアクシデントの可能性がありますので注意してください。</div>`:""}
       ${(selectedMain||selectedSub)?`<div class="diagnosis-image-info">
         <strong>名前のイメージ</strong>
         ${selectedMain?`<div class="small">メイン：${esc(selectedMain)}</div>`:""}
