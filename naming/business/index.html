@@ -17,7 +17,7 @@
   --business-brown:#503a36;
 }
 body[data-product="BUSINESS"]{
-  background:#fff7f6;
+  background:#fff7f6 url("./assets/business-sky-rainbow-bg.png") center top / 100% auto no-repeat fixed;
   color:#3f3735;
 }
 body[data-product="BUSINESS"] .business-hero{
@@ -170,6 +170,10 @@ body[data-product="BUSINESS"] .total-card .cap{
   color:#70808a;
   font-weight:700;
 }
+body[data-product="BUSINESS"] .total-card:nth-child(1),
+body[data-product="BUSINESS"] .total-card:nth-child(2){
+  text-align:center;
+}
 body[data-product="BUSINESS"] .total-number{
   margin-top:4px;
   font-size:1.7rem;
@@ -202,8 +206,8 @@ body[data-product="BUSINESS"] .business-dragon{
   position:absolute;
   z-index:0;
   top:auto;
-  bottom:18px;
-  width:clamp(180px,19.5vw,285px);
+  bottom:12px;
+  width:clamp(290px,30vw,430px);
   height:auto;
   opacity:.82;
   pointer-events:none;
@@ -211,11 +215,11 @@ body[data-product="BUSINESS"] .business-dragon{
 }
 body[data-product="BUSINESS"] .business-dragon-left{
   left:0;
-  transform:translateX(calc(-100% - 12px));
+  transform:translateX(calc(-100% - 20px));
 }
 body[data-product="BUSINESS"] .business-dragon-right{
   right:0;
-  transform:translateX(calc(100% + 12px));
+  transform:translateX(calc(100% + 20px));
 }
 body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
   position:relative;
@@ -223,8 +227,8 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
 }
 @media(max-width:1100px){
   body[data-product="BUSINESS"] .business-dragon{
-    width:clamp(144px,16.5vw,225px);
-    opacity:.72;
+    width:clamp(220px,24vw,330px);
+    opacity:.82;
   }
 }
 @media(max-width:820px){
