@@ -124,8 +124,11 @@ body{
   .bg-heart.h3{left:18%;top:74%;font-size:44px}
   .bg-spark.s2,.bg-spark.s4{display:none}
 }
-.input-hero{max-width:860px;margin:0 auto 20px}
+.input-hero{position:relative;max-width:860px;margin:0 auto 20px}
 .input-hero img{display:block;width:100%;height:auto;border-radius:18px}
+.love-diagnosis-counter{position:absolute;left:50%;bottom:8px;transform:translate(-50%,11px);z-index:2;white-space:nowrap;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.82);font-size:14px;font-weight:700;line-height:1.35;color:#5f4650;box-shadow:0 2px 8px rgba(70,45,55,.12)}
+.love-diagnosis-counter strong{font-size:18px;color:#b04770;margin:0 3px}
+@media(max-width:700px){.love-diagnosis-counter{bottom:5px;padding:4px 9px;font-size:11px}.love-diagnosis-counter strong{font-size:15px}}
 .layout{display:block}
 .screen[hidden]{display:none!important}
 .input-wrap{max-width:860px;margin:0 auto}
@@ -458,6 +461,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 <div id="inputScreen" class="screen">
   <div class="input-hero">
     <img src="../images/love-header.jpg" alt="恋愛・結婚相性診断">
+    <div class="love-diagnosis-counter" aria-live="polite">累計相性診断数 <strong id="loveDiagnosisCounterValue">---</strong> 件</div>
   </div>
   <div class="input-wrap">
 <section class="panel inputs">
@@ -760,6 +764,38 @@ function saveA(a){
     localStorage.removeItem("compatibility_self_v3");
   }
 }
+/* ---------- 恋愛・結婚相性診断 累計カウンター ---------- */
+const LOVE_DIAGNOSIS_COUNTER_BASE = 'https://countapi.mileshilliard.com/api/v1';
+const LOVE_DIAGNOSIS_COUNTER_KEY  = 'biofesta-love-compatibility-diagnosis-v1';
+
+function showLoveDiagnosisCounter(value){
+  const el=document.getElementById("loveDiagnosisCounterValue");
+  if(!el)return;
+  const n=Number(value);
+  el.textContent=Number.isFinite(n)?n.toLocaleString("ja-JP"):"---";
+}
+async function loadLoveDiagnosisCounter(){
+  try{
+    const r=await fetch(`${LOVE_DIAGNOSIS_COUNTER_BASE}/get/${encodeURIComponent(LOVE_DIAGNOSIS_COUNTER_KEY)}`,{cache:"no-store"});
+    if(!r.ok){
+      if(r.status===404){showLoveDiagnosisCounter(0);return;}
+      throw new Error(`counter get: ${r.status}`);
+    }
+    const data=await r.json();
+    showLoveDiagnosisCounter(data.value);
+  }catch(e){
+    showLoveDiagnosisCounter("---");
+  }
+}
+async function incrementLoveDiagnosisCounter(){
+  try{
+    const r=await fetch(`${LOVE_DIAGNOSIS_COUNTER_BASE}/hit/${encodeURIComponent(LOVE_DIAGNOSIS_COUNTER_KEY)}`,{cache:"no-store"});
+    if(!r.ok)throw new Error(`counter hit: ${r.status}`);
+    const data=await r.json();
+    showLoveDiagnosisCounter(data.value);
+  }catch(e){}
+}
+
 function loadA(){
   try{
     // 旧試作版 compatibility_self_v1 は読み込まない。
@@ -1220,7 +1256,7 @@ async function showResult(){
       }
     }
     showScreen("result");
-    requestAnimationFrame(()=>render());
+    requestAnimationFrame(()=>{render();incrementLoveDiagnosisCounter();});
   }catch(e){
     showScreen("input");
     showInputError(e.message||"診断データを算出できませんでした。");
@@ -1285,6 +1321,7 @@ document.getElementById("clear").addEventListener("click",()=>{localStorage.remo
 document.getElementById("another").addEventListener("click",resetOpponent);
 window.addEventListener("resize",()=>{ if(!document.getElementById("resultScreen").hidden) render(); });
 loadA();
+loadLoveDiagnosisCounter();
 </script>
 </body>
 </html>
