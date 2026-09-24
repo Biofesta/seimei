@@ -35,27 +35,9 @@
       .replaceAll("'","&#039;");
   }
 
-  function fixedStars(filled,total){
-    const max=Math.max(0,Number(total)||0);
-    const on=Math.max(0,Math.min(max,Number(filled)||0));
-    const off=Math.max(0,max-on);
-    return `<span style="white-space:nowrap;letter-spacing:0.08em;">`
-      +`<span style="background:linear-gradient(180deg,#ffe27a 0%,#f5a623 100%);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;">${"★".repeat(on)}</span>`
-      +`<span style="color:#d3d3d3;">${"☆".repeat(off)}</span>`
-      +`</span>`;
-  }
-
   function stars(n){
     const s=E.scoreInfo(Number(n)).score;
-    return fixedStars(s,6);
-  }
-
-  function triadStars(rating){
-    const s=String(rating||"");
-    if(s==="◎") return fixedStars(10,10);
-    if(s==="〇" || s==="○") return fixedStars(8,10);
-    if(s.includes("要注意")) return '<span style="color:#b00020;font-weight:700;">【要注意】</span>';
-    return esc(s||"—");
+    return s ? "★".repeat(s) : "—";
   }
 
   function cleanReading(v){
@@ -260,42 +242,14 @@
     if(box) box.hidden=true;
   }
 
-  function rankingFieldsReady(){
-    const surname=$("surname").value.trim();
-    const sex=$("sex").value;
-    return !!surname && (sex==="male" || sex==="female");
-  }
-
-  function showRankingInputError(message){
-    let box=$("rankingRequiredMessage");
-    if(!box){
-      box=document.createElement("span");
-      box.id="rankingRequiredMessage";
-      box.style.cssText="display:none;margin-left:10px;color:#c62828;font-weight:700;font-size:.92em;";
-      const surnameInput=$("surname");
-      const label=surnameInput?.parentElement?.querySelector("label");
-      if(label) label.appendChild(box);
-    }
-    if(box){
-      box.textContent=message;
-      box.style.display="inline";
-    }
-  }
-
-  function clearRankingInputError(){
-    const box=$("rankingRequiredMessage");
-    if(box) box.style.display="none";
-  }
-
   function rankingInputReady(){
     const surname=$("surname").value.trim();
-    if(!rankingFieldsReady()){
+    const sex=$("sex").value;
+    if(!surname || (sex!=="male" && sex!=="female")){
       showRankingMessage("姓と男女別を入力してください。");
       if(!surname) $("surname").focus();
-      showRankingInputError("姓と男女別を入力してください。");
       return false;
     }
-    clearRankingInputError();
     clearRankingMessage();
     return true;
   }
@@ -573,8 +527,7 @@
         state.selectedImageTerms.clear();
         if(!same) state.selectedImageTerms.add(label);
         renderImageGroups();
-        $("nameCandidatePanel").classList.add("hidden");
-        $("nameDiagnosisPanel").classList.add("hidden");
+        runImageSearch();
       });
     });
 
@@ -683,11 +636,6 @@
       return;
     }
 
-    if(selectedMain && !selectedSub && !selectedFeature){
-      $("nameCandidatePanel").classList.add("hidden");
-      return;
-    }
-
     let rows=baseNameRecords();
     let title="";
     const conditions=[];
@@ -758,7 +706,7 @@
             <div class="candidate-reading" title="${esc(reading)}"${rankingReadingStyle}>${esc(reading)}</div>
             <span class="gender-mini">${gender}</span>
           </div>
-          <button type="button" class="btn secondary diagnose-name" data-name-index="${i}">この名前を選択する</button>
+          <button type="button" class="btn secondary diagnose-name" data-name-index="${i}" style="background:#e7f5e8 !important;border-color:#b8dbbd !important;color:#315a37 !important;">この名前で診断する</button>
         </article>`;
       }).join("");
       document.querySelectorAll(".diagnose-name").forEach(btn=>{
@@ -812,8 +760,9 @@
       socialIndependence:$("socialIndependence").checked
     });
     const reasons=(gate.reasons||[]).map(x=>String(x).replace(/三才/g,"陰陽五行"));
-    const selectedMain=MAIN_IMAGE_TERMS.find(x=>state.selectedImageTerms.has(x))||"";
-    const selectedSub=SUB_IMAGE_TERMS.find(x=>state.selectedImageTerms.has(x))||"";
+    const main=(rec.main_image_tags||rec.tags||[]).slice(0,8);
+    const keywords=(rec.image_keywords||[]).slice(0,12);
+    const subtags=(rec.image_subtags||[]).slice(0,10);
 
     $("nameDiagnosisBox").innerHTML=`
       <div class="name">${esc(surname+rec.name)}</div>
@@ -824,15 +773,17 @@
         `).join("")}
       </div>
       <div class="stroke-pills diagnosis-summary-pills">
-        <span class="pill">陰陽五行 ${triadStars(rating)}</span>
-        <span class="pill">社交性 ${esc(sociabilityLabel(calc))}</span>
+        <span class="pill">陰陽五行 ${esc(triadDisplayLabel(rating))}</span>
+        <span class="pill">適応性 ${esc(sociabilityLabel(calc))}</span>
       </div>
       ${reasons.length?`<div class="notice warn diagnosis-note">確認：${esc(reasons.join("／"))}</div>`:`<div class="notice ok diagnosis-note">現在の名付け基準では候補条件を通過します。</div>`}
-      ${(selectedMain||selectedSub)?`<div class="diagnosis-image-info">
+      ${reasons.some(x=>String(x).includes("陰陽五行"))?`<div class="notice warn diagnosis-note">陰陽五行で【要注意】の場合は、思わぬアクシデントの可能性がありますので注意してください。</div>`:""}
+      <div class="diagnosis-image-info">
         <strong>名前のイメージ</strong>
-        ${selectedMain?`<div class="small">メイン：${esc(selectedMain)}</div>`:""}
-        ${selectedSub?`<div class="small">サブ：${esc(selectedSub)}</div>`:""}
-      </div>`:""}`;
+        <div class="candidate-tags">${main.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+        ${subtags.length?`<div class="small">サブイメージ：${esc(subtags.join("・"))}</div>`:""}
+        ${keywords.length?`<div class="small">連想：${esc(keywords.join("・"))}</div>`:""}
+      </div>`;
 
     $("nameDiagnosisPanel").classList.remove("hidden");
     $("nameDiagnosisPanel").scrollIntoView({behavior:"smooth",block:"start"});
@@ -877,9 +828,6 @@
 
     renderPatterns(r.filterStats||{});
     $("patternPanel").classList.remove("hidden");
-    $("mobileSelectedPatternBar")?.classList.add("hidden");
-    $("patternSummary")?.classList.remove("hidden");
-    $("patternGrid")?.classList.remove("hidden");
     $("selectorPanel").classList.add("hidden");
     $("finalPanel").classList.add("hidden");
     $("patternPanel").scrollIntoView({behavior:"smooth",block:"start"});
@@ -898,7 +846,6 @@
     );
     $("patternSummary").innerHTML=
       `候補画数配置 <strong>${state.patterns.length}</strong>件。`+
-      (state.patterns.length>12 ? ` 評価上位<strong>12件</strong>を表示しています。` : "")+
       (excluded?` 低評価・要注意・地格31以上を ${excluded.toLocaleString()}構成除外しました。`:"")+
       ` <strong>ここでは名前は自動生成しません。</strong>`;
 
@@ -910,9 +857,9 @@
         p.triad?.items?.[0]?.[1]?.symbol ||
         "";
       const harmony=triadRating
-        ? `陰陽五行：${triadStars(triadRating)}`
+        ? `陰陽五行：${esc(triadDisplayLabel(triadRating))}`
         : "陰陽五行：データ未取得";
-      const sociability=`社交性：${esc(sociabilityLabel(s))}`;
+      const sociability=`適応性：${esc(sociabilityLabel(s))}`;
 
       return `<div class="pattern-card" data-pcard="${i}">
         <div class="pattern-strokes">${p.strokes.join(" ＋ ")}画</div>
@@ -948,20 +895,6 @@
     renderSlots();
     $("selectorPanel").classList.remove("hidden");
     $("finalPanel").classList.add("hidden");
-
-    if(window.matchMedia("(max-width:600px)").matches){
-      $("mobileSelectedPatternLabel").textContent=`選択中：第${index+1}候補`;
-      $("mobileSelectedPatternDetails").textContent=
-        `${p.strokes.join(" ＋ ")}画（主${p.scores.jin}・地${p.scores.chi}・外${p.scores.gai}・総${p.scores.sou}）`;
-      $("mobileSelectedPatternBar").classList.remove("hidden");
-      $("patternSummary").classList.add("hidden");
-      $("patternGrid").classList.add("hidden");
-    }else{
-      $("mobileSelectedPatternBar")?.classList.add("hidden");
-      $("patternSummary")?.classList.remove("hidden");
-      $("patternGrid")?.classList.remove("hidden");
-    }
-
     $("selectorPanel").scrollIntoView({behavior:"smooth",block:"start"});
   }
 
@@ -1151,8 +1084,8 @@
       "";
     const triadHTML=finalTriadRating
       ? `<div class="stroke-pills">
-          <span class="pill">陰陽五行 ${triadStars(finalTriadRating)}</span>
-          <span class="pill">社交性 ${esc(sociabilityLabel(calc))}</span>
+          <span class="pill">陰陽五行 ${esc(triadDisplayLabel(finalTriadRating))}</span>
+          <span class="pill">適応性 ${esc(sociabilityLabel(calc))}</span>
         </div>`
       : `<div class="small">陰陽五行データを取得できません</div>`;
 
@@ -1180,100 +1113,14 @@
     $("finalPanel").scrollIntoView({behavior:"smooth",block:"nearest"});
   }
 
-  $("surname").addEventListener("input",()=>{
-    if(rankingFieldsReady()) clearRankingInputError();
-  });
-
   $("sex").addEventListener("change",()=>{
     updateFemalePreference();
-    if(rankingFieldsReady()) clearRankingInputError();
     if(state.searchMode==="image" && state.selectedImageTerms.size) runImageSearch();
     if(state.searchMode==="kanji" && $("favoriteKanji")?.value.trim()) runKanjiSearch();
     if(state.searchMode==="name" && $("nameQuery")) runNameQuerySearch();
   });
-
-  $("backToPatternListBtn")?.addEventListener("click",()=>{
-    $("mobileSelectedPatternBar")?.classList.add("hidden");
-    $("patternSummary")?.classList.remove("hidden");
-    $("patternGrid")?.classList.remove("hidden");
-    $("selectorPanel")?.classList.add("hidden");
-    $("patternPanel")?.scrollIntoView({behavior:"smooth",block:"start"});
-  });
-
   $("finalReading").addEventListener("input",updateFinalReadingPreview);
-
-  $("selectedNameResetBtn")?.addEventListener("click",()=>{
-    $("nameDiagnosisPanel").classList.add("hidden");
-    $("nameDiagnosisBox").innerHTML="";
-    requestAnimationFrame(()=>{
-      $("nameCandidatePanel").scrollIntoView({behavior:"smooth",block:"start"});
-    });
-  });
-
-  $("strokeSelectedNameResetBtn")?.addEventListener("click",()=>{
-    const p=state.patterns[state.selectedPatternIndex];
-    const count=p?.strokes?.length || state.selectedChars.length;
-    state.selectedChars=Array(count).fill(null);
-    state.selectedReadings=Array(count).fill("");
-    $("finalReading").value="";
-    updateFinalReadingPreview();
-    $("finalPanel").classList.add("hidden");
-    if(p) renderSlots();
-    requestAnimationFrame(()=>{
-      $("selectorPanel").scrollIntoView({behavior:"smooth",block:"start"});
-    });
-  });
-
-  $("basicInfoClearBtn")?.addEventListener("click",()=>{
-    $("surname").value="";
-    $("sex").value="";
-    $("socialIndependence").checked=false;
-    updateFemalePreference();
-    clearRankingInputError();
-    clearRankingMessage();
-  });
-
-  $("resetBtn").addEventListener("click",()=>{
-    state.searchMode="";
-    state.selectedImageTerms.clear();
-    state.currentCandidates=[];
-    state.currentAllCandidates=[];
-    state.currentCandidateTitle="";
-    state.currentCandidateConditions=[];
-    state.candidateDisplayCount=60;
-    state.patterns=[];
-    state.selectedPatternIndex=null;
-    state.selectedChars=[];
-    state.selectedReadings=[];
-    state.slotFilters=[];
-
-    document.querySelectorAll("[data-search-mode]").forEach(btn=>{
-      btn.classList.remove("selected");
-      btn.style.removeProperty("display");
-    });
-
-    $("searchModePanel").classList.add("hidden");
-    $("searchModePanel").innerHTML="";
-    $("nameCandidatePanel").classList.add("hidden");
-    $("nameDiagnosisPanel").classList.add("hidden");
-    $("patternPanel").classList.add("hidden");
-    $("selectorPanel").classList.add("hidden");
-    $("finalPanel").classList.add("hidden");
-    $("mobileSelectedPatternBar")?.classList.add("hidden");
-    clearRankingMessage();
-
-    const vw=Math.min(
-      window.innerWidth || 9999,
-      document.documentElement.clientWidth || 9999,
-      (window.screen && window.screen.width) || 9999
-    );
-    if(vw<=760){
-      requestAnimationFrame(()=>{
-        $("searchMethodPanel").scrollIntoView({behavior:"smooth",block:"start"});
-      });
-    }
-  });
-
+  $("resetBtn").addEventListener("click",()=>location.reload());
   document.querySelectorAll("[data-search-mode]").forEach(btn=>{
     btn.addEventListener("click",()=>setSearchMode(btn.dataset.searchMode));
   });
