@@ -76,6 +76,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
   opacity:1;
 }
 
+
 /* 累計利用カウンター */
 .naming-use-counter{
   grid-column:1 / -1;
@@ -151,12 +152,10 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
         <div>
           <label>お子さまの性別</label>
           <select id="sex">
-            <option value="">指定しない</option>
+            <option value="" selected disabled>選択してください</option>
             <option value="male">男の子</option>
             <option value="female">女の子</option>
-            <option value="other">男女共通・指定しない</option>
           </select>
-          <div class="hint">指定が無い場合、命名ランキングは確認出来なくなります。</div>
         </div>
         <div id="femalePreference" class="hidden">
           <label>女性の社会的自立・活躍を積極的に重視</label>
@@ -213,6 +212,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
     <div id="nameDiagnosisBox" class="final-preview"></div>
     <div class="actions">
       <button id="selectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+      <button id="omifudaFromNameBtn" type="button" class="btn">御身札V1.0で誘導エネルギー診断</button>
     </div>
   </section>
 
@@ -274,6 +274,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
     </div>
     <div class="actions">
       <button id="strokeSelectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+      <button id="omifudaFromStrokeBtn" type="button" class="btn">御身札V1.0で誘導エネルギー診断</button>
     </div>
   </section>
 
@@ -286,7 +287,7 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
 
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/selector-v4.js?v=baby-20260914-12"></script>
+<script src="../shared/selector-v4.js?v=baby-20260915-star1"></script>
 <script>
 (function(){
   const cards=[...document.querySelectorAll('[data-search-mode]')];
@@ -323,45 +324,92 @@ body[data-product="BABY"] #strokeSelectedNameResetBtn:hover{
   window.addEventListener('resize',function(){
     if(!isBabyMobile()) showAllSearchCards();
   });
+
+  function openOmifudaFromSelectedName(nameSourceId){
+    const surname=(document.getElementById('surname')?.value || '').trim();
+    const source=document.getElementById(nameSourceId);
+    const fullName=(source?.querySelector('.name')?.textContent || '').trim();
+
+    if(!surname){
+      alert('先に姓を入力してください。');
+      document.getElementById('surname')?.focus();
+      return;
+    }
+
+    if(!fullName){
+      alert('先に診断する名前を選択してください。');
+      return;
+    }
+
+    const givenName=fullName.startsWith(surname)
+      ? fullName.slice(surname.length).trim()
+      : '';
+
+    if(!givenName){
+      alert('選択した名前を取得できませんでした。');
+      return;
+    }
+
+    const url=new URL('/seimei/omifuda1/', window.location.origin);
+    url.searchParams.set('sei', surname);
+    url.searchParams.set('mei', givenName);
+    url.searchParams.set('autostart', '1');
+
+    // 名付け画面を残したまま、御身札を別タブで開く
+    window.open(url.toString(), '_blank', 'noopener');
+  }
+
+  document.getElementById('omifudaFromNameBtn')?.addEventListener('click',function(){
+    openOmifudaFromSelectedName('nameDiagnosisBox');
+  });
+
+  document.getElementById('omifudaFromStrokeBtn')?.addEventListener('click',function(){
+    openOmifudaFromSelectedName('finalBox');
+  });
 })();
 </script>
 
 <script>
 (function(){
-const COUNTER_KEY='biofesta-baby-naming-use-v1';
-const COUNTER_ID='babyNamingCounterValue';
-const COUNTER_BASE='https://countapi.mileshilliard.com/api/v1';
-function showCount(value){
-  const el=document.getElementById(COUNTER_ID);
-  if(!el) return;
-  const n=Number(value);
-  el.textContent=Number.isFinite(n)?n.toLocaleString('ja-JP'):'---';
-}
-async function loadCount(){
-  try{
-    const r=await fetch(`${COUNTER_BASE}/get/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
-    if(!r.ok){ if(r.status===404){showCount(0);return;} throw new Error(String(r.status)); }
-    const data=await r.json(); showCount(data.value);
-  }catch(e){ showCount('---'); }
-}
-async function hitCount(){
-  try{
-    const r=await fetch(`${COUNTER_BASE}/hit/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
-    if(!r.ok) return;
-    const data=await r.json(); showCount(data.value);
-  }catch(e){}
-}
-loadCount();
-const panel=document.getElementById('finalPanel');
-if(panel){
-  let wasVisible=!panel.classList.contains('hidden');
-  new MutationObserver(()=>{
-    const visible=!panel.classList.contains('hidden');
-    if(visible && !wasVisible) hitCount();
-    wasVisible=visible;
-  }).observe(panel,{attributes:true,attributeFilter:['class']});
-}
+  const COUNTER_KEY='biofesta-baby-naming-use-v1';
+  const COUNTER_ID='babyNamingCounterValue';
+  const COUNTER_BASE='https://countapi.mileshilliard.com/api/v1';
+  function showCount(value){
+    const el=document.getElementById(COUNTER_ID);
+    if(!el) return;
+    const n=Number(value);
+    el.textContent=Number.isFinite(n)?n.toLocaleString('ja-JP'):'---';
+  }
+  async function loadCount(){
+    try{
+      const r=await fetch(`${COUNTER_BASE}/get/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+      if(!r.ok){ if(r.status===404){showCount(0);return;} throw new Error(String(r.status)); }
+      const data=await r.json(); showCount(data.value);
+    }catch(e){ showCount('---'); }
+  }
+  async function hitCount(){
+    try{
+      const r=await fetch(`${COUNTER_BASE}/hit/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+      if(!r.ok) return;
+      const data=await r.json(); showCount(data.value);
+    }catch(e){}
+  }
+  loadCount();
+
+  // 名前候補からの確認・画数からの確認のどちらでも、
+  // 最終確認画面が新たに表示された時だけ加算する。
+  ['nameDiagnosisPanel','finalPanel'].forEach(id=>{
+    const panel=document.getElementById(id);
+    if(!panel) return;
+    let wasVisible=!panel.classList.contains('hidden');
+    new MutationObserver(()=>{
+      const visible=!panel.classList.contains('hidden');
+      if(visible && !wasVisible) hitCount();
+      wasVisible=visible;
+    }).observe(panel,{attributes:true,attributeFilter:['class']});
+  });
 })();
 </script>
+
 </body>
 </html>
