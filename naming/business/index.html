@@ -249,6 +249,24 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
     padding:16px 12px;
   }
 }
+/* 累計利用カウンター */
+.naming-use-counter{
+  grid-column:1 / -1;
+  text-align:center;
+  margin:0;
+  padding:6px 10px;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.4;
+  color:#625852;
+  background:rgba(255,255,255,.86);
+}
+.naming-use-counter strong{
+  margin:0 3px;
+  font-size:17px;
+  color:#b14c68;
+}
+
 </style>
 </head>
 <body data-product="BUSINESS">
@@ -256,6 +274,7 @@ body[data-product="BUSINESS"] .business-input-panel > :not(.business-dragon){
 <header class="business-hero">
   <div class="wrap">
     <img class="business-header-image" src="./assets/business-header.png" alt="商品名・企業名　成功への第一歩">
+    <div class="naming-use-counter" aria-live="polite">累計名称診断数 <strong id="businessNamingCounterValue">---</strong> 件</div>
   </div>
 </header>
 
@@ -438,6 +457,49 @@ if(businessTotalNumberEl){
   );
   updateBusinessDiagnosisKeywords();
 }
+</script>
+
+<script>
+(function(){
+const COUNTER_KEY='biofesta-business-name-diagnosis-v1';
+const COUNTER_ID='businessNamingCounterValue';
+const COUNTER_BASE='https://countapi.mileshilliard.com/api/v1';
+function showCount(value){
+  const el=document.getElementById(COUNTER_ID);
+  if(!el) return;
+  const n=Number(value);
+  el.textContent=Number.isFinite(n)?n.toLocaleString('ja-JP'):'---';
+}
+async function loadCount(){
+  try{
+    const r=await fetch(`${COUNTER_BASE}/get/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+    if(!r.ok){ if(r.status===404){showCount(0);return;} throw new Error(String(r.status)); }
+    const data=await r.json(); showCount(data.value);
+  }catch(e){ showCount('---'); }
+}
+async function hitCount(){
+  try{
+    const r=await fetch(`${COUNTER_BASE}/hit/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+    if(!r.ok) return;
+    const data=await r.json(); showCount(data.value);
+  }catch(e){}
+}
+loadCount();
+const btn=document.getElementById('diagnoseBtn');
+const total=document.getElementById('totalNumber');
+const panel=document.getElementById('resultPanel');
+if(btn && total && panel){
+  let pending=false;
+  btn.addEventListener('click',()=>{pending=true;});
+  function fireIfReady(){
+    if(pending && !panel.classList.contains('hidden') && total.textContent.trim()){
+      pending=false; hitCount();
+    }
+  }
+  new MutationObserver(fireIfReady).observe(total,{childList:true,subtree:true,characterData:true});
+  new MutationObserver(fireIfReady).observe(panel,{attributes:true,attributeFilter:['class']});
+}
+})();
 </script>
 </body>
 </html>

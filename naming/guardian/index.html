@@ -594,6 +594,24 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
   border-width:3px;
 }
 
+/* 累計利用カウンター */
+.naming-use-counter{
+  grid-column:1 / -1;
+  text-align:center;
+  margin:0;
+  padding:6px 10px;
+  font-size:13px;
+  font-weight:700;
+  line-height:1.4;
+  color:#625852;
+  background:rgba(255,255,255,.86);
+}
+.naming-use-counter strong{
+  margin:0 3px;
+  font-size:17px;
+  color:#b14c68;
+}
+
 </style>
 </head>
 <body data-product="GUARDIAN">
@@ -615,6 +633,7 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
           <span id="triadStatus" class="status">陰陽五行確認中</span>
         </div>
         <div id="loadError" class="notice bad hidden guardian-connection-error"></div>
+        <div class="naming-use-counter" aria-live="polite">累計改名利用数 <strong id="guardianNamingCounterValue">---</strong> 件</div>
       </div>
     </div>
     <div class="eyebrow" id="eyebrow"></div>
@@ -730,6 +749,53 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
 <script>window.NAMING_PRODUCT="GUARDIAN";</script>
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
-<script src="../shared/app.js?v=guardian-20260915-star1"></script>
+<script src="../shared/app.js?v=guardian-20260914-09"></script>
+
+<script>
+(function(){
+const COUNTER_KEY='biofesta-guardian-renaming-use-v1';
+const COUNTER_ID='guardianNamingCounterValue';
+const COUNTER_BASE='https://countapi.mileshilliard.com/api/v1';
+function showCount(value){
+  const el=document.getElementById(COUNTER_ID);
+  if(!el) return;
+  const n=Number(value);
+  el.textContent=Number.isFinite(n)?n.toLocaleString('ja-JP'):'---';
+}
+async function loadCount(){
+  try{
+    const r=await fetch(`${COUNTER_BASE}/get/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+    if(!r.ok){ if(r.status===404){showCount(0);return;} throw new Error(String(r.status)); }
+    const data=await r.json(); showCount(data.value);
+  }catch(e){ showCount('---'); }
+}
+async function hitCount(){
+  try{
+    const r=await fetch(`${COUNTER_BASE}/hit/${encodeURIComponent(COUNTER_KEY)}`,{cache:'no-store'});
+    if(!r.ok) return;
+    const data=await r.json(); showCount(data.value);
+  }catch(e){}
+}
+loadCount();
+const finalPanel=document.getElementById('finalPanel');
+if(finalPanel){
+  let wasVisible=!finalPanel.classList.contains('hidden');
+  new MutationObserver(()=>{
+    const visible=!finalPanel.classList.contains('hidden');
+    if(visible && !wasVisible) hitCount();
+    wasVisible=visible;
+  }).observe(finalPanel,{attributes:true,attributeFilter:['class']});
+}
+const evalBtn=document.getElementById('evaluateBtn');
+const directResult=document.getElementById('directResult');
+if(evalBtn && directResult){
+  let pending=false;
+  evalBtn.addEventListener('click',()=>{pending=true;});
+  new MutationObserver(()=>{
+    if(pending && directResult.textContent.trim()){ pending=false; hitCount(); }
+  }).observe(directResult,{childList:true,subtree:true,characterData:true});
+}
+})();
+</script>
 </body>
 </html>
