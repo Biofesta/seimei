@@ -594,6 +594,48 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
   border-width:3px;
 }
 
+
+/* ==========================================================
+   GUARDIAN final actions — 選択名リセット / 御身札V1.0
+========================================================== */
+body[data-product="GUARDIAN"] .guardian-final-actions{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+body[data-product="GUARDIAN"] #guardianSelectedNameResetBtn{
+  background:#e0bd70;
+  color:#17202a;
+  border:1px solid #c99d4e;
+  font-weight:800;
+}
+
+body[data-product="GUARDIAN"] #guardianOmifudaBtn{
+  background:#a85f73;
+  color:#fff;
+  border:1px solid #945064;
+  font-weight:800;
+}
+
+body[data-product="GUARDIAN"] #guardianSelectedNameResetBtn:hover,
+body[data-product="GUARDIAN"] #guardianOmifudaBtn:hover{
+  transform:translateY(-1px);
+  opacity:1;
+}
+
+@media(max-width:600px){
+  body[data-product="GUARDIAN"] .guardian-final-actions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+  body[data-product="GUARDIAN"] .guardian-final-actions .btn{
+    width:100%;
+  }
+}
+
+
 /* 累計利用カウンター */
 .naming-use-counter{
   grid-column:1 / -1;
@@ -742,6 +784,11 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
     <div class="notice warn guardian-final-note">
       ここでは選ばれた漢字名の読みはお客様で決めてください。
     </div>
+
+    <div class="actions guardian-final-actions">
+      <button id="guardianSelectedNameResetBtn" type="button" class="btn">選択した名前をリセット</button>
+      <button id="guardianOmifudaBtn" type="button" class="btn">御身札V1.0で誘導エネルギー診断</button>
+    </div>
   </section>
 </main>
 
@@ -750,6 +797,75 @@ body[data-product="GUARDIAN"] #patterns [data-pattern]{
 <script src="../shared/product-config.js"></script>
 <script src="../shared/naming-engine.js"></script>
 <script src="../shared/app.js?v=guardian-20260914-09"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  function getGuardianSurname(){
+    return (document.getElementById("surname")?.value || "").trim();
+  }
+
+  function getGuardianGivenName(){
+    const surname=getGuardianSurname();
+    const fullName=(document.getElementById("finalName")?.textContent || "").trim();
+
+    if(!surname || !fullName) return "";
+
+    return fullName.startsWith(surname)
+      ? fullName.slice(surname.length).trim()
+      : "";
+  }
+
+  document.getElementById("guardianSelectedNameResetBtn")?.addEventListener("click",function(){
+    const finalPanel=document.getElementById("finalPanel");
+    const finalReading=document.getElementById("finalReading");
+
+    finalPanel?.classList.add("hidden");
+    if(finalReading) finalReading.value="";
+
+    /*
+      命名条件や画数配置は残したまま、
+      名前を選び直せる位置へ戻す。
+    */
+    const charSelector=document.getElementById("guardianCharSelector");
+    const candidates=document.getElementById("candidates");
+    const target=
+      (charSelector && !charSelector.classList.contains("hidden")) ? charSelector :
+      (candidates && !candidates.classList.contains("hidden")) ? candidates :
+      document.getElementById("resultPanel");
+
+    requestAnimationFrame(()=>{
+      target?.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+
+  document.getElementById("guardianOmifudaBtn")?.addEventListener("click",function(){
+    const surname=getGuardianSurname();
+    const givenName=getGuardianGivenName();
+
+    if(!surname){
+      alert("先に姓・固定する上の名前を入力してください。");
+      document.getElementById("surname")?.focus();
+      return;
+    }
+
+    if(!givenName){
+      alert("選択した名前を取得できませんでした。");
+      return;
+    }
+
+    const url=new URL("/seimei/omifuda1/",window.location.origin);
+    url.searchParams.set("sei",surname);
+    url.searchParams.set("mei",givenName);
+    url.searchParams.set("autostart","1");
+
+    /* 守護名画面を残したまま、御身札V1.0を別タブで開く */
+    window.open(url.toString(),"_blank","noopener");
+  });
+})();
+</script>
+
 
 <script>
 (function(){
