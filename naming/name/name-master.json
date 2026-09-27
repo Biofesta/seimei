@@ -3,7 +3,7 @@
     "name": "男女統合 名前マスター",
     "version": "name-book-rebuild-3.0",
     "created_at": "2026-09-07",
-    "record_count": 1088,
+    "record_count": 1189,
     "male_record_count": 749,
     "female_record_count": 320,
     "selection_policy": [
@@ -20,7 +20,7 @@
       "戰",
       "鑑"
     ],
-    "edited_at": "2026-09-13T02:46:58.491Z",
+    "edited_at": "2026-09-27T06:13:29.984Z",
     "record_unit": "one kanji spelling per record",
     "display_note": "表示以外の読みはお客様の任意です。",
     "filename_policy": "ファイル名は固定し、内容のみ更新"
@@ -3927,7 +3927,7 @@
     {
       "name": "公一",
       "readings": [
-        "まさかず"
+        "こういち"
       ],
       "gender": [
         "male"
@@ -3952,7 +3952,7 @@
       ],
       "kanji_count": 2,
       "initials": [
-        "ま"
+        "こ"
       ]
     },
     {
@@ -11072,7 +11072,7 @@
     {
       "name": "彩子",
       "readings": [
-        "さいこ",
+        "あやこ",
         "さえこ"
       ],
       "gender": [
@@ -11103,6 +11103,7 @@
       ],
       "kanji_count": 2,
       "initials": [
+        "あ",
         "さ"
       ]
     },
@@ -33449,7 +33450,7 @@
         "なみえ"
       ],
       "gender": [
-        "male"
+        "female"
       ],
       "main_image_tags": [
         "知性・感性",
@@ -33722,9 +33723,9 @@
       "image_keywords": []
     },
     {
-      "name": "トモコ",
+      "name": "博子",
       "readings": [
-        "ともこ"
+        "ひろこ"
       ],
       "gender": [
         "female"
@@ -33736,9 +33737,9 @@
         "活動的",
         "明るい"
       ],
-      "kanji_count": 3,
+      "kanji_count": 2,
       "initials": [
-        "と"
+        "ひ"
       ],
       "extended_image_tags": [],
       "image_keywords": []
@@ -34693,7 +34694,8 @@
     {
       "name": "彩夏",
       "readings": [
-        "さやか"
+        "さやか",
+        "あやか"
       ],
       "gender": [
         "female"
@@ -34709,7 +34711,8 @@
       ],
       "kanji_count": 2,
       "initials": [
-        "さ"
+        "さ",
+        "あ"
       ],
       "extended_image_tags": [],
       "image_keywords": []
@@ -35155,7 +35158,8 @@
     {
       "name": "千夏",
       "readings": [
-        "ちなつ"
+        "ちなつ",
+        "ちか"
       ],
       "gender": [
         "female"
@@ -35242,6 +35246,2324 @@
       "kanji_count": 2,
       "initials": [
         "ま"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "奈美絵",
+      "readings": [
+        "なみえ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "な"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "奈美枝",
+      "readings": [
+        "なみえ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "芸術",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "やさしい",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "な"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "奈美江",
+      "readings": [
+        "なみえ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "明るい",
+        "親しみやすい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "な"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "波恵",
+      "readings": [
+        "なみえ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "な"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "恵美子",
+      "readings": [
+        "えみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい",
+        "誠実"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "江美子",
+      "readings": [
+        "えみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "力強い"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "絵美子",
+      "readings": [
+        "えみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "芸術"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "夕子",
+      "readings": [
+        "ゆうこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "由子",
+      "readings": [
+        "ゆうこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "文子",
+      "readings": [
+        "あやこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "綾子",
+      "readings": [
+        "あやこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "亜矢子",
+      "readings": [
+        "あやこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "やさしい",
+        "かわいい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "絢子",
+      "readings": [
+        "あやこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "弘子",
+      "readings": [
+        "ひろこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "寛子",
+      "readings": [
+        "ひろこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "洋子",
+      "readings": [
+        "ようこ",
+        "ひろこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "かわいい",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "よ",
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "紘子",
+      "readings": [
+        "ひろこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "知的",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "遙佳",
+      "readings": [
+        "はるか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "は"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "春香",
+      "readings": [
+        "はるか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "は"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "晴香",
+      "readings": [
+        "はるか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "は"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "優樹菜",
+      "readings": [
+        "ゆきな"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "優樹奈",
+      "readings": [
+        "ゆきな"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的",
+        "やさしい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "友昭",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知明",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "智明",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "智昭",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "力強い",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "美智子",
+      "readings": [
+        "みちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "三智子",
+      "readings": [
+        "みちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "美知子",
+      "readings": [
+        "みちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "綾音",
+      "readings": [
+        "あやね"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "知的",
+        "上品"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "彩音",
+      "readings": [
+        "あやね"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "愛情・縁・幸福"
+      ],
+      "image_subtags": [
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "彩花",
+      "readings": [
+        "さやか",
+        "あやか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "さ",
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "由美",
+      "readings": [
+        "ゆみ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "知的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "裕美",
+      "readings": [
+        "ゆみ",
+        "ひろみ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ",
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "優美",
+      "readings": [
+        "ゆみ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "友美",
+      "readings": [
+        "ゆみ",
+        "ともみ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "かわいい",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ",
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "由美子",
+      "readings": [
+        "ゆみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "夕美子",
+      "readings": [
+        "ゆみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "やさしい",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "弓子",
+      "readings": [
+        "ゆみこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "やさしい",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "佐知子",
+      "readings": [
+        "さちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "さ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "早智子",
+      "readings": [
+        "さちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "さ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "紗智子",
+      "readings": [
+        "さちこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "さ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "璃花子",
+      "readings": [
+        "りかこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "知的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "浩一",
+      "readings": [
+        "ひろかず",
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "落ち着いた",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ",
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "功一",
+      "readings": [
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "晄一",
+      "readings": [
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "明るい",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "珠里",
+      "readings": [
+        "じゅり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "じ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "朱里",
+      "readings": [
+        "じゅり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "活動的",
+        "かわいい",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "じ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健人",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健斗",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "活動的",
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢人",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健翔",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢一",
+      "readings": [
+        "けんいち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "活動的",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "謙一",
+      "readings": [
+        "けんいち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "落ち着いた",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "研二",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "芸術",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "明るい",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健二",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢治",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健司",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健児",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健一郎",
+      "readings": [
+        "けんいちろう"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "理彩",
+      "readings": [
+        "りさ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "梨紗",
+      "readings": [
+        "りさ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "里彩",
+      "readings": [
+        "りさ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "莉彩",
+      "readings": [
+        "りさ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "明るい",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "莉紗",
+      "readings": [
+        "りさ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "かわいい",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "陽葵",
+      "readings": [
+        "ひまわり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "桃子",
+      "readings": [
+        "ももこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "も"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "優花",
+      "readings": [
+        "ゆうか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "かわいい",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ゆ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "奏",
+      "readings": [
+        "かなで"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "上品"
+      ],
+      "kanji_count": 1,
+      "initials": [
+        "か"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "栞",
+      "readings": [
+        "しおり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "知的",
+        "やさしい"
+      ],
+      "kanji_count": 1,
+      "initials": [
+        "し"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "詩織",
+      "readings": [
+        "しおり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "上品"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "し"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "紫織",
+      "readings": [
+        "しおり"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "愛情・縁・幸福"
+      ],
+      "image_subtags": [
+        "活動的",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "し"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "美幸",
+      "readings": [
+        "みゆき"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "上品",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "美由紀",
+      "readings": [
+        "みゆき"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "落ち着いた"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "美雪",
+      "readings": [
+        "みゆき"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "かわいい",
+        "上品"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "み"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "紗佳",
+      "readings": [
+        "さやか",
+        "あやか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "さ",
+        "あ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "貴子",
+      "readings": [
+        "たかこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "た"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "里帆",
+      "readings": [
+        "りほ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "里穂",
+      "readings": [
+        "りほ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "理穂",
+      "readings": [
+        "りほ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "梨穂",
+      "readings": [
+        "りほ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "理帆",
+      "readings": [
+        "りほ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "り"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "千代",
+      "readings": [
+        "ちよ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知代",
+      "readings": [
+        "ちよ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "千世",
+      "readings": [
+        "ちよ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "絵梨佳",
+      "readings": [
+        "えりか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "絵梨花",
+      "readings": [
+        "えりか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "絵梨香",
+      "readings": [
+        "えりか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "え"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "桂子",
+      "readings": [
+        "けいこ",
+        "よしこ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け",
+        "よ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "舞",
+      "readings": [
+        "まい"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "芸術",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 1,
+      "initials": [
+        "ま"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "真衣",
+      "readings": [
+        "まい"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ま"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "舞衣",
+      "readings": [
+        "まい"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ま"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "舞彩",
+      "readings": [
+        "まい"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "芸術",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ま"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "千香",
+      "readings": [
+        "ちか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "千佳",
+      "readings": [
+        "ちか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知香",
+      "readings": [
+        "ちか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "上品"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知花",
+      "readings": [
+        "ちか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知佳",
+      "readings": [
+        "ちか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "千奈津",
+      "readings": [
+        "ちなつ"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "ち"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "志津香",
+      "readings": [
+        "しづか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "し"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "静香",
+      "readings": [
+        "しずか"
+      ],
+      "gender": [
+        "female"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "し"
       ],
       "extended_image_tags": [],
       "image_keywords": []

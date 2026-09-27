@@ -3,7 +3,7 @@
     "name": "男性名マスター",
     "version": "name-book-rebuild-3.0",
     "created_at": "2026-09-07",
-    "record_count": 772,
+    "record_count": 790,
     "male_record_count": 749,
     "female_record_count": 320,
     "selection_policy": [
@@ -20,7 +20,7 @@
       "戰",
       "鑑"
     ],
-    "edited_at": "2026-09-13T02:46:58.491Z",
+    "edited_at": "2026-09-27T06:13:29.984Z",
     "record_unit": "one kanji spelling per record",
     "display_note": "表示以外の読みはお客様の任意です。",
     "filename_policy": "ファイル名は固定し、内容のみ更新"
@@ -2968,7 +2968,7 @@
     {
       "name": "公一",
       "readings": [
-        "まさかず"
+        "こういち"
       ],
       "gender": [
         "male"
@@ -2993,7 +2993,7 @@
       ],
       "kanji_count": 2,
       "initials": [
-        "ま"
+        "こ"
       ]
     },
     {
@@ -24195,30 +24195,6 @@
       "image_keywords": []
     },
     {
-      "name": "奈美恵",
-      "readings": [
-        "なみえ"
-      ],
-      "gender": [
-        "male"
-      ],
-      "main_image_tags": [
-        "知性・感性",
-        "芸術"
-      ],
-      "image_subtags": [
-        "活動的",
-        "やさしい",
-        "明るい"
-      ],
-      "kanji_count": 3,
-      "initials": [
-        "な"
-      ],
-      "extended_image_tags": [],
-      "image_keywords": []
-    },
-    {
       "name": "友子",
       "readings": [
         "ともこ"
@@ -24633,6 +24609,444 @@
       "kanji_count": 3,
       "initials": [
         "し"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "友昭",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "知明",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "智明",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "智昭",
+      "readings": [
+        "ともあき"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "力強い",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "と"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "浩一",
+      "readings": [
+        "ひろかず",
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "落ち着いた",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "ひ",
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "功一",
+      "readings": [
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "芸術"
+      ],
+      "image_subtags": [
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "晄一",
+      "readings": [
+        "こういち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "自然・風景・季節",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "明るい",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "こ"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健人",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健斗",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "活動的",
+        "やさしい",
+        "誠実"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢人",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "知的",
+        "さわやか",
+        "活動的"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健翔",
+      "readings": [
+        "けんと"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢一",
+      "readings": [
+        "けんいち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性"
+      ],
+      "image_subtags": [
+        "活動的",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "謙一",
+      "readings": [
+        "けんいち"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "落ち着いた",
+        "親しみやすい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "研二",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "芸術",
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "明るい",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健二",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "力強い",
+        "落ち着いた"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "賢治",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ",
+        "希望・未来・成長"
+      ],
+      "image_subtags": [
+        "知的",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健司",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "知性・感性",
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "さわやか",
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健児",
+      "readings": [
+        "けんじ"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "活気・躍動・スポーツ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 2,
+      "initials": [
+        "け"
+      ],
+      "extended_image_tags": [],
+      "image_keywords": []
+    },
+    {
+      "name": "健一郎",
+      "readings": [
+        "けんいちろう"
+      ],
+      "gender": [
+        "male"
+      ],
+      "main_image_tags": [
+        "伝統・気品・華やかさ"
+      ],
+      "image_subtags": [
+        "活動的",
+        "明るい"
+      ],
+      "kanji_count": 3,
+      "initials": [
+        "け"
       ],
       "extended_image_tags": [],
       "image_keywords": []
