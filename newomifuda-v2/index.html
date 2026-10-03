@@ -2,16 +2,9 @@
 <!-- OMIFUDA V2 STAR DISPLAY FIX v4 -->
 <html lang="ja">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7EFETXE8F"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-L7EFETXE8F');
-</script>
-  <meta charset="utf-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<base href="/seimei/omifuda2/">
 <title>御身札（おみふだ）</title>
 
 <!-- 診断画面を画像化するライブラリ -->
@@ -636,7 +629,7 @@ async function incrementDiagnosisCounter(){
 async function loadData(){
   try{
     const [r1,r2,r3,r4,r5,r6]=await Promise.all([
-      fetch("data/kanjidic-naming.json", {cache:"no-store"}),
+      fetch("../shared/kanjidic-naming.json?v=20261003", {cache:"no-store"}),
       fetch("diagnosis_data.json", {cache:"no-store"}),
       fetch("diagnosis_triad_free.json", {cache:"no-store"}), // ★ 既存の個別・主格相性診断
       fetch("data/sansai.json", {cache:"no-store"}),          // ★ 陰陽五行125通りの総合評価
