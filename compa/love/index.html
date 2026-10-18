@@ -200,9 +200,9 @@ button{width:100%;border:0;border-radius:10px;padding:13px 16px;font-family:inhe
 .relation-visual{
   display:block;
   width:100%;
-  height:clamp(128px,22vw,205px);
-  object-fit:cover;
-  object-position:center 58%;
+  height:auto;
+  object-fit:contain;
+  object-position:center center;
 }
 
 /* 恋愛以外は従来どおり10個の星で表示 */
@@ -255,7 +255,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .detail h3{margin:0 0 8px;font-size:17px} .detail ul{margin:0;padding-left:20px;line-height:1.8}
 .good{color:#2d784e} .warn{color:#a43a37} .gold{color:#8b651a}
 
-.diagnosis-sections{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.diagnosis-sections{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
 .diagbox{border:1px solid #e5ded4;border-radius:12px;background:#fff;padding:14px}
 .diagbox h3{margin:0 0 8px;font-size:17px}
 .diagmeta{font-size:12px;color:#7a726a;margin-bottom:8px}
@@ -316,7 +316,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
  .compat-center{min-height:76px;order:3}
  .single-heart{width:62px;height:58px;flex-basis:62px}
  .single-heart .heart-base,.single-heart .heart-fill{font-size:56px}
- .relation-visual{height:128px;object-position:center 58%}
+ .relation-visual{height:auto;object-position:center center}
  .rating-icon{width:20px;flex-basis:20px;height:29px}
  .rating-icon .outline,.rating-icon .fill{font-size:23px;line-height:29px}
  .midnote{font-size:9px}
@@ -441,6 +441,61 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 @media(max-width:700px){.birth-compat-label{display:flex;margin:0 0 6px 0;width:fit-content}}
 @media(max-width:700px){.birth-grid,.birth-summary{grid-template-columns:1fr}}
 @media(max-width:700px){.number{font-size:29px}.kaku-stars{font-size:13px;letter-spacing:0}.kaku-stars .star-unit{font-size:14px}}
+
+/* 2026-10-18：恋愛相性図の配置・線の3分類切替。既存判定・文章は変更しない。 */
+.names{
+  grid-template-columns:minmax(0,1fr) minmax(100px,190px) minmax(0,1fr);
+  column-gap:6px;
+  align-items:center;
+}
+.names .n{font-size:20px;line-height:1.35;overflow-wrap:anywhere;word-break:normal;min-width:0}
+.names .n::before{content:attr(data-person-label);display:block;font-family:"Yu Gothic",Meiryo,sans-serif;font-size:12px;font-weight:500;color:#716a62;margin-bottom:2px}
+.names #aName{grid-column:1;grid-row:1}
+.names #compatCenter{grid-column:2;grid-row:1;min-height:74px}
+.names #bName{grid-column:3;grid-row:1}
+.names.gender-flipped #aName{grid-column:3}
+.names.gender-flipped #bName{grid-column:1}
+.names .single-heart{width:62px;height:57px;flex-basis:62px}
+.names .single-heart .heart-base,.names .single-heart .heart-fill{font-size:55px}
+.names .love-meter,.names .star-meter{min-height:54px}
+/* 男性が左、女性が右。同性同士の場合はあなた左・お相手右のまま。 */
+.map.gender-flipped .side.a{left:auto;right:3%}
+.map.gender-flipped .side.b{right:auto;left:3%}
+/* 文字・星の大きさは確保しつつ、各格の上下余白を圧縮 */
+.map{min-height:480px}
+.side{top:24px}
+.layer{height:103px;margin-bottom:11px;padding:7px 10px 8px}
+.relation-mode-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0 9px}
+.relation-mode-btn{
+  width:100%;min-width:0;min-height:61px;padding:7px 4px 6px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:0;line-height:1.15;border-radius:11px;border:2px solid var(--rel-color);
+  color:var(--rel-color);background:#fff;font-size:16px;font-weight:800;
+  box-shadow:0 2px 7px rgba(45,42,38,.06);
+}
+.relation-mode-btn span{display:block;line-height:1.15}
+.relation-mode-btn[aria-pressed="true"]{background:var(--rel-bg);box-shadow:0 0 0 1px var(--rel-color) inset,0 3px 10px rgba(45,42,38,.10)}
+.relation-mode-btn:focus-visible{outline:3px solid #305cb8;outline-offset:2px}
+.relation-mode-status{margin:0 0 8px;text-align:center;font-size:12px;color:#756b66;min-height:18px}
+.cards .metric-card.selected-relation{border-color:var(--rel-highlight,#b7861e);box-shadow:0 0 0 1px var(--rel-highlight,#b7861e) inset}
+@media(max-width:700px){
+  .names{grid-template-columns:minmax(0,1fr) minmax(82px,100px) minmax(0,1fr);gap:3px;margin-bottom:8px}
+  .names .n{font-size:clamp(13px,3.7vw,17px);line-height:1.3}
+  .names .n::before{font-size:10px}
+  .names #compatCenter{min-height:64px;order:initial}
+  .names .single-heart{width:49px;height:45px;flex-basis:49px}
+  .names .single-heart .heart-base,.names .single-heart .heart-fill{font-size:45px}
+  .names .love-meter,.names .star-meter{min-height:42px}
+  .names .score-label{font-size:11px;line-height:1.3}
+  .names .score-label .score-num{font-size:14px}
+  .map{min-height:418px}
+  .side{top:22px;width:34%}
+  .layer{height:90px;margin-bottom:9px;padding:5px 5px 6px}
+  .map.gender-flipped .side.a{left:auto;right:1.5%}
+  .map.gender-flipped .side.b{right:auto;left:1.5%}
+  .relation-mode-btn{min-height:57px;font-size:15px;padding:5px 2px}
+  .relation-mode-tabs{gap:6px}
+}
 </style>
 </head>
 <body>
@@ -541,12 +596,6 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <img class="relation-visual" id="relationVisual" src="" alt="">
   </div>
 
-  <div class="surname-compare-bar" id="surnameCompareBar">
-    <span class="surname-mode-label" id="surnameModeLabel">結婚後に同姓を名乗る場合を確認</span>
-    <input class="surname-result-input" id="marriedSurnameResult" placeholder="名乗る姓を入力　例：木村" autocomplete="off">
-    <button class="secondary surname-toggle-btn" id="toggleSurnameMode" type="button">同姓の場合を確認</button>
-  </div>
-
   <div class="map" id="map">
     <div class="midnote">線の本数より「種類」と「つながる格」を見る</div>
     <svg id="lines"></svg>
@@ -563,6 +612,13 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="layer outer" data-side="b" data-key="outer"><div class="meta"><span class="lab">外格</span><span class="desc">対人関係・表面</span></div><div class="kaku-value"><span class="number" id="bOuterV"></span><span class="kaku-stars" id="bOuterStars" aria-label="外格の吉凶評価"></span></div></div>
     </div>
   </div>
+
+  <div class="relation-mode-tabs" role="group" aria-label="関係線の表示切替">
+    <button type="button" class="relation-mode-btn" data-relation-mode="support" aria-pressed="true" style="--rel-color:#3f8f62;--rel-bg:#edf8f0"><span>相生</span><span>関係</span></button>
+    <button type="button" class="relation-mode-btn" data-relation-mode="conflict" aria-pressed="false" style="--rel-color:#c34a46;--rel-bg:#fff0ef"><span>相剋</span><span>関係</span></button>
+    <button type="button" class="relation-mode-btn" data-relation-mode="common" aria-pressed="false" style="--rel-color:#b7861e;--rel-bg:#fff8e7"><span>共通</span><span>関係</span></button>
+  </div>
+  <p class="relation-mode-status" id="relationModeStatus" aria-live="polite">5秒ごとに自動切替します。ボタン操作で停止します。</p>
 
   <div class="cards">
     <div class="card metric-card" id="sameCard">
@@ -607,6 +663,12 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     </div>
   </div>
 
+  <div class="surname-compare-bar" id="surnameCompareBar">
+    <span class="surname-mode-label" id="surnameModeLabel">結婚後に同姓を名乗る場合を確認</span>
+    <input class="surname-result-input" id="marriedSurnameResult" placeholder="名乗る姓を入力　例：木村" autocomplete="off">
+    <button class="secondary surname-toggle-btn" id="toggleSurnameMode" type="button">同姓の場合を確認</button>
+  </div>
+
   <div class="diagnosis-sections" id="diagnosisSections"></div>
   <div class="detail"><h3>二人への総合アドバイス</h3><p id="overallAdvice"></p><p class="data-note">共通格数・同系格数の多さだけを吉とはせず、引力・相生・相剋を合わせて読みます。</p></div>
   <div class="detail" id="birthResult" hidden>
@@ -625,7 +687,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <p class="birth-relation-text" id="birthRelationText"></p>
     <p class="data-note">四柱推命の相性は、日主・日支・天干・地支・五行補完を別々に確認します。出生時刻が空欄の場合は時柱を使わずに判定します。総合表示は5項目をまとめた簡易な傾向で、姓名相性の点数には加算しません。節入り時刻付近や23時台の出生は、詳細鑑定では時刻条件の確認が必要です。</p>
   </div>
-  <div class="detail"><h3>相手を詳しく知る</h3><p class="diagtext">相手本人の詳しい姓名判断は、独立サービス「御身札V2.0」で確認できます。</p></div>
+  <div class="detail"><h3>相手を詳しく知る</h3><p class="diagtext">相性診断した相手本人の詳しい将来性などの姓名判断は、「御身札V2.0」もしくは「御身札V1.0」で確認することをお勧め致します。</p></div>
   <div class="result-actions"><button class="secondary" id="another">リセット（名前の入力に戻る）</button></div>
 </section>
   </div>
@@ -813,7 +875,9 @@ function showInputError(msg){
 }
 function pos(el,side){
   const m=document.getElementById("map").getBoundingClientRect(), r=el.getBoundingClientRect();
-  return {x:side==="a"?r.right-m.left:r.left-m.left,y:r.top-m.top+r.height/2};
+  const isLeft=(r.left+r.right)/2<(m.left+m.right)/2;
+  // 画面上で左右を交換しても、矢印は元の本人・相手の格へ向かう。
+  return {x:(isLeft?r.right:r.left)-m.left,y:r.top-m.top+r.height/2};
 }
 function se(tag,attrs={}){
   const e=document.createElementNS("http://www.w3.org/2000/svg",tag);
@@ -1060,6 +1124,72 @@ function renderBirthSupplement(){
   document.getElementById("birthRelationText").textContent=`総合：${compat.summary.label}。${compat.summary.text}`;
 }
 
+/* 相生・相剋・共通：表示線と説明カードの並び順だけを切り替える。 */
+const RELATION_MODES=["support","conflict","common"];
+const RELATION_STYLES={
+  support:["support"],
+  conflict:["conflict"],
+  common:["same_number","same_coefficient","main_outer_attraction"]
+};
+let ACTIVE_RELATION_MODE="support";
+let RELATION_LINE_DATA=[];
+let RELATION_TIMER=null;
+let RELATION_MANUAL=false;
+function applyRelationMode(mode){
+  if(!RELATION_STYLES[mode])return;
+  ACTIVE_RELATION_MODE=mode;
+  const svg=document.getElementById("lines");
+  if(svg){
+    // SVG内のdefsは保持し、線だけを選択中の種類に差し替える。
+    for(const path of Array.from(svg.querySelectorAll(":scope > path")))path.remove();
+    const chosen=RELATION_LINE_DATA.filter(item=>RELATION_STYLES[mode].includes(item.type));
+    const maxLines=window.innerWidth<=700?7:10;
+    for(const item of chosen.slice(0,maxLines)){
+      const e1=document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`);
+      const e2=document.querySelector(`.layer[data-side="${item.s2}"][data-key="${item.k2}"]`);
+      if(!e1||!e2)continue;
+      const markerId=item.arrow?(item.type==="support"?"arrowGreen":"arrowGold"):"";
+      draw(svg,pos(e1,item.s1),pos(e2,item.s2),item.type,item.title,item.bend||0,markerId);
+    }
+  }
+  const priority={
+    support:["suppCard","sameCard","coeffCard","attrCard","confCard"],
+    conflict:["confCard","sameCard","coeffCard","attrCard","suppCard"],
+    common:["sameCard","coeffCard","attrCard","suppCard","confCard"]
+  }[mode];
+  for(const [index,id] of priority.entries()){
+    const card=document.getElementById(id);
+    if(card){card.style.order=String(index);card.classList.toggle("selected-relation",mode==="common"?index<3:index===0);card.style.setProperty("--rel-highlight",mode==="support"?"#3f8f62":mode==="conflict"?"#c34a46":"#b7861e");}
+  }
+  document.getElementById("map")?.setAttribute("data-relation-mode",mode);
+  for(const btn of document.querySelectorAll(".relation-mode-btn")){
+    btn.setAttribute("aria-pressed",String(btn.dataset.relationMode===mode));
+  }
+  const status=document.getElementById("relationModeStatus");
+  if(status)status.textContent=RELATION_MANUAL?"選択した関係を表示しています。":"5秒ごとに自動切替します。ボタン操作で停止します。";
+}
+function stopRelationCycle(){
+  if(RELATION_TIMER!==null){clearInterval(RELATION_TIMER);RELATION_TIMER=null;}
+}
+function startRelationCycle(){
+  stopRelationCycle();
+  RELATION_MANUAL=false;
+  ACTIVE_RELATION_MODE="support";
+  applyRelationMode(ACTIVE_RELATION_MODE);
+  RELATION_TIMER=setInterval(()=>{
+    if(document.getElementById("resultScreen").hidden||document.hidden)return;
+    const next=(RELATION_MODES.indexOf(ACTIVE_RELATION_MODE)+1)%RELATION_MODES.length;
+    applyRelationMode(RELATION_MODES[next]);
+  },5000);
+}
+document.querySelectorAll(".relation-mode-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    stopRelationCycle();
+    RELATION_MANUAL=true;
+    applyRelationMode(btn.dataset.relationMode);
+  });
+});
+
 function render(){
   const currentA=person("a"), currentB=person("b");
   saveA(currentA);
@@ -1070,6 +1200,11 @@ function render(){
   updateSurnameCompareUI();
   document.getElementById("aName").textContent=fullname(a);
   document.getElementById("bName").textContent=fullname(b);
+  document.getElementById("aName").dataset.personLabel=a.sex==="male"?"男性":"女性";
+  document.getElementById("bName").dataset.personLabel=b.sex==="male"?"男性":"女性";
+  const genderFlipped=a.sex==="female"&&b.sex==="male";
+  document.querySelector(".names")?.classList.toggle("gender-flipped",genderFlipped);
+  document.getElementById("map")?.classList.toggle("gender-flipped",genderFlipped);
   for(const s of ["a","b"]) {
     const p=s==="a"?a:b;
     for(const k of K){
@@ -1181,12 +1316,9 @@ function render(){
 
   // 同じ2格間に複数の関係がある場合は優先度が最も高い線だけを表示。
   const chosen=[...pairMap.values()].sort((x,y)=>(DATA.line_styles[y.type]?.priority||0)-(DATA.line_styles[x.type]?.priority||0));
-  const maxLines=window.innerWidth<=700?7:10;
-  for(const item of chosen.slice(0,maxLines)){
-    const p1=pos(el[item.s1][item.k1],item.s1), p2=pos(el[item.s2][item.k2],item.s2);
-    const markerId=item.arrow?(item.type==="support"?"arrowGreen":"arrowGold"):"";
-    draw(svg,p1,p2,item.type,item.title,item.bend||0,markerId);
-  }
+  // 線の計算は従来どおり保持。画面描画のみ3つの切替ボタンで制御。
+  RELATION_LINE_DATA=chosen;
+  applyRelationMode(ACTIVE_RELATION_MODE);
 
   document.getElementById("sameN").textContent=same;
   document.getElementById("coeffN").textContent=sameCoeff;
@@ -1218,6 +1350,7 @@ function render(){
 }
 
 function showScreen(which){
+  if(which!=="result")stopRelationCycle();
   const input=document.getElementById("inputScreen");
   const result=document.getElementById("resultScreen");
   input.hidden = which!=="input";
@@ -1256,7 +1389,7 @@ async function showResult(){
       }
     }
     showScreen("result");
-    requestAnimationFrame(()=>{render();incrementLoveDiagnosisCounter();});
+    requestAnimationFrame(()=>{render();startRelationCycle();incrementLoveDiagnosisCounter();});
   }catch(e){
     showScreen("input");
     showInputError(e.message||"診断データを算出できませんでした。");
