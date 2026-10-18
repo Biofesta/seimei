@@ -395,6 +395,18 @@
     letter-spacing:1px;
   }
 
+  /* ★ 陰陽五行の総合診断：◎・〇・◐は同じ表示枠・文字サイズ */
+  .sansai-overall-symbol {
+    display:inline-block;
+    min-width:1.15em;
+    text-align:center;
+    font-family:"Segoe UI Symbol","Yu Gothic",Meiryo,sans-serif;
+    font-size:22px;
+    line-height:1;
+    vertical-align:-0.08em;
+    letter-spacing:0;
+  }
+
   /* ★ 御身札V2.0・累計カウンター（既存レイアウトとは独立） */
   .diagnosis-counter {
     text-align:center;
@@ -572,7 +584,7 @@
 <div id="pdfArea"></div>
 
 <script>
-let strokes=null, diagnosis=null, triadFree=null, sansai=null, sansaiTexts=null, numberMaster=null, missingInfo=[];
+let strokes=null, diagnosis=null, triadFree=null, sansai=null, sansaiTexts=null, numberMaster=null, inductionPairs=null, missingInfo=[];
 
 /* ---------- 御身札V2.0・累計診断カウンター ----------
    ※姓名などの入力内容は送信せず、数字だけを加算します。
@@ -627,13 +639,14 @@ async function incrementDiagnosisCounter(){
 /* ---------- データ読み込み ---------- */
 async function loadData(){
   try{
-    const [r1,r2,r3,r4,r5,r6]=await Promise.all([
+    const [r1,r2,r3,r4,r5,r6,r7]=await Promise.all([
       fetch("../shared/kanjidic-naming.json?v=20261003", {cache:"no-store"}),
       fetch("diagnosis_data.json", {cache:"no-store"}),
       fetch("diagnosis_triad_free.json", {cache:"no-store"}), // ★ 既存の個別・主格相性診断
       fetch("data/sansai.json", {cache:"no-store"}),          // ★ 陰陽五行125通りの総合評価
       fetch("data/number-master-1-81_reido_total_4sections_v1.json", {cache:"no-store"}), // ★ V2詳細五格診断 1〜81画・霊導反映版
-      fetch("data/sansai_texts.json", {cache:"no-store"})     // ★ 陰陽五行125通りの診断文・アドバイス
+      fetch("data/sansai_texts.json", {cache:"no-store"}),    // ★ 陰陽五行125通りの診断文・アドバイス
+      fetch("data/induction_pair_100.json", {cache:"no-store"}) // ★ 環境適応性・総合安定性の100通り
     ]);
     strokes      = await r1.json();
     diagnosis    = await r2.json();
@@ -641,6 +654,7 @@ async function loadData(){
     sansai       = await r4.json();
     numberMaster = await r5.json();
     sansaiTexts  = await r6.json();
+    inductionPairs = await r7.json();
 
     const totalChars = Object.keys(strokes || {}).length;
     document.getElementById('debug').textContent =
@@ -879,6 +893,24 @@ function pickTriad(category, jinCount, otherCount){
   return catNode[otherGroupKey] || {symbol:'',text:'',advice:''};
 }
 
+/* ---------- 主格×外格／主格×総画：10系数100通りの付帯診断 ---------- */
+function pickInductionPair(category, jinCount, otherCount){
+  if(!inductionPairs || !inductionPairs.pairs) return {symbol:'',text:'',advice:''};
+
+  // 画数の末尾1桁（0も独立した系数）で主格→相手格の順に取り出す
+  const mainDigit  = Math.abs(jinCount) % 10;
+  const otherDigit = Math.abs(otherCount) % 10;
+  const pairKey = `${mainDigit}_${otherDigit}`;
+  const entry = inductionPairs.pairs[pairKey]?.[category];
+  if(!entry) return {symbol:'',text:'',advice:''};
+
+  return {
+    symbol: entry.rating || '',
+    text: entry.diagnosis || '',
+    advice: entry.advice || ''
+  };
+}
+
 /* ---------- 陰陽五行125通り：総合星評価 ---------- */
 function getSansaiRating(tenCount, jinCount, chiCount){
   if(!sansai || !sansai.ratings) return '';
@@ -907,24 +939,29 @@ function formatSansaiOverallRating(rating){
 
   let filled = 0;
   let caution = false;
+  const isHalf = s === '◐';
 
   if(s.includes('◎')){
     filled = 10;
   }else if(s.includes('〇') || s.includes('○')){
     filled = 8;
+  }else if(isHalf){
+    filled = 5;
   }else if(s.includes('要注意')){
     filled = 0;
     caution = true;
   }
 
-  // ◎・〇・【要注意】のいずれでも、10個の星枠は必ず表示
+  // ◎・〇・◐・【要注意】のいずれでも、10個の星枠は必ず表示
   let stars = '';
   for(let i=0;i<10;i++){
     const color = (i < filled) ? yellow : gray;
     stars += `<span style="color:${color};">★</span>`;
   }
 
-  return `<span class="sansai-star-rating" aria-label="陰陽五行10段階評価 ${filled}">${stars}</span>`;
+  // 記号は直下の【総合診断 ⇒ ...】に統一表示する（星評価は従来どおり）
+  const label = isHalf ? '陰陽五行10段階評価 5（吉凶半々）' : `陰陽五行10段階評価 ${filled}`;
+  return `<span class="sansai-star-rating" aria-label="${label}">${stars}</span>`;
 }
 
 function calcExpr(chars,reiTop=false,reiBottom=false){
@@ -1275,8 +1312,8 @@ function calculate(){
 /* ---------- 陰陽五行（diagnosis_triad_free.json） ---------- */
   const sSucc = pickTriad('success',    jin, ten);
   const sFoun = pickTriad('foundation', jin, chi);
-  const sRela = pickTriad('relation',   jin, gai);
-  const sOver = pickTriad('total',      jin, sou);
+  const sRela = pickInductionPair('environment_adaptation', jin, gai);
+  const sOver = pickInductionPair('stability', jin, sou);
 
   const sansaiRating = getSansaiRating(ten, jin, chi);
   out.push(
@@ -1287,9 +1324,13 @@ function calculate(){
   // 判定理由（why_rating）は本番画面には表示しない
   const sansaiText = getSansaiText(ten, jin, chi);
   if(sansaiText){
+    // 〇・◎・◐は同じ文字サイズ、【要注意】は従来どおり赤で表示
+    const sansaiMark = String(sansaiRating || '').includes('要注意')
+      ? '<span class="warn">要注意</span>'
+      : `<span class="sansai-overall-symbol">${sansaiRating}</span>`;
     out.push(`
       <div class="sansai-overall-box">
-        <div class="detail-label">【総合診断】</div>
+        <div class="detail-label">【総合診断 ⇒ ${sansaiMark}】</div>
         <div class="detail-text">${wrapZenkaku(sansaiText.diagnosis || '')}</div>
         <div class="advice-label">［アドバイス］</div>
         <div class="detail-text">${wrapZenkaku(sansaiText.advice || '')}</div>
@@ -1318,8 +1359,8 @@ function calculate(){
 
   addCompat('成功・発展運（主格⇔天格）',  sSucc.symbol, sSucc.text, sSucc.advice);
   addCompat('基礎運（主格⇔地格）',        sFoun.symbol, sFoun.text, sFoun.advice);
-  addCompat('対人・職業運（主格⇔外格）',  sRela.symbol, sRela.text, sRela.advice);
-  addCompat('総合バランス（主格⇔総画）',  sOver.symbol, sOver.text, sOver.advice);
+  addCompat('環境適応性（対人・職業）',  sRela.symbol, sRela.text, sRela.advice);
+  addCompat('総合安定性（主格⇔総画）',  sOver.symbol, sOver.text, sOver.advice);
 
   document.getElementById('result').innerHTML =
     out.join('') +
