@@ -6392,6 +6392,27 @@
       ]
     }
   },
+  "彌": {
+    "kumazaki_strokes": 17,
+    "readings": {
+      "on": [
+        "ミ",
+        "ビ"
+      ],
+      "kun": [
+        "や",
+        "いや",
+        "いよ.いよ",
+        "わた.る"
+      ],
+      "nanori": [
+        "わたる",
+        "みつ",
+        "ひろ",
+        "よ"
+      ]
+    }
+  },
   "彦": {
     "kumazaki_strokes": 9,
     "readings": {
@@ -14759,7 +14780,7 @@
     }
   },
   "沙": {
-    "kumazaki_strokes": 7,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "サ",
@@ -14773,7 +14794,7 @@
     }
   },
   "没": {
-    "kumazaki_strokes": 7,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "ボツ",
@@ -14788,7 +14809,7 @@
     }
   },
   "油": {
-    "kumazaki_strokes": 8,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "ユ",
@@ -14823,7 +14844,7 @@
     }
   },
   "法": {
-    "kumazaki_strokes": 8,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "ホウ",
@@ -14964,7 +14985,7 @@
     }
   },
   "消": {
-    "kumazaki_strokes": 10,
+    "kumazaki_strokes": 11,
     "readings": {
       "on": [
         "ショウ"
@@ -14977,7 +14998,7 @@
     }
   },
   "涙": {
-    "kumazaki_strokes": 10,
+    "kumazaki_strokes": 12,
     "readings": {
       "on": [
         "ルイ",
@@ -15113,7 +15134,7 @@
     }
   },
   "溶": {
-    "kumazaki_strokes": 13,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "ヨウ"
@@ -15140,7 +15161,7 @@
     }
   },
   "演": {
-    "kumazaki_strokes": 20,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "エン"
@@ -16579,7 +16600,7 @@
     }
   },
   "涛": {
-    "kumazaki_strokes": 10,
+    "kumazaki_strokes": 18,
     "readings": {
       "on": [
         "トウ"
@@ -16603,7 +16624,7 @@
     }
   },
   "淵": {
-    "kumazaki_strokes": 12,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "エン",
@@ -16619,7 +16640,7 @@
     }
   },
   "渇": {
-    "kumazaki_strokes": 13,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "カツ"
@@ -16746,7 +16767,7 @@
     }
   },
   "滅": {
-    "kumazaki_strokes": 13,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "メツ"
@@ -16760,7 +16781,7 @@
     }
   },
   "滋": {
-    "kumazaki_strokes": 14,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "ジ",
@@ -16831,7 +16852,7 @@
     }
   },
   "漠": {
-    "kumazaki_strokes": 15,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "バク"
@@ -17032,7 +17053,7 @@
     }
   },
   "瀬": {
-    "kumazaki_strokes": 20,
+    "kumazaki_strokes": 21,
     "readings": {
       "on": [
         "ライ"
@@ -20437,7 +20458,7 @@
     }
   },
   "瀧": {
-    "kumazaki_strokes": 19,
+    "kumazaki_strokes": 20,
     "readings": {
       "on": [
         "ロウ",
@@ -22588,7 +22609,7 @@
     }
   },
   "悪": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 12,
     "readings": {
       "on": [
         "アク",
@@ -22758,7 +22779,7 @@
     }
   },
   "畏": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "イ"
@@ -23150,7 +23171,7 @@
     }
   },
   "殴": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "オウ"
@@ -23239,7 +23260,7 @@
     }
   },
   "寡": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "カ"
@@ -23646,7 +23667,7 @@
     }
   },
   "棺": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 12,
     "readings": {
       "on": [
         "カン"
@@ -23739,7 +23760,7 @@
     }
   },
   "韓": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 17,
     "readings": {
       "on": [
         "カン"
@@ -23797,7 +23818,7 @@
     }
   },
   "忌": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 7,
     "readings": {
       "on": [
         "キ"
@@ -24067,7 +24088,7 @@
     }
   },
   "僅": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "キン",
@@ -24149,7 +24170,7 @@
     }
   },
   "屑": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "セツ"
@@ -24188,7 +24209,7 @@
     }
   },
   "卦": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "カ",
@@ -24417,7 +24438,7 @@
     }
   },
   "狐": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "コ"
@@ -24429,7 +24450,7 @@
     }
   },
   "糊": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "コ",
@@ -24457,7 +24478,7 @@
     }
   },
   "股": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "コ"
@@ -24487,7 +24508,7 @@
     }
   },
   "菰": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "コ"
@@ -24551,7 +24572,7 @@
     }
   },
   "勾": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 4,
     "readings": {
       "on": [
         "コウ",
@@ -24931,7 +24952,7 @@
     }
   },
   "頃": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 11,
     "readings": {
       "on": [
         "ケイ",
@@ -24970,7 +24991,7 @@
     }
   },
   "恨": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "コン"
@@ -24995,7 +25016,7 @@
     }
   },
   "昏": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "コン"
@@ -25112,7 +25133,7 @@
     }
   },
   "挫": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 11,
     "readings": {
       "on": [
         "ザ",
@@ -25126,7 +25147,7 @@
     }
   },
   "砕": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "サイ"
@@ -25174,7 +25195,7 @@
     }
   },
   "索": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "サク"
@@ -25208,7 +25229,7 @@
     }
   },
   "拶": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "サツ"
@@ -25262,7 +25283,7 @@
     }
   },
   "惨": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "サン",
@@ -25277,7 +25298,7 @@
     }
   },
   "蚕": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 24,
     "readings": {
       "on": [
         "サン",
@@ -25342,7 +25363,7 @@
     }
   },
   "祉": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "シ"
@@ -25583,7 +25604,7 @@
     }
   },
   "弱": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "ジャク"
@@ -25809,7 +25830,7 @@
     }
   },
   "書": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "ショ"
@@ -26060,7 +26081,7 @@
     }
   },
   "芯": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "シン"
@@ -26160,7 +26181,7 @@
     }
   },
   "衰": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 10,
     "readings": {
       "on": [
         "スイ"
@@ -26226,7 +26247,7 @@
     }
   },
   "裾": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "キョ",
@@ -26306,7 +26327,7 @@
     }
   },
   "葬": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "ソウ"
@@ -26444,7 +26465,7 @@
     }
   },
   "詑": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 12,
     "readings": {
       "on": [
         "イ",
@@ -26460,7 +26481,7 @@
     }
   },
   "唾": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 11,
     "readings": {
       "on": [
         "ダ",
@@ -26661,7 +26682,7 @@
     }
   },
   "逮": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "タイ"
@@ -26875,7 +26896,7 @@
     }
   },
   "痴": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 18,
     "readings": {
       "on": [
         "チ"
@@ -27038,7 +27059,7 @@
     }
   },
   "弔": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 4,
     "readings": {
       "on": [
         "チョウ"
@@ -27275,7 +27296,7 @@
     }
   },
   "諦": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 16,
     "readings": {
       "on": [
         "テイ",
@@ -27432,7 +27453,7 @@
     }
   },
   "怒": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "ド",
@@ -27517,7 +27538,7 @@
     }
   },
   "豚": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "トン"
@@ -27545,7 +27566,7 @@
     }
   },
   "謎": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 20,
     "readings": {
       "on": [
         "メイ",
@@ -27602,7 +27623,7 @@
     }
   },
   "罵": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 15,
     "readings": {
       "on": [
         "バ"
@@ -27965,7 +27986,7 @@
     }
   },
   "膝": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 17,
     "readings": {
       "on": [
         "シツ"
@@ -27977,7 +27998,7 @@
     }
   },
   "肘": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "チュウ"
@@ -28269,7 +28290,7 @@
     }
   },
   "憤": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 16,
     "readings": {
       "on": [
         "フン"
@@ -28333,7 +28354,7 @@
     }
   },
   "癖": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 18,
     "readings": {
       "on": [
         "ヘキ"
@@ -28376,7 +28397,7 @@
     }
   },
   "補": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "ホ"
@@ -28491,7 +28512,7 @@
     }
   },
   "貌": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "ボウ",
@@ -28629,7 +28650,7 @@
     }
   },
   "昧": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 9,
     "readings": {
       "on": [
         "マイ",
@@ -28729,7 +28750,7 @@
     }
   },
   "蜜": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 14,
     "readings": {
       "on": [
         "ミツ",
@@ -28767,7 +28788,7 @@
     }
   },
   "麺": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 20,
     "readings": {
       "on": [
         "メン",
@@ -28793,7 +28814,7 @@
     }
   },
   "盲": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "モウ"
@@ -28831,7 +28852,7 @@
     }
   },
   "戻": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 8,
     "readings": {
       "on": [
         "レイ"
@@ -28909,7 +28930,7 @@
     }
   },
   "幼": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 5,
     "readings": {
       "on": [
         "ヨウ"
@@ -29035,7 +29056,7 @@
     }
   },
   "乱": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 13,
     "readings": {
       "on": [
         "ラン",
@@ -29162,7 +29183,7 @@
     }
   },
   "陵": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 16,
     "readings": {
       "on": [
         "リョウ"
@@ -29257,7 +29278,7 @@
     }
   },
   "錬": {
-    "kumazaki_strokes": 0,
+    "kumazaki_strokes": 17,
     "readings": {
       "on": [
         "レン"
@@ -36261,7 +36282,7 @@
     }
   },
   "濫": {
-    "kumazaki_strokes": 18,
+    "kumazaki_strokes": 19,
     "readings": {
       "on": [
         "ラン"
