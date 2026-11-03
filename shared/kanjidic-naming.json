@@ -37236,5 +37236,414 @@
         "なべ"
       ]
     }
+  },
+  "樋": {
+    "kumazaki_strokes": 18,
+    "readings": {
+      "on": [
+        "トウ"
+      ],
+      "kun": [
+        "とい",
+        "ひ"
+      ],
+      "nanori": [
+        "とい",
+        "ひ"
+      ]
+    }
+  },
+  "惠": {
+    "kumazaki_strokes": 12,
+    "readings": {
+      "on": [
+        "ケイ",
+        "エ"
+      ],
+      "kun": [
+        "めぐ.む"
+      ],
+      "nanori": [
+        "めぐみ"
+      ]
+    }
+  },
+  "柏": {
+    "kumazaki_strokes": 9,
+    "readings": {
+      "on": [
+        "ハク",
+        "ヒャク",
+        "ビャク"
+      ],
+      "kun": [
+        "かしわ"
+      ],
+      "nanori": [
+        "かしわ"
+      ]
+    }
+  },
+  "萬": {
+    "kumazaki_strokes": 15,
+    "readings": {
+      "on": [
+        "マン",
+        "バン"
+      ],
+      "kun": [
+        "よろず"
+      ],
+      "nanori": [
+        "よろず"
+      ]
+    }
+  },
+  "荻": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "テキ"
+      ],
+      "kun": [
+        "おぎ"
+      ],
+      "nanori": [
+        "おぎ"
+      ]
+    }
+  },
+  "槇": {
+    "kumazaki_strokes": 14,
+    "readings": {
+      "on": [
+        "テン",
+        "シン"
+      ],
+      "kun": [
+        "まき"
+      ],
+      "nanori": [
+        "まき"
+      ]
+    }
+  },
+  "蜷": {
+    "kumazaki_strokes": 14,
+    "readings": {
+      "on": [
+        "ケン"
+      ],
+      "kun": [
+        "にな"
+      ],
+      "nanori": [
+        "にな"
+      ]
+    }
+  },
+  "溥": {
+    "kumazaki_strokes": 14,
+    "readings": {
+      "on": [
+        "フ"
+      ],
+      "kun": [
+        "あまね.し",
+        "ひろ.い",
+        "おお.きい",
+        "し.く"
+      ],
+      "nanori": [
+        "ひろ"
+      ]
+    }
+  },
+  "凉": {
+    "kumazaki_strokes": 10,
+    "readings": {
+      "on": [
+        "リョウ"
+      ],
+      "kun": [
+        "すず.しい",
+        "すず.む",
+        "うす.い"
+      ],
+      "nanori": [
+        "すず"
+      ]
+    }
+  },
+  "舘": {
+    "kumazaki_strokes": 16,
+    "readings": {
+      "on": [
+        "カン"
+      ],
+      "kun": [
+        "やかた",
+        "たち",
+        "たて"
+      ],
+      "nanori": [
+        "たて"
+      ]
+    }
+  },
+  "條": {
+    "kumazaki_strokes": 11,
+    "readings": {
+      "on": [
+        "ジョウ"
+      ],
+      "kun": [
+        "えだ",
+        "すじ"
+      ],
+      "nanori": [
+        "じょう"
+      ]
+    }
+  },
+  "楳": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "バイ"
+      ],
+      "kun": [
+        "うめ"
+      ],
+      "nanori": [
+        "うめ"
+      ]
+    }
+  },
+  "笘": {
+    "kumazaki_strokes": 11,
+    "readings": {
+      "on": [
+        "セン",
+        "チョウ"
+      ],
+      "kun": [
+        "ふだ",
+        "むち"
+      ],
+      "nanori": [
+        "とま"
+      ]
+    }
+  },
+  "渕": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "エン"
+      ],
+      "kun": [
+        "ふち",
+        "ふか.い",
+        "おくぶか.い"
+      ],
+      "nanori": [
+        "ふち"
+      ]
+    }
+  },
+  "椛": {
+    "kumazaki_strokes": 12,
+    "readings": {
+      "on": [],
+      "kun": [
+        "かば",
+        "もみじ"
+      ],
+      "nanori": [
+        "もみじ",
+        "かば"
+      ]
+    }
+  },
+  "徠": {
+    "kumazaki_strokes": 11,
+    "readings": {
+      "on": [
+        "ライ"
+      ],
+      "kun": [
+        "きた.る",
+        "く.る"
+      ],
+      "nanori": [
+        "らい"
+      ]
+    }
+  },
+  "萱": {
+    "kumazaki_strokes": 15,
+    "readings": {
+      "on": [
+        "カン",
+        "ケン"
+      ],
+      "kun": [
+        "かや",
+        "わすれぐさ"
+      ],
+      "nanori": [
+        "かや"
+      ]
+    }
+  },
+  "縣": {
+    "kumazaki_strokes": 16,
+    "readings": {
+      "on": [
+        "ケン"
+      ],
+      "kun": [
+        "あがた"
+      ],
+      "nanori": [
+        "あがた"
+      ]
+    }
+  },
+  "續": {
+    "kumazaki_strokes": 21,
+    "readings": {
+      "on": [
+        "ゾク",
+        "ショク"
+      ],
+      "kun": [
+        "つづ.く",
+        "つづ.ける",
+        "つ.ぐ"
+      ],
+      "nanori": [
+        "つぐ"
+      ]
+    }
+  },
+  "彅": {
+    "kumazaki_strokes": 14,
+    "readings": {
+      "on": [],
+      "kun": [
+        "なぎ"
+      ],
+      "nanori": [
+        "なぎ"
+      ]
+    }
+  },
+  "鴎": {
+    "kumazaki_strokes": 22,
+    "readings": {
+      "on": [
+        "オウ"
+      ],
+      "kun": [
+        "かもめ"
+      ],
+      "nanori": [
+        "かもめ"
+      ]
+    }
+  },
+  "犀": {
+    "kumazaki_strokes": 12,
+    "readings": {
+      "on": [
+        "サイ",
+        "セイ"
+      ],
+      "kun": [
+        "かた.い",
+        "するど.い"
+      ],
+      "nanori": [
+        "さい"
+      ]
+    }
+  },
+  "馳": {
+    "kumazaki_strokes": 13,
+    "readings": {
+      "on": [
+        "ジ",
+        "チ"
+      ],
+      "kun": [
+        "は.せる"
+      ],
+      "nanori": [
+        "はせ"
+      ]
+    }
+  },
+  "夷": {
+    "kumazaki_strokes": 6,
+    "readings": {
+      "on": [
+        "イ"
+      ],
+      "kun": [
+        "えびす",
+        "えみし",
+        "ころ.す",
+        "たい.らか"
+      ],
+      "nanori": [
+        "えびす"
+      ]
+    }
+  },
+  "篁": {
+    "kumazaki_strokes": 15,
+    "readings": {
+      "on": [
+        "コウ"
+      ],
+      "kun": [
+        "たかむら",
+        "たけ",
+        "たけやぶ"
+      ],
+      "nanori": [
+        "たかむら"
+      ]
+    }
+  },
+  "鏑": {
+    "kumazaki_strokes": 19,
+    "readings": {
+      "on": [
+        "テキ"
+      ],
+      "kun": [
+        "かぶら",
+        "かぶらや",
+        "やじり"
+      ],
+      "nanori": [
+        "かぶら"
+      ]
+    }
+  },
+  "崑": {
+    "kumazaki_strokes": 11,
+    "readings": {
+      "on": [
+        "コン"
+      ],
+      "kun": [],
+      "nanori": [
+        "こん"
+      ]
+    }
   }
 }
