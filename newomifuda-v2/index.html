@@ -1578,6 +1578,19 @@ async function showCelebritySearch(totalStrokes){
       toggle.textContent = opening ? '閉じる' : '詳細を確認する';
       toggle.setAttribute('aria-expanded', String(opening));
     });
+    // ★ 長い一覧の最下部からも閉じられるようにする
+    const closeAtBottom = document.createElement('button');
+    closeAtBottom.type = 'button';
+    closeAtBottom.className = 'celebrity-toggle';
+    closeAtBottom.textContent = '閉じる';
+    closeAtBottom.addEventListener('click', () => {
+      list.hidden = true;
+      toggle.textContent = '詳細を確認する';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus({preventScroll:true});
+      toggle.scrollIntoView({block:'start'});
+    });
+    list.appendChild(closeAtBottom);
     section.append(toggle, list);
   }catch(error){
     if(serial !== celebritySearchSerial) return;
