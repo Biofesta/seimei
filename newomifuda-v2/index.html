@@ -494,6 +494,75 @@
     margin: 0 0 24px;
   }
 
+
+  /* ★ 御身札V2.0：著名人総画検索（診断末尾のみ） */
+  #celebritySearch {
+    margin-top:24px;
+    padding:16px;
+    border:2px solid #b68a2e;
+    border-radius:9px;
+    background:rgba(255,255,255,.96);
+    box-sizing:border-box;
+  }
+  #celebritySearch[hidden], .celebrity-list[hidden] {
+    display:none !important;
+  }
+  .celebrity-heading {
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .celebrity-summary {
+    font-size:16px;
+    font-weight:700;
+    line-height:1.65;
+  }
+  .celebrity-toggle {
+    display:block;
+    width:100%;
+    max-width:280px;
+    margin:14px auto 0;
+    padding:10px 14px;
+    border:1px solid #8d6517;
+    border-radius:8px;
+    background:#f4e6bd;
+    color:#5f4615;
+    font-size:15px;
+    cursor:pointer;
+  }
+  .celebrity-list {
+    margin-top:16px;
+    border-top:1px solid #d8c69c;
+  }
+  .celebrity-row {
+    display:grid;
+    grid-template-columns:minmax(0,37%) minmax(0,1fr);
+    gap:12px;
+    padding:13px 0;
+    border-bottom:1px solid #e8e0d3;
+    font-size:15px;
+    line-height:1.7;
+  }
+  .celebrity-name,
+  .celebrity-category,
+  .celebrity-achievements {
+    min-width:0;
+    overflow-wrap:anywhere;
+  }
+  .celebrity-name,
+  .celebrity-category {
+    font-weight:700;
+  }
+  .celebrity-achievements {
+    margin-top:5px;
+    font-size:14px;
+  }
+  @media (max-width:520px) {
+    #celebritySearch { padding:12px; }
+    .celebrity-row { gap:9px; font-size:14px; }
+    .celebrity-achievements { font-size:13px; }
+  }
+
   @media (max-width: 520px) {
     header {
       padding:0;
@@ -570,6 +639,8 @@
       </div>
 
       <div id="result">まだ診断されていません。</div>
+      <!-- ★ 著名人検索：通常の診断結果・PDF保存領域から独立 -->
+      <section id="celebritySearch" aria-live="polite" hidden></section>
     </section>
 
   </div><!-- /saveArea -->
@@ -1200,6 +1271,7 @@ function renderKakusu(sei, mei, flags, scores){
    計算
    =========================================================== */
 function calculate(){
+  resetCelebritySearch();
   missingInfo=[];
   const sei=splitChars(document.getElementById('sei').value||'');
   const mei=splitChars(document.getElementById('mei').value||'');
@@ -1369,6 +1441,9 @@ function calculate(){
        <img src="logo_biofesta.jpg" alt="biofesta logo" style="width:30mm;height:auto;"/>
      </div>`;
 
+  // ★ 診断結果の総格を使用して、著名人検索を末尾に表示
+  showCelebritySearch(sou);
+
   // ★ 診断結果が出た後だけ PDF 保存ボタンを表示
   const saveControls = document.querySelector('.save-controls');
   if(saveControls) saveControls.classList.add('is-visible');
@@ -1377,8 +1452,140 @@ function calculate(){
   incrementDiagnosisCounter();
 }
 
+
+/* ---------- 御身札V2.0：著名人総画検索 ----------
+   ① 通称名・芸名の総画数を最優先
+   ② ①が全件0名の場合だけ本名の総画数を検索
+   ※既存の総格・診断計算、およびPDF出力は変更しない。
+------------------------------------------------ */
+let celebrityDataPromise = null;
+let celebritySearchSerial = 0;
+
+function resetCelebritySearch(){
+  celebritySearchSerial++;
+  const section = document.getElementById('celebritySearch');
+  if(section){
+    section.hidden = true;
+    section.replaceChildren();
+  }
+}
+
+async function loadCelebrityData(){
+  if(!celebrityDataPromise){
+    celebrityDataPromise = fetch('../shared/celebrities.json', {cache:'no-store'})
+      .then(response => {
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        if(!data || !Array.isArray(data.people)){
+          throw new Error('JSONの人物データ形式が正しくありません');
+        }
+        return data.people;
+      })
+      .catch(error => {
+        celebrityDataPromise = null; // 取得失敗時は次の診断で再試行
+        throw error;
+      });
+  }
+  return celebrityDataPromise;
+}
+
+async function showCelebritySearch(totalStrokes){
+  const section = document.getElementById('celebritySearch');
+  if(!section) return;
+  const serial = ++celebritySearchSerial;
+  section.hidden = false;
+  section.textContent = '著名人データを読み込んでいます…';
+
+  try{
+    const people = await loadCelebrityData();
+    if(serial !== celebritySearchSerial) return; // 再診断・クリア後の古い結果を表示しない
+
+    // 「本名だけ」の人物は第一条件には含めない。
+    const professionalMatches = people.filter(person =>
+      typeof person.professional_name === 'string' &&
+      person.professional_name.trim() !== '' &&
+      typeof person.professional_total_strokes === 'number' &&
+      person.professional_total_strokes === totalStrokes
+    );
+
+    const fallbackToRealName = professionalMatches.length === 0;
+    const matches = fallbackToRealName
+      ? people.filter(person =>
+          typeof person.real_name === 'string' &&
+          person.real_name.trim() !== '' &&
+          typeof person.real_total_strokes === 'number' &&
+          person.real_total_strokes === totalStrokes
+        )
+      : professionalMatches;
+
+    section.replaceChildren();
+    const heading = document.createElement('div');
+    heading.className = 'celebrity-heading';
+    heading.textContent = `【総画${totalStrokes}画と著名人】`;
+    section.appendChild(heading);
+
+    const summary = document.createElement('div');
+    summary.className = 'celebrity-summary';
+    summary.textContent = matches.length
+      ? `同じ総画の著名人${matches.length}名収録`
+      : '著名人4,000名に同じ総画データはありません';
+    section.appendChild(summary);
+    if(!matches.length) return;
+
+    const list = document.createElement('div');
+    list.className = 'celebrity-list';
+    list.hidden = true;
+    for(const person of matches){
+      const row = document.createElement('div');
+      row.className = 'celebrity-row';
+      const name = document.createElement('div');
+      name.className = 'celebrity-name';
+      const realName = String(person.real_name || '').trim();
+      const professionalName = String(person.professional_name || '').trim();
+      name.textContent = fallbackToRealName
+        ? (professionalName && professionalName !== realName
+          ? `${realName} ⇒ ${professionalName}` : realName)
+        : professionalName;
+
+      const details = document.createElement('div');
+      const category = document.createElement('div');
+      category.className = 'celebrity-category';
+      category.textContent = String(person.category || '');
+      details.appendChild(category);
+      if(person.achievements){
+        const achievements = document.createElement('div');
+        achievements.className = 'celebrity-achievements';
+        achievements.textContent = String(person.achievements);
+        details.appendChild(achievements);
+      }
+      row.append(name, details);
+      list.appendChild(row);
+    }
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'celebrity-toggle';
+    toggle.textContent = '詳細を確認する';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.addEventListener('click', () => {
+      const opening = list.hidden;
+      list.hidden = !opening;
+      toggle.textContent = opening ? '閉じる' : '詳細を確認する';
+      toggle.setAttribute('aria-expanded', String(opening));
+    });
+    section.append(toggle, list);
+  }catch(error){
+    if(serial !== celebritySearchSerial) return;
+    section.textContent = '著名人データを読み込めませんでした。JSONの保存先をご確認ください。';
+    console.warn('著名人データ読み込みエラー:', error);
+  }
+}
+
 /* ---------- クリア ---------- */
 function clearForm(){
+  resetCelebritySearch();
   document.getElementById('sei').value='';
   document.getElementById('mei').value='';
   document.getElementById('result').textContent='まだ診断されていません。';
