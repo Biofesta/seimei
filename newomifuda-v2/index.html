@@ -1454,8 +1454,8 @@ function calculate(){
 
 
 /* ---------- 御身札V2.0：著名人総画検索 ----------
-   ① 通称名・芸名の総画数を最優先
-   ② ①が全件0名の場合だけ本名の総画数を検索
+   ① 通称名・芸名があればその総画数、なければ本名総画数で検索
+   ② ①が全件0名の場合だけ通称名のある人物の本名総画数を検索
    ※既存の総格・診断計算、およびPDF出力は変更しない。
 ------------------------------------------------ */
 let celebrityDataPromise = null;
@@ -1502,23 +1502,27 @@ async function showCelebritySearch(totalStrokes){
     const people = await loadCelebrityData();
     if(serial !== celebritySearchSerial) return; // 再診断・クリア後の古い結果を表示しない
 
-    // 「本名だけ」の人物は第一条件には含めない。
-    const professionalMatches = people.filter(person =>
-      typeof person.professional_name === 'string' &&
-      person.professional_name.trim() !== '' &&
-      typeof person.professional_total_strokes === 'number' &&
-      person.professional_total_strokes === totalStrokes
-    );
+    // 第一条件：通称名がある人物は通称名の画数、ない人物は本名の画数で照合。
+    const primaryMatches = people.filter(person => {
+      const professionalName = String(person.professional_name || '').trim();
+      const realName = String(person.real_name || '').trim();
+      const searchName = professionalName || realName;
+      const searchStrokes = professionalName
+        ? person.professional_total_strokes : person.real_total_strokes;
+      return searchName !== '' &&
+        typeof searchStrokes === 'number' && searchStrokes === totalStrokes;
+    });
 
-    const fallbackToRealName = professionalMatches.length === 0;
+    // 第二条件：第一条件が全体で0名のときだけ、通称名がある人物の本名画数を照合。
+    const fallbackToRealName = primaryMatches.length === 0;
     const matches = fallbackToRealName
       ? people.filter(person =>
-          typeof person.real_name === 'string' &&
-          person.real_name.trim() !== '' &&
+          String(person.professional_name || '').trim() !== '' &&
+          String(person.real_name || '').trim() !== '' &&
           typeof person.real_total_strokes === 'number' &&
           person.real_total_strokes === totalStrokes
         )
-      : professionalMatches;
+      : primaryMatches;
 
     section.replaceChildren();
     const heading = document.createElement('div');
@@ -1545,9 +1549,8 @@ async function showCelebritySearch(totalStrokes){
       const realName = String(person.real_name || '').trim();
       const professionalName = String(person.professional_name || '').trim();
       name.textContent = fallbackToRealName
-        ? (professionalName && professionalName !== realName
-          ? `${realName} ⇒ ${professionalName}` : realName)
-        : professionalName;
+        ? `${realName} ⇒ ${professionalName}`
+        : (professionalName || realName);
 
       const details = document.createElement('div');
       const category = document.createElement('div');
