@@ -902,6 +902,16 @@ function calculate(){
   addCompat('対人・職業運（主格⇔外格）',  sRela.symbol, sRela.text, sRela.advice);
   addCompat('総合バランス（主格⇔総画）',  sOver.symbol, sOver.text, sOver.advice);
 
+  /* ★ 陰陽五行診断の「要注意」について（全診断結果に共通表示） */
+  out.push(`
+    <div style="margin-top:22px; padding:14px 16px; background:#f7f7f7; border:1px solid #e1e1e1; border-radius:8px; font-size:14px; line-height:1.9; color:#333;">
+      <p style="margin:0 0 8px; font-weight:bold;">【陰陽五行診断の「要注意」について】</p>
+      <p style="margin:0 0 10px;">陰陽五行診断における「要注意」は、五行の組み合わせから、健康面や精神的な負担、人間関係、生活環境などについて、日常生活での心がけを促すものです。</p>
+      <p style="margin:0 0 10px;">人物の善悪や将来の不幸を意味するものではありません。また、健康状態や人生の出来事を断定するものでもありません。</p>
+      <p style="margin:0;">診断結果は、ご自身の生活をより良くするための参考としてお受け止めください。</p>
+    </div>
+  `);
+
   document.getElementById('result').innerHTML =
     out.join('') +
     `<p style="text-align:center;margin-top:30px;font-weight:bold;">―― 御身札 ――</p>
