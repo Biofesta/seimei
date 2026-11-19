@@ -267,6 +267,29 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .card h3{margin:0 0 4px;font-size:13px} .big{font-size:25px;font-weight:700} .card p{font-size:11px;line-height:1.55;color:#6c655d;margin:4px 0 0}
 .detail{margin-top:12px;border:1px solid #e5ded4;border-radius:12px;background:#fff;padding:14px}
 .detail h3{margin:0 0 8px;font-size:17px} .detail ul{margin:0;padding-left:20px;line-height:1.8}
+/* 相性診断についての注釈だけを強調する */
+.detail.compatibility-note{
+  border:3px solid #b66b88;
+  background:#fff1f5;
+  padding:18px;
+}
+.detail.compatibility-note h3{
+  text-align:center;
+  color:#71334d;
+  font-weight:700;
+}
+.detail.compatibility-note .diagtext{
+  color:#40343a;
+  font-weight:700;
+}
+/* リセットボタンだけを濃色にする */
+.result-actions #another{
+  background:#843b5b;
+  color:#fff;
+  font-weight:700;
+  border:1px solid #6d304a;
+}
+
 .good{color:#2d784e} .warn{color:#a43a37} .gold{color:#8b651a}
 
 .diagnosis-sections{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
@@ -702,7 +725,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <p class="birth-relation-text" id="birthRelationText"></p>
     <p class="data-note">四柱推命の相性は、日主・日支・天干・地支・五行補完を別々に確認します。出生時刻が空欄の場合は時柱を使わずに判定します。総合表示は5項目をまとめた簡易な傾向で、姓名相性の点数には加算しません。節入り時刻付近や23時台の出生は、詳細鑑定では時刻条件の確認が必要です。</p>
   </div>
-  <div class="detail"><h3>相性診断について</h3><p class="diagtext">この相性診断は、二人の間に生じる縁の強さや結びつきの傾向を示すものであり、縁の善し悪しを判断するものではありません。強い縁が必ずしも良い縁とは限らず、その関係には、それぞれが持つ思考傾向や運勢も関わってきます。縁の善し悪しを理解するためには、それぞれの個別診断「御身札V2.0」を併せてご参照ください。個々の性質や運勢については、個別診断の方がより詳しく理解できます。また、恋愛や結婚は経済的な条件、年齢、嗜好などによっても変化します。思い込みに注意し、お相手の判断を尊重しましょう。</p></div>
+  <div class="detail compatibility-note"><h3>相性診断について</h3><p class="diagtext">この相性診断は、二人の間に生じる縁の強さや結びつきの傾向を示すものであり、縁の善し悪しを判断するものではありません。強い縁が必ずしも良い縁とは限らず、その関係には、それぞれが持つ思考傾向や運勢も関わってきます。縁の善し悪しを理解するためには、それぞれの個別診断「御身札V2.0」を併せてご参照ください。個々の性質や運勢については、個別診断の方がより詳しく理解できます。また、恋愛や結婚は経済的な条件、年齢、嗜好などによっても変化します。思い込みに注意し、お相手の判断を尊重しましょう。</p></div>
   <div class="result-actions"><button class="secondary" id="another">リセット（名前の入力に戻る）</button></div>
 </section>
   </div>
