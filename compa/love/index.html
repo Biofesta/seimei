@@ -13,7 +13,7 @@
 body{
   margin:0; font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif;
   color:var(--ink);
-  background:#f6e9ef;
+  background:#aa5d7e;
   min-height:100vh;
   overflow-x:hidden;
 }
@@ -27,14 +27,15 @@ body{
   overflow:hidden;
   pointer-events:none;
   background:
-    linear-gradient(rgba(255,255,255,.08),rgba(255,255,255,.08)),
-    url("../images/love-background.jpg") center center / cover no-repeat;
+    linear-gradient(125deg,rgba(86,24,58,.43) 0%,rgba(135,39,79,.18) 44%,rgba(66,25,54,.48) 100%),
+    url("../images/love-background.jpg") center center / cover no-repeat,
+    linear-gradient(135deg,#c47b9a 0%,#a35678 52%,#7d405e 100%);
 }
 .romantic-bg::before{
   content:"";
   position:absolute;
   inset:-8%;
-  opacity:.82;
+  opacity:.62;
   background:
     radial-gradient(circle at 12% 20%,rgba(255,255,255,.95) 0 2px,transparent 3px),
     radial-gradient(circle at 28% 72%,rgba(255,244,251,.9) 0 2px,transparent 3px),
@@ -52,18 +53,18 @@ body{
   right:-12%;
   bottom:-10%;
   height:48%;
-  opacity:.38;
+  opacity:.22;
   filter:blur(14px);
   background:
-    radial-gradient(ellipse at 18% 55%,rgba(255,255,255,.8),transparent 42%),
-    radial-gradient(ellipse at 50% 72%,rgba(255,226,239,.72),transparent 44%),
-    radial-gradient(ellipse at 82% 48%,rgba(237,225,255,.68),transparent 42%);
+    radial-gradient(ellipse at 18% 55%,rgba(255,244,249,.63),transparent 42%),
+    radial-gradient(ellipse at 50% 72%,rgba(249,188,214,.57),transparent 44%),
+    radial-gradient(ellipse at 82% 48%,rgba(226,174,219,.51),transparent 42%);
   animation:romanticWater 12s ease-in-out infinite alternate;
 }
 .bg-heart{
   position:absolute;
   display:block;
-  color:rgba(244,171,203,.46);
+  color:rgba(255,184,216,.62);
   font-family:Georgia,"Times New Roman",serif;
   font-weight:400;
   line-height:1;
@@ -125,7 +126,7 @@ body{
   .bg-spark.s2,.bg-spark.s4{display:none}
 }
 .input-hero{position:relative;max-width:860px;margin:0 auto 20px}
-.input-hero img{display:block;width:100%;height:auto;border-radius:18px}
+.input-hero img{display:block;width:100%;height:auto;border-radius:18px;border:1px solid rgba(255,231,241,.7);box-shadow:0 12px 34px rgba(69,20,46,.31);filter:saturate(1.18) contrast(1.10)}
 .love-diagnosis-counter{position:absolute;left:50%;bottom:8px;transform:translate(-50%,11px);z-index:2;white-space:nowrap;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.82);font-size:14px;font-weight:700;line-height:1.35;color:#5f4650;box-shadow:0 2px 8px rgba(70,45,55,.12)}
 .love-diagnosis-counter strong{font-size:18px;color:#b04770;margin:0 3px}
 @media(max-width:700px){.love-diagnosis-counter{bottom:5px;padding:4px 9px;font-size:11px}.love-diagnosis-counter strong{font-size:15px}}
@@ -140,6 +141,19 @@ body{
 .inputs{padding:18px}
 .personbox{border:1px solid #e5dfd7;border-radius:14px;padding:14px;margin-bottom:14px;background:#fffdf9}
 .personbox h2{margin:0 0 12px;font-size:21px}
+/* 入力画面だけに適用。診断結果の配色は変更しない。 */
+#inputScreen .panel.inputs{background:rgba(255,250,251,.97);border:1px solid #dba9bd;box-shadow:0 16px 42px rgba(65,16,44,.25)}
+#inputScreen .personbox{border-color:#d9afbf;background:linear-gradient(180deg,#fffefd 0%,#fff6f8 100%);box-shadow:0 3px 12px rgba(106,42,73,.06)}
+#inputScreen .personbox h2{color:#7e284e;font-weight:800;border-bottom:1px solid #e6c9d5;padding-bottom:9px}
+#inputScreen .grid2 label{color:#5b3a4b;font-weight:700}
+#inputScreen input:not([type="checkbox"]):not([type="radio"]),#inputScreen select{border-color:#b98197;background:#fff;color:#362832;box-shadow:0 2px 7px rgba(97,42,69,.06)}
+#inputScreen input:focus-visible,#inputScreen select:focus-visible{outline:2px solid #a94169;outline-offset:1px}
+#inputScreen input[type="checkbox"],#inputScreen input[type="radio"]{accent-color:#a33d64}
+#inputScreen .save label{color:#633c50;font-size:14px;font-weight:700;line-height:1.55;align-items:flex-start}
+#inputScreen .save input{width:18px;height:18px;flex:0 0 18px;margin-top:1px}
+#inputScreen .birth-option{border-color:#dfb7c7;background:#fff4f8}
+#inputScreen #run{background:linear-gradient(135deg,#b64c75,#802b50);color:#fff;font-weight:800;box-shadow:0 6px 16px rgba(111,26,63,.30)}
+#inputScreen #run:hover{filter:brightness(1.05)}
 .grid2,.numgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 label{display:block;font-size:13px;color:#5e5952;margin-bottom:9px}
 input,select{width:100%;border:1px solid #cec6ba;background:#fff;padding:9px 10px;border-radius:8px;font-size:16px;font-family:inherit}
@@ -532,7 +546,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <label><input type="radio" name="aSex" value="male">男性</label>
       <label><input type="radio" name="aSex" value="female">女性</label>
     </div>
-    <div class="save"><label><input id="saveSelf" type="checkbox">本人データをこの端末に保存</label></div>
+    <div class="save"><label><input id="saveSelf" type="checkbox">チェックを入れるとご自身のお名前の複数回の入力を省けます</label></div>
   </div>
 
   <div class="personbox">
@@ -568,8 +582,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 
   <div id="inputError" class="errorbox"></div>
   <button class="primary" id="run">診断する</button>
-  <button class="secondary" id="clear">保存した本人情報を解除</button>
-  <p class="smallnote">姓・名を入力し、性別を選んで「診断する」を押してください。「生年月日からも相性を見る」を選んだ場合だけ、四柱推命の追加情報も表示します。本人情報の保存は姓名・性別のみで、生年月日は保存しません。結婚後の同姓比較は診断結果から必要な場合だけ確認できます。</p>
+  <p class="smallnote">姓・名を入力し、性別を選んで「診断する」を押してください。「生年月日からも相性を見る」を選んだ場合だけ、四柱推命の追加情報も表示します。結婚後の同姓比較は診断結果から必要な場合だけ確認できます。</p>
 </section>
   </div>
 </div>
@@ -1493,7 +1506,14 @@ document.getElementById("useBirth").addEventListener("change",e=>{
   if(!e.target.checked) BIRTH_COMPAT_RESULTS=null;
 });
 document.getElementById("run").addEventListener("click",showResult);
-document.getElementById("clear").addEventListener("click",()=>{localStorage.removeItem("compatibility_self_v3"); localStorage.removeItem("compatibility_self_v2"); localStorage.removeItem("compatibility_self_v1"); document.getElementById("aFamily").value=""; document.getElementById("aGiven").value=""; document.querySelectorAll('input[name="aSex"]').forEach(r=>r.checked=false); document.getElementById("saveSelf").checked=false; alert("保存した本人情報を解除しました。");});
+document.getElementById("saveSelf").addEventListener("change",e=>{
+  if(!e.target.checked){
+    // チェックを外した場合だけ端末に記憶した本人情報を削除。入力中の氏名は残す。
+    for(const key of ["compatibility_self_v3","compatibility_self_v2","compatibility_self_v1"]){
+      localStorage.removeItem(key);
+    }
+  }
+});
 document.getElementById("another").addEventListener("click",resetOpponent);
 window.addEventListener("resize",()=>{ if(!document.getElementById("resultScreen").hidden) render(); });
 loadA();
