@@ -474,9 +474,11 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   box-shadow:0 2px 7px rgba(45,42,38,.06);
 }
 .relation-mode-btn span{display:block;line-height:1.15}
-.relation-mode-btn[aria-pressed="true"]{background:var(--rel-bg);box-shadow:0 0 0 1px var(--rel-color) inset,0 3px 10px rgba(45,42,38,.10)}
+.relation-mode-btn[aria-pressed="true"]{background:var(--rel-bg);border-width:3px;box-shadow:0 0 0 1px var(--rel-color) inset,0 3px 10px rgba(45,42,38,.10);opacity:1}
+.relation-mode-btn[aria-pressed="false"]{opacity:.42;box-shadow:none}
 .relation-mode-btn:focus-visible{outline:3px solid #305cb8;outline-offset:2px}
-.relation-mode-status{margin:0 0 8px;text-align:center;font-size:12px;color:#756b66;min-height:18px}
+.relation-mode-status{margin:0 0 8px;text-align:center;font-size:14px;font-weight:700;line-height:1.6;color:#5c554d;min-height:24px}
+.relation-mode-status.is-empty{padding:6px 10px;border:1px solid #ead4ca;border-radius:8px;background:#fff7f2;color:#8c4a38}
 .cards .metric-card.selected-relation{border-color:var(--rel-highlight,#b7861e);box-shadow:0 0 0 1px var(--rel-highlight,#b7861e) inset}
 @media(max-width:700px){
   .names{grid-template-columns:minmax(0,1fr) minmax(82px,100px) minmax(0,1fr);gap:3px;margin-bottom:8px}
@@ -1138,11 +1140,11 @@ let RELATION_MANUAL=false;
 function applyRelationMode(mode){
   if(!RELATION_STYLES[mode])return;
   ACTIVE_RELATION_MODE=mode;
+  const chosen=RELATION_LINE_DATA.filter(item=>RELATION_STYLES[mode].includes(item.type));
   const svg=document.getElementById("lines");
   if(svg){
     // SVG内のdefsは保持し、線だけを選択中の種類に差し替える。
     for(const path of Array.from(svg.querySelectorAll(":scope > path")))path.remove();
-    const chosen=RELATION_LINE_DATA.filter(item=>RELATION_STYLES[mode].includes(item.type));
     const maxLines=window.innerWidth<=700?7:10;
     for(const item of chosen.slice(0,maxLines)){
       const e1=document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`);
@@ -1166,7 +1168,14 @@ function applyRelationMode(mode){
     btn.setAttribute("aria-pressed",String(btn.dataset.relationMode===mode));
   }
   const status=document.getElementById("relationModeStatus");
-  if(status)status.textContent=RELATION_MANUAL?"選択した関係を表示しています。":"5秒ごとに自動切替します。ボタン操作で停止します。";
+  if(status){
+    const relationName={support:"相生",conflict:"相剋",common:"共通"}[mode];
+    const autoNote=RELATION_MANUAL?"":" 5秒ごとに自動切替します。ボタン操作で停止します。";
+    status.textContent=chosen.length
+      ? `表示中：${relationName}の関係。${autoNote}`
+      : `${relationName}の関係はありません。${autoNote}`;
+    status.classList.toggle("is-empty",chosen.length===0);
+  }
 }
 function stopRelationCycle(){
   if(RELATION_TIMER!==null){clearInterval(RELATION_TIMER);RELATION_TIMER=null;}
