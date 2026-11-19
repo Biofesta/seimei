@@ -887,19 +887,10 @@ function se(tag,attrs={}){
   return e;
 }
 function draw(svg,p1,p2,type,title,bend=0,markerId=""){
-  const st=DATA.line_styles[type], dx=Math.abs(p2.x-p1.x), dy=Math.abs(p2.y-p1.y);
+  const st=DATA.line_styles[type];
   const lineOpacity = type==="conflict" ? ".72" : (type==="same_coefficient" ? ".98" : ".92");
-  const horizontal=dy<18;
-  let d="";
-  if(horizontal){
-    const arch=Math.max(28, Math.min(60, dx*0.12 + Math.abs(bend)*1.6));
-    const span=p2.x-p1.x;
-    const c1x=p1.x+span*0.28, c2x=p2.x-span*0.28;
-    const peakY=Math.min(p1.y,p2.y)-arch;
-    d=`M ${p1.x} ${p1.y} C ${c1x} ${peakY} ${c2x} ${peakY} ${p2.x} ${p2.y}`;
-  }else{
-    d=`M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
-  }
+  // 曲線には判定上の意味はない。全種類を始点と終点を結ぶ直線で表示する。
+  const d=`M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
   const path=se("path",{d,
     fill:"none",stroke:st.color,"stroke-width":st.width,"stroke-dasharray":st.dash||"",
     "stroke-linecap":"round","stroke-linejoin":"round",opacity:lineOpacity});
@@ -1146,12 +1137,39 @@ function applyRelationMode(mode){
     // SVG内のdefsは保持し、線だけを選択中の種類に差し替える。
     for(const path of Array.from(svg.querySelectorAll(":scope > path")))path.remove();
     const maxLines=window.innerWidth<=700?7:10;
-    for(const item of chosen.slice(0,maxLines)){
-      const e1=document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`);
-      const e2=document.querySelector(`.layer[data-side="${item.s2}"][data-key="${item.k2}"]`);
-      if(!e1||!e2)continue;
+    const visible=chosen.slice(0,maxLines).map(item=>({
+      item,
+      e1:document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`),
+      e2:document.querySelector(`.layer[data-side="${item.s2}"][data-key="${item.k2}"]`)
+    })).filter(line=>line.e1&&line.e2);
+
+    // 同じ格から複数の線が出る場合、カードの内側の辺に接続点を分散させる。
+    // 相手側の格が画面で上にある線から順に並べ、直線が重なりにくくする。
+    const endpoints=new Map();
+    for(const line of visible){
+      for(const end of ["e1","e2"]){
+        const el=line[end], other=line[end==="e1"?"e2":"e1"];
+        if(!endpoints.has(el))endpoints.set(el,[]);
+        endpoints.get(el).push({line,end,otherY:other.getBoundingClientRect().top+other.getBoundingClientRect().height/2});
+      }
+    }
+    const pointOffsets=new Map();
+    for(const [el,links] of endpoints){
+      links.sort((a,b)=>a.otherY-b.otherY || (a.line.item.title||"").localeCompare(b.line.item.title||""));
+      const height=el.getBoundingClientRect().height;
+      const step=links.length>1?Math.min(15,(height-22)/(links.length-1)):0;
+      links.forEach((link,i)=>{
+        if(!pointOffsets.has(link.line))pointOffsets.set(link.line,{});
+        pointOffsets.get(link.line)[link.end]=(i-(links.length-1)/2)*step;
+      });
+    }
+    for(const line of visible){
+      const {item,e1,e2}=line;
+      const p1=pos(e1,item.s1), p2=pos(e2,item.s2);
+      p1.y+=(pointOffsets.get(line)?.e1||0);
+      p2.y+=(pointOffsets.get(line)?.e2||0);
       const markerId=item.arrow?(item.type==="support"?"arrowGreen":"arrowGold"):"";
-      draw(svg,pos(e1,item.s1),pos(e2,item.s2),item.type,item.title,item.bend||0,markerId);
+      draw(svg,p1,p2,item.type,item.title,item.bend||0,markerId);
     }
   }
   const priority={
