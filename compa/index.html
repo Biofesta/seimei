@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>相性診断</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif JP",serif;
+    color:#3f342e;
+    background:linear-gradient(180deg,#fffaf7 0%,#f7f0ea 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 18px;
+  }
+  .wrap{
+    width:min(920px,100%);
+    background:rgba(255,255,255,.9);
+    border:1px solid #e6d7cc;
+    border-radius:24px;
+    box-shadow:0 16px 40px rgba(91,65,49,.10);
+    padding:42px 34px 36px;
+  }
+  h1{
+    margin:0 0 10px;
+    text-align:center;
+    font-size:clamp(28px,4vw,42px);
+    font-weight:600;
+    letter-spacing:.08em;
+  }
+  .lead{
+    margin:0 0 34px;
+    text-align:center;
+    color:#75665c;
+    font-size:15px;
+    line-height:1.9;
+  }
+  .choices{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+  }
+  .card{
+    display:block;
+    text-decoration:none;
+    color:inherit;
+    border-radius:20px;
+    padding:30px 24px;
+    border:1px solid #e4d6cd;
+    background:#fff;
+    transition:.18s ease;
+    min-height:240px;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 26px rgba(79,55,43,.12);
+  }
+  .general{background:linear-gradient(180deg,#fffdf8 0%,#f7f2e6 100%)}
+  .love{background:linear-gradient(180deg,#fff9fb 0%,#f9e9ef 100%)}
+  .icon{font-size:46px;line-height:1;margin-bottom:18px;text-align:center}
+  .title{text-align:center;font-size:24px;font-weight:700;margin-bottom:12px}
+  .desc{text-align:center;font-size:14px;line-height:1.9;color:#70645d}
+  .btn{
+    margin:22px auto 0;
+    width:max-content;
+    padding:10px 22px;
+    border-radius:999px;
+    border:1px solid #cdb8a9;
+    background:rgba(255,255,255,.8);
+    font-size:14px;
+  }
+  .love .btn{border-color:#d9b2c0}
+  .note{
+    margin-top:28px;
+    text-align:center;
+    font-size:12px;
+    color:#94867d;
+  }
+  @media(max-width:700px){
+    .wrap{padding:30px 18px 26px}
+    .choices{grid-template-columns:1fr}
+    .card{min-height:0}
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>相性診断</h1>
+    <p class="lead">診断したい関係を選んでください。</p>
+
+    <div class="choices">
+      <a class="card general" href="./general/">
+        <div class="icon">◇</div>
+        <div class="title">一般相性診断</div>
+        <div class="desc">仕事・友人・家族・その他の人間関係を、姓名の関係から確認します。</div>
+        <div class="btn">一般相性診断へ</div>
+      </a>
+
+      <a class="card love" href="./love/">
+        <div class="icon">♡</div>
+        <div class="title">恋愛・結婚相性診断</div>
+        <div class="desc">恋愛・結婚の関係を中心に、姓名の縁・引力・相生・相剋などから確認します。</div>
+        <div class="btn">恋愛・結婚相性診断へ</div>
+      </a>
+    </div>
+
+    <div class="note">このページは入口です。各診断ページは general / love フォルダ内で管理します。</div>
+  </main>
+</body>
+</html>
