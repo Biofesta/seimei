@@ -683,7 +683,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   </div>
 
   <div class="map" id="map">
-    <div class="midnote">線の本数より「種類」と「つながる格」を見る</div>
+    <div class="midnote">天格を除く4格×4格（全16通り）で、線の「種類」と「つながる格」を見る</div>
     <svg id="lines"></svg>
     <div class="side a">
       <div class="layer total" data-side="a" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="aTotalV"></span><span class="kaku-stars" id="aTotalStars" aria-label="総格の吉凶評価"></span></div></div>
@@ -705,13 +705,14 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <button type="button" class="relation-mode-btn" data-relation-mode="common" aria-pressed="false" style="--rel-color:#b7861e;--rel-bg:#fff8e7"><span>共通</span><span>関係</span></button>
   </div>
   <p class="relation-mode-status" id="relationModeStatus" aria-live="polite">5秒ごとに自動切替します。ボタン操作で停止します。</p>
+  <p class="smallnote">【診断基準】天格を除く総格・主格・地格・外格の4格×4格＝全16通りを比較します。相生・相剋は「一緒にいて楽しい・心地よいか、反発や負担を感じやすいか」を示す作用で、各1として集計します。同じ画数は理解し合いやすい相生の要素として各1を含め、同時に縁の力としても評価します。共通数・同系数は「縁の強さ」で各1、主格と相手の外格（双方向）の引合力だけは各2として集計します。縁が強くても良い縁とは限らず、共通する数理が強く働くほど、その数意に応じた反発が生じる場合もあります。中央の10点表示には引合力の重みを直接加算せず、縁の善し悪しは二人それぞれの性質・運勢によって変わります。</p>
 
   <div class="cards">
     <div class="card metric-card" id="sameCard">
       <div class="metric-box"><div class="metric-name">共通格数</div><div class="metric-value" id="sameN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#b7861e;border-width:2.5px"></i><span>金線＝同じ画数</span></div>
-        <p class="card-explain">指定した比較関係の中で現れる、同じ画数による縁の接点です。</p>
+        <p class="card-explain">天格を除く4格×4格・全16通りで、同じ画数が示す縁を数えます。同じ画数は互いを理解しやすい相生の要素でもありますが、数意によっては反発も生じます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="sameValues"></div><div class="card-readings" id="sameReadings"></div></div>
     </div>
@@ -719,7 +720,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">同系格数</div><div class="metric-value" id="coeffN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#d4a33c;border-width:4.2px"></i><span>金線＝画数は違っても同じ系数</span></div>
-        <p class="card-explain">指定した比較関係の中で、画数は違っても同じ系数を持つ共鳴の接点です。</p>
+        <p class="card-explain">天格を除く全16通りで、画数は異なっても同じ系数が示す縁を数えます。縁の性質や持続性は別に判断し、反発が生じる場合は系数ごとの数意にも目を向けます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="coeffValues"></div><div class="card-readings" id="coeffReadings"></div></div>
     </div>
@@ -727,7 +728,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">引合力</div><div class="metric-value" id="attrN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#8c6517;border-width:7px"></i><span>太い金線＋矢印＝主格と外格の同数・同系数</span></div>
-        <p class="card-explain">二人の主格と外格に同数・同系数があると、相生よりも強い引合力が働くとされます。ただし、その強さゆえに強い反発や分離が生じることもあります。</p>
+        <p class="card-explain">共通（引合力）は格の位置によらず働く縁の力です。そのうち主格と相手の外格（双方向）の一致は特に強く、通常の共通関係1に対して2の重みで数えます。強い縁でも、数意に応じた反発や距離が生じることがあります。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="attrReadings"></div></div>
     </div>
@@ -735,7 +736,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">相生配置</div><div class="metric-value" id="suppN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#3f8f62;border-width:3px"></i><span>緑線＋矢印＝五行の相生</span></div>
-        <p class="card-explain">一緒にいれば楽しいと感じる人。五行で一方が他方を生じ、支えやすい関係として見ます。</p>
+        <p class="card-explain">天格を除く全16通りで、五行が生かし合う作用と、同じ画数による理解のしやすさを各1として数えます。一緒にいて楽しい、心地よいと感じやすい関係の要素です。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="suppReadings"></div></div>
     </div>
@@ -743,7 +744,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">相剋配置</div><div class="metric-value" id="confN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#c34a46;border-width:2.1px;border-top-style:dashed"></i><span>赤い破線＝五行の相剋</span></div>
-        <p class="card-explain">一緒にいて楽しいと感じない人。距離や衝突が生じやすい要因として見ます。</p>
+        <p class="card-explain">天格を除く全16通りで、五行が抑制・反発する作用を各1として数えます。一緒にいると疲れや不快感、意見の衝突が生じやすい関係の要素です。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="confReadings"></div></div>
     </div>
@@ -774,7 +775,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <p class="birth-relation-text" id="birthRelationText"></p>
     <p class="data-note">四柱推命の相性は、日主・日支・天干・地支・五行補完を別々に確認します。出生時刻が空欄の場合は時柱を使わずに判定します。総合表示は5項目をまとめた簡易な傾向で、姓名相性の点数には加算しません。節入り時刻付近や23時台の出生は、詳細鑑定では時刻条件の確認が必要です。</p>
   </div>
-  <div class="detail compatibility-note"><h3>相性診断について</h3><p class="diagtext">この相性診断は、二人の間に生じる縁の強さや結びつきの傾向を示すものであり、縁の善し悪しを判断するものではありません。強い縁が必ずしも良い縁とは限らず、その関係には、それぞれが持つ思考傾向や運勢も関わってきます。縁の善し悪しを理解するためには、それぞれの個別診断「御身札V2.0」を併せてご参照ください。個々の性質や運勢については、個別診断の方がより詳しく理解できます。また、恋愛や結婚は経済的な条件、年齢、嗜好などによっても変化します。思い込みに注意し、お相手の判断を尊重しましょう。</p></div>
+  <div class="detail compatibility-note"><h3>相性診断について</h3><p class="diagtext">相生・相剋は、一緒にいて楽しい・心地よいと感じやすいか、反発や負担が生じやすいかを示す五行の作用です。一方、共通数・同系数による引合力は、互いを引きつける「縁の強さ」を示します。主格と相手の外格（双方向）に生じる引合力は、特に強い縁として扱います。同じ画数には相手を理解しやすい面があり、相生にも含めます。ただし、共通する数理のエネルギーが強く働けば、その数意に応じた反発が生じる場合もあります。強く引き合うことと、一緒にいて心地よいことは別であり、強い縁が必ずしも良い縁とは限りません。縁が良い方向に働くかどうかは、本人とお相手それぞれの思考傾向や運勢、その相互作用によって変わります。個々の性質や運勢を詳しく理解するには、個別診断「御身札V2.0」も併せてご参照ください。また、恋愛や結婚は経済的条件、年齢、嗜好など現実の事情にも左右されます。思い込みに注意し、お相手の意思を尊重しましょう。なお、中央の点数は相生・相剋による心地よさの目安で、縁の善し悪しを表すものではありません。</p></div>
   <div class="result-actions"><button class="secondary" id="another">リセット（名前の入力に戻る）</button></div>
 </section>
   </div>
@@ -836,19 +837,9 @@ function renderKakuStars(side,key,value){
   }
 }
 
-// 相性診断で実際に比較する格の組合せ。
-// 総格は総格同士、地格は地格同士、外格は外格同士。
-// 主格だけは相手の主格・地格・外格との関連を見る（左右対称に確認）。
-const COMPARE_PAIRS = [
-  ["total","total"],
-  ["main","main"],
-  ["main","ground"],
-  ["ground","main"],
-  ["main","outer"],
-  ["outer","main"],
-  ["ground","ground"],
-  ["outer","outer"]
-];
+// 天格を除く4格×4格を、相生・相剋・共通（同数・同系数）のすべてで比較。
+// 4×4=16通り。各格の比較位置によって判定を省略しない。
+const COMPARE_PAIRS = K.flatMap(ka => K.map(kb => [ka,kb]));
 
 // 五行の相生：木→火→土→金→水→木
 const SUPPORT_CYCLE = {
@@ -1009,15 +1000,53 @@ function renderLegacySections(a,b){
   }
   document.getElementById("diagnosisSections").innerHTML=html.join("");
 }
-function makeOverallAdvice({same,sameCoeff,attraction,support,conflict,strongBond}){
+// 同数・同系数の縁が強く働いた場合に見られる、10系数別の反発の特徴。
+// 診断結果を決めつけず、もっとも関係の深い系数を最大2つだけ助言へ織り込む。
+const COEFFICIENT_FRICTION_ADVICE={
+  1:"互いの主導権をめぐって譲りにくくなる",
+  2:"助け合いながらも、それぞれの意思で別々の道を選び、距離が生まれる",
+  3:"感情が急激に高まり、強い言葉や反応につながる",
+  4:"積み重ねた不満が一度に表に出る",
+  5:"相手を思う気持ちが、かえってすれ違いにつながる",
+  6:"善意がお節介になったり、自己顕示がぶつかる",
+  7:"互いの頑固さが重なり、折り合いをつけにくくなる",
+  8:"双方の意志の強さから、進む方向を譲りにくくなる",
+  9:"繊細な感性や受け取り方の違いが衝突につながる",
+  0:"築いてきた関係や生活の基盤が崩れ、振り出しに戻るほどの変化につながる"
+};
+function makeCoefficientFrictionAdvice(bondPairs){
+  if(!bondPairs.length)return "";
+  const weights=new Map();
+  for(const pair of bondPairs){
+    const key=pair.coefficient;
+    weights.set(key,(weights.get(key)||0)+(pair.strong?2:1));
+  }
+  const top=[...weights.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0]).slice(0,2);
+  const features=top.map(([c])=>`${c}系数では、${COEFFICIENT_FRICTION_ADVICE[c]}場合があります。`);
+  return "共通する数理には互いを理解し、引き合う縁がある一方、反発が生じた際には数意に応じた特徴も表れます。"+
+    features.join("")+"実際の関係を決めつけず、互いの意思や状況を確かめることが大切です。";
+}
+function makeOverallAdvice({same,sameCoeff,attraction,support,conflict,strongBond,bondPower,bondPairs}){
   const parts=[];
-  if(strongBond>=2) parts.push("主格と外格の同数・同系数による引合力が両方向に働き、互いに強く引き合う配置です。ただし、その力の強さゆえに反発や分離が生じることもあります。");
-  else if(strongBond===1) parts.push("主格と外格の同数・同系数による引合力が働く配置です。ただし、その力の強さゆえに反発や分離が生じることもあります。");
-  if(same>0 || sameCoeff>0) parts.push(`共通格数${same}件、同系格数${sameCoeff}件があり、二人には共鳴しやすい接点があります。ただし、同じ弱点まで重なりやすいため、数が多いことだけを吉とは見ません。`);
-  if(support>0) parts.push(`相生配置が${support}件あります。五行で一方が他方を生じる、支え合いの要素として見ます。`);
-  if(conflict>0 && (attraction>0 || same>0 || sameCoeff>0)) parts.push(`一方で相剋配置が${conflict}件あります。縁や引力があっても安定性とは別なので、「惹かれるが安定しにくい」「縁はあるが距離が生じやすい」可能性を意識して、無理に同じ考えへ合わせないことが大切です。`);
-  else if(conflict>0) parts.push(`相剋配置が${conflict}件あります。考え方や距離感の違いが出た時は、結論を急がず相手のペースを確認することが大切です。`);
-  if(!parts.length) parts.push("指定した比較関係の中に強い一致や相剋は多くありません。相性は一つの強い配置だけで決めず、各項目の文章を合わせて確認してください。");
+  // 相生・相剋は一緒にいるときの心地よさ、共通（引合力）は縁の強さとして別々に説明する。同数は相生にも含む。
+  parts.push(`相生配置${support}件・相剋配置${conflict}件を、天格を除く全16通りで確認しました（各1ポイント）。`);
+  if(support>conflict) parts.push("相生が相剋を上回り、一緒にいて楽しさや心地よさを感じやすい作用が優勢です。ただし、二人の関係全体の善し悪しを確定するものではありません。");
+  else if(conflict>support) parts.push("相剋が相生を上回り、一緒にいるときに疲れや反発を感じやすい作用が優勢です。意見が違うときには、無理に結論を急がないことが大切です。");
+  else if(support===0) parts.push("相生・相剋のいずれも確認されず、五行の作用だけから心地よさの優劣は判断できません。");
+  else parts.push("相生と相剋が同数で、心地よさと反発の作用が拮抗しています。場面によって関係の感じ方が変わることがあります。");
+  const normalBond=same+sameCoeff-strongBond;
+  if(same>0 || sameCoeff>0){
+    parts.push(`共通格数${same}件・同系格数${sameCoeff}件による縁の力は${bondPower}ポイントです（通常の共通関係${normalBond}件×1、主格と外格の特別な引合力${strongBond}件×2）。これは引き合う縁の強さであり、同数による相生1ポイントとは別に、引合力の重みを心地よさの点数へ直接加算しません。`);
+    if(strongBond>=2) parts.push("主格と外格の引合力が双方向にあり、特に強く引き合う縁と解釈されます。");
+    else if(strongBond===1) parts.push("主格と相手の外格の間に、特に強い引合力が一方向にあります。");
+  }else{
+    parts.push("同数・同系数による共通の縁は今回の16通りでは確認されませんでした。これは二人の現実の関係を否定するものではありません。");
+  }
+  if(same>0 || sameCoeff>0){
+    const caution=makeCoefficientFrictionAdvice(bondPairs);
+    if(caution)parts.push(caution);
+  }
+  parts.push("強い縁が必ずしも良い縁とは限りません。縁の善し悪しには、二人それぞれの主格・地格・外格・総格が示す性質や運勢、その相互作用も関わります。個別診断「御身札V2.0」を併せて参考にしてください。");
   return parts.join(" ");
 }
 function getLegacyCompatibilityScore(a,b){
@@ -1031,12 +1060,13 @@ function getLegacyCompatibilityScore(a,b){
   }
   return values.length?values.reduce((s,v)=>s+v,0)/values.length:5;
 }
-function calcOverallScore(a,b,{sameCoeff,attraction,conflict}){
-  let score=getLegacyCompatibilityScore(a,b);
-  // 引力は相性を少し押し上げる。共通数そのものは「縁の深さ」なので直接加点しない。
-  score+=Math.min(attraction,2)*0.5;
-  score+=Math.min(sameCoeff,5)*0.1;
-  score-=Math.min(conflict,4)*0.5;
+function calcOverallScore(a,b,{support,conflict}){
+  // 一緒にいるときの心地よさの目安：相生 +1、相剋 -1。天格を除く全16通りで比較。
+  // 1〜10点の中立点を5.5とし、両端（相生16／相剋16）が対称になるよう換算する。
+  // 同数は相生1として点数へ反映する。同系数や主格×外格の引合力の重みは加点しない。
+  // 本人と相手の入力順序を入れ替えても点数は同じ。
+  const balance=(support-conflict)/COMPARE_PAIRS.length;
+  const score=5.5+4.5*balance;
   return Math.max(1,Math.min(10,Math.round(score*10)/10));
 }
 function renderRatingRow(container,score){
@@ -1063,36 +1093,33 @@ function setSingleHeart(score){
   if(!fill || !heart) return;
   const pct=Math.max(0,Math.min(100,score*10));
   fill.style.clipPath=`inset(${100-pct}% 0 0 0)`;
-  heart.setAttribute("aria-label",`恋愛相性 ${score.toFixed(1)} / 10`);
+  heart.setAttribute("aria-label",`一緒にいるときの心地よさ ${score.toFixed(1)} / 10（相生・相剋の目安）`);
 }
 
 /*
   恋愛イラストの判定基準
-  ・今回の有効な比較関係の中で、同じ数の格が2組以上ある → relation-good.png
-  ・同じ数による縁がない AND 総格同士を除く相剋が2つ以上 → relation-distance.png
-  ・それ以外 → relation-neutral.png
-
-  ※ good / distance の「縁」は、同じ画数（共通数）だけで判断する。
-     同系数・引力・相生はイラストの縁件数には加えない。
+  ・全16通りの相生が相剋より多く、相生2件以上 → relation-good.png（縁の善し悪しとは別）
+  ・全16通りの相剋が相生より多く、相剋2件以上 → relation-distance.png（縁の強さは別）
+  ・それ以外（引合力の強さだけでは良好と断定しない） → relation-neutral.png
 */
 function getRelationVisualState(stats){
-  if((stats.same||0)>=2) return "good";
-  if((stats.same||0)===0 && (stats.nonTotalConflict||0)>=2) return "distance";
+  if((stats.support||0)>(stats.conflict||0) && (stats.support||0)>=2) return "good";
+  if((stats.conflict||0)>(stats.support||0) && (stats.conflict||0)>=2) return "distance";
   return "neutral";
 }
 
 const RELATION_VISUALS={
   good:{
     src:"../images/relation-good.png",
-    alt:"指定した比較関係の中で、同じ数の格が二組以上ある相性を表すイラスト"
+    alt:"相生が相剋より多く、五行の調和が見られる相性を表すイラスト"
   },
   neutral:{
     src:"../images/relation-neutral.png",
-    alt:"縁と相剋のどちらにも偏らない相性を表すイラスト"
+    alt:"相生と相剋の作用が拮抗または少なく、心地よさの傾向が中立的なイラスト"
   },
   distance:{
     src:"../images/relation-distance.png",
-    alt:"同じ数による縁がなく、総格同士を除く相剋が二つ以上ある相性を表すイラスト"
+    alt:"引合力の有無にかかわらず、相剋が相生より多く、反発の作用が優勢なイラスト"
   }
 };
 
@@ -1114,7 +1141,7 @@ function renderCompatibilityMeter(a,b,stats){
   visual.alt=item.alt;
   visual.dataset.state=state;
 
-  document.getElementById("scoreLabel").innerHTML=`恋愛相性 <span class="score-num">${score.toFixed(1)}</span> / 10`;
+  document.getElementById("scoreLabel").innerHTML=`心地よさ <span class="score-num">${score.toFixed(1)}</span> / 10`;
 }
 
 let BIRTH_COMPAT_RESULTS=null;
@@ -1221,7 +1248,7 @@ function applyRelationMode(mode){
   if(svg){
     // SVG内のdefsは保持し、線だけを選択中の種類に差し替える。
     for(const path of Array.from(svg.querySelectorAll(":scope > path")))path.remove();
-    const maxLines=window.innerWidth<=700?7:10;
+    const maxLines=COMPARE_PAIRS.length; // 16通りすべて。線の表示本数制限で判定漏れを起こさない。
     const visible=chosen.slice(0,maxLines).map(item=>({
       item,
       e1:document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`),
@@ -1345,7 +1372,8 @@ function render(){
   }
 
   let same=0, sameCoeff=0, attraction=0, support=0, conflict=0;
-  let strongBond=0; // 画面表示用。既存の相性点数計算とは分けて保持する。
+  let strongBond=0; // 主格×外格の共通関係。各2の縁の強さとして別集計する。
+  const bondPairs=[]; // 共通する各系数を、反発の特徴に応じた助言へ渡す。
   const nonTotalConflictPairs=new Set();
   const sameValues=new Set(), coeffValues=new Set();
   const sameReadings=[], coeffReadings=[], attrReadings=[], suppReadings=[], confReadings=[];
@@ -1353,14 +1381,11 @@ function render(){
   let bendIdx=0, cidx=0, sidx=0;
 
   /*
-    比較ルール
-    総格：総格同士のみ
-    主格：相手の主格・地格・外格
-    地格：地格同士（加えて相手主格との関係は主格側の比較として確認）
-    外格：外格同士（加えて相手主格との関係は主格側の比較として確認）
-
-    各有効ペアで、同数 → 同系数 → 相生 → 相剋 の順に関係を確認する。
-    主格⇔外格が同数・同系数の場合は、各共通関係に数えた上で強い引合力として太線にする。
+    比較ルール：天格を除く総格・主格・地格・外格の4格×4格＝全16通り。
+    それぞれの組み合わせで、同数 → 同系数 → 相生 → 相剋 の順に関係を確認する。
+    同数は理解しやすさとして相生にも各1含める。相剋は各1、共通の縁は各1として数える。
+    主格⇔外格（双方向）の同数・同系数だけは縁の強さを各2とし、金色の太線を示す。
+    共通数の力を「良い相性」の点数へ直接加えない。
   */
   for(const [ka,kb] of COMPARE_PAIRS){
     const va=a[ka], vb=b[kb];
@@ -1370,6 +1395,9 @@ function render(){
 
     if(exact){
       same++;
+      support++; // 同数は互いを理解しやすい相生としても1件数える。
+      bondPairs.push({coefficient:coef(va),strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
+      suppReadings.push(`本人側の${KL[ka]}${va} と 相手側の${KL[kb]}${vb} は同数。互いを理解しやすい相生の要素です（金線で表示）。`);
       sameValues.add(va);
       el.a[ka].querySelector(".number").classList.add("bond-number");
       el.b[kb].querySelector(".number").classList.add("bond-number");
@@ -1395,6 +1423,7 @@ function render(){
     if(sameC){
       const cg=coef(va);
       sameCoeff++;
+      bondPairs.push({coefficient:cg,strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
       coeffValues.add(cg);
       el.a[ka].querySelector(".number").classList.add("bond-number");
       el.b[kb].querySelector(".number").classList.add("bond-number");
@@ -1402,6 +1431,7 @@ function render(){
       addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:"same_coefficient",title:`同系数 ${cg}：${va}－${vb}`,arrow:false,bend:((bendIdx++%5)-2)*10});
       // 主格と外格の同系数は、共通関係の中でも特に強い引合力として示す。
       if((ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")){
+        attraction++;
         strongBond++;
         el.a[ka].querySelector(".number").classList.add("attraction-number");
         el.b[kb].querySelector(".number").classList.add("attraction-number");
@@ -1444,7 +1474,7 @@ function render(){
 
   // 同じ2格間に複数の関係がある場合は優先度が最も高い線だけを表示。
   const chosen=[...pairMap.values()].sort((x,y)=>(DATA.line_styles[y.type]?.priority||0)-(DATA.line_styles[x.type]?.priority||0));
-  // 線の計算は従来どおり保持。画面描画のみ3つの切替ボタンで制御。
+  // 判定は全16組を保持し、画面描画のみ3つの切替ボタンで制御。
   RELATION_LINE_DATA=chosen;
   applyRelationMode(ACTIVE_RELATION_MODE);
 
@@ -1472,8 +1502,10 @@ function render(){
   renderReadings("confReadings",confReadings,"相剋配置はありません。");
   renderLegacySections(a,b);
   const nonTotalConflict=nonTotalConflictPairs.size;
-  document.getElementById("overallAdvice").textContent=makeOverallAdvice({same,sameCoeff,attraction,support,conflict,strongBond});
-  renderCompatibilityMeter(a,b,{same,sameCoeff,attraction,support,conflict,nonTotalConflict});
+  // 通常の共通関係は1、主格×外格の2方向は2の重み（同じ1組を二重計上しない）。
+  const bondPower=same+sameCoeff+strongBond;
+  document.getElementById("overallAdvice").textContent=makeOverallAdvice({same,sameCoeff,attraction,support,conflict,strongBond,bondPower,bondPairs});
+  renderCompatibilityMeter(a,b,{same,sameCoeff,attraction,support,conflict,nonTotalConflict,bondPower});
   renderBirthSupplement();
 }
 
