@@ -591,14 +591,20 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   .relation-mode-btn{min-height:57px;font-size:15px;padding:5px 2px}
   .relation-mode-tabs{gap:6px}
 }
-/* 天格は三才配置の補助確認用。相性の関係線・採点には加えない。 */
-.side .heaven-caption{
-  position:absolute;top:-20px;left:0;width:100%;
-  font-size:12px;line-height:16px;font-weight:600;
-  color:#756d68;text-align:center;white-space:nowrap;
-  pointer-events:none;
+/* 天格は五格の一枠として作図するが、三才配置の参照のみ。相性の線と点数には加えない。 */
+.layer.heaven{
+  background:linear-gradient(135deg,#f0eee9,#f9f7f3);
+  grid-template-rows:1fr auto;
 }
-@media(max-width:700px){.side .heaven-caption{top:-19px;font-size:11px;line-height:16px}}
+.layer.heaven .number{background:#ece8e1;box-shadow:0 0 0 1px rgba(94,83,71,.14)}
+.layer.heaven .desc{justify-self:center;color:#777069}
+/* 五格分の表示領域を確保し、総格と三格の区切り位置だけを下へずらす。 */
+.map{min-height:610px}
+.map .total-grid-divider{top:132.5px}
+@media(max-width:700px){
+  .map{min-height:526px}
+  .map .total-grid-divider{top:116.5px}
+}
 </style>
 </head>
 <body>
@@ -703,15 +709,15 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <svg id="lines"></svg>
     <div class="total-grid-divider" aria-hidden="true"></div>
     <div class="side a">
-      <div class="heaven-caption" id="aHeavenV" aria-label="あなたの天格"></div>
       <div class="layer total" data-side="a" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="aTotalV"></span><span class="kaku-stars" id="aTotalStars" aria-label="総格の吉凶評価"></span></div></div>
+      <div class="layer heaven" data-side="a" data-key="heaven"><div class="meta"><span class="lab">天格</span><span class="desc">三才配置の確認</span></div><div class="kaku-value"><span class="number" id="aHeavenV" aria-label="天格の画数"></span></div></div>
       <div class="layer main" data-side="a" data-key="main"><div class="meta"><span class="lab">主格</span><span class="desc">中心となる性質</span></div><div class="kaku-value"><span class="number" id="aMainV"></span><span class="kaku-stars" id="aMainStars" aria-label="主格の吉凶評価"></span></div></div>
       <div class="layer ground" data-side="a" data-key="ground"><div class="meta"><span class="lab">地格</span><span class="desc">内面・感情・基盤</span></div><div class="kaku-value"><span class="number" id="aGroundV"></span><span class="kaku-stars" id="aGroundStars" aria-label="地格の吉凶評価"></span></div></div>
       <div class="layer outer" data-side="a" data-key="outer"><div class="meta"><span class="lab">外格</span><span class="desc">対人関係・表面</span></div><div class="kaku-value"><span class="number" id="aOuterV"></span><span class="kaku-stars" id="aOuterStars" aria-label="外格の吉凶評価"></span></div></div>
     </div>
     <div class="side b">
-      <div class="heaven-caption" id="bHeavenV" aria-label="お相手の天格"></div>
       <div class="layer total" data-side="b" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="bTotalV"></span><span class="kaku-stars" id="bTotalStars" aria-label="総格の吉凶評価"></span></div></div>
+      <div class="layer heaven" data-side="b" data-key="heaven"><div class="meta"><span class="lab">天格</span><span class="desc">三才配置の確認</span></div><div class="kaku-value"><span class="number" id="bHeavenV" aria-label="天格の画数"></span></div></div>
       <div class="layer main" data-side="b" data-key="main"><div class="meta"><span class="lab">主格</span><span class="desc">中心となる性質</span></div><div class="kaku-value"><span class="number" id="bMainV"></span><span class="kaku-stars" id="bMainStars" aria-label="主格の吉凶評価"></span></div></div>
       <div class="layer ground" data-side="b" data-key="ground"><div class="meta"><span class="lab">地格</span><span class="desc">内面・感情・基盤</span></div><div class="kaku-value"><span class="number" id="bGroundV"></span><span class="kaku-stars" id="bGroundStars" aria-label="地格の吉凶評価"></span></div></div>
       <div class="layer outer" data-side="b" data-key="outer"><div class="meta"><span class="lab">外格</span><span class="desc">対人関係・表面</span></div><div class="kaku-value"><span class="number" id="bOuterV"></span><span class="kaku-stars" id="bOuterStars" aria-label="外格の吉凶評価"></span></div></div>
@@ -1507,7 +1513,7 @@ function render(){
   document.getElementById("map")?.classList.toggle("gender-flipped",genderFlipped);
   for(const s of ["a","b"]) {
     const p=s==="a"?a:b;
-    document.getElementById(s+"HeavenV").textContent=`天格 ${p.heaven}画`;
+    document.getElementById(s+"HeavenV").textContent=p.heaven;
     for(const k of K){
       document.getElementById(s+k[0].toUpperCase()+k.slice(1)+"V").textContent=p[k];
       renderKakuStars(s,k,p[k]);
