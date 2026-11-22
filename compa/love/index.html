@@ -1451,7 +1451,7 @@ function render(){
   mg.appendChild(se("path",{d:"M1,1 L1,15 L15,8 z",fill:"#8c6517"})); defs.appendChild(mg);
   const mgreen=se("marker",{id:"arrowGreen",markerWidth:"10",markerHeight:"10",refX:"8",refY:"3",orient:"auto",markerUnits:"strokeWidth"});
   mgreen.appendChild(se("path",{d:"M0,0 L0,6 L9,3 z",fill:"#3f8f62"})); defs.appendChild(mgreen);
-  const mred=se("marker",{id:"arrowRed",markerWidth:"10",markerHeight:"10",refX:"8",refY:"3",orient:"auto-start-reverse",markerUnits:"strokeWidth"});
+  const mred=se("marker",{id:"arrowRed",markerWidth:"10",markerHeight:"10",refX:"8",refY:"3",orient:"auto-start-reverse",markerUnits:"userSpaceOnUse"});
   mred.appendChild(se("path",{d:"M0,0 L0,6 L9,3 z",fill:"#c34a46"})); defs.appendChild(mred);
   svg.appendChild(defs);
 
