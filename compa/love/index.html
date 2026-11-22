@@ -985,18 +985,19 @@ function se(tag,attrs={}){
 function draw(svg,p1,p2,type,title,bend=0,markerStartId="",markerEndId=""){
   const st=DATA.line_styles[type];
   const lineOpacity = (type==="conflict" || type==="main_main_conflict" || type==="main_outer_conflict") ? ".96" : (type==="same_coefficient" ? ".98" : ".92");
-  // 相剋の矢印は細線時のサイズを維持。太線の端が矢印の内部まで重ならないよう、
-  // 赤線の軸だけを矢印の付け根（端から24px）までに留める。
-  const isConflictLine=(type==="conflict"||type==="main_main_conflict"||type==="main_outer_conflict");
+  // 各矢印は細い線のときの大きさで固定する。
+  // 線幅が太くても軸線を矢印の内部へ伸ばさず、三角形の付け根で止める。
+  const arrowBaseInset={arrowRed:24,arrowGreen:24,arrowGold:12};
   let start=p1, end=p2;
-  if(isConflictLine && markerStartId==="arrowRed" && markerEndId==="arrowRed"){
-    const dx=p2.x-p1.x, dy=p2.y-p1.y, length=Math.hypot(dx,dy);
-    if(length>0){
-      const inset=Math.min(24,length/2);
-      const ux=dx/length,uy=dy/length;
-      start={x:p1.x+ux*inset,y:p1.y+uy*inset};
-      end={x:p2.x-ux*inset,y:p2.y-uy*inset};
-    }
+  const dx=p2.x-p1.x, dy=p2.y-p1.y, length=Math.hypot(dx,dy);
+  if(length>0){
+    const startInset=arrowBaseInset[markerStartId]||0;
+    const endInset=arrowBaseInset[markerEndId]||0;
+    const totalInset=startInset+endInset;
+    const ratio=totalInset>length?length/totalInset:1;
+    const ux=dx/length,uy=dy/length;
+    start={x:p1.x+ux*startInset*ratio,y:p1.y+uy*startInset*ratio};
+    end={x:p2.x-ux*endInset*ratio,y:p2.y-uy*endInset*ratio};
   }
   // 曲線には判定上の意味はない。全種類を始点と終点を結ぶ直線で表示する。
   const d=`M ${start.x} ${start.y} L ${end.x} ${end.y}`;
@@ -1472,10 +1473,11 @@ function render(){
   const svg=document.getElementById("lines"); svg.innerHTML="";
   const defs=se("defs");
   // 引合力の7px線でも矢印が極端に拡大されないよう、金矢印だけ画面上の固定サイズにする。
-  const mg=se("marker",{id:"arrowGold",markerWidth:"16",markerHeight:"16",refX:"13",refY:"8",orient:"auto",markerUnits:"userSpaceOnUse"});
+  const mg=se("marker",{id:"arrowGold",markerWidth:"16",markerHeight:"16",refX:"1",refY:"8",orient:"auto",markerUnits:"userSpaceOnUse"});
   mg.appendChild(se("path",{d:"M1,1 L1,15 L15,8 z",fill:"#8c6517"})); defs.appendChild(mg);
-  const mgreen=se("marker",{id:"arrowGreen",markerWidth:"10",markerHeight:"10",refX:"8",refY:"3",orient:"auto",markerUnits:"strokeWidth"});
-  mgreen.appendChild(se("path",{d:"M0,0 L0,6 L9,3 z",fill:"#3f8f62"})); defs.appendChild(mgreen);
+  // 緑矢印は従来の細線(3px)での表示寸法(27×18px)を維持し、太線でも拡大しない。
+  const mgreen=se("marker",{id:"arrowGreen",markerWidth:"30",markerHeight:"30",refX:"0",refY:"9",orient:"auto",markerUnits:"userSpaceOnUse"});
+  mgreen.appendChild(se("path",{d:"M0,0 L0,18 L27,9 z",fill:"#3f8f62"})); defs.appendChild(mgreen);
   const mred=se("marker",{id:"arrowRed",markerWidth:"30",markerHeight:"30",refX:"0",refY:"9",orient:"auto-start-reverse",markerUnits:"userSpaceOnUse"});
   mred.appendChild(se("path",{d:"M0,0 L0,18 L27,9 z",fill:"#c34a46"})); defs.appendChild(mred);
   svg.appendChild(defs);
