@@ -591,6 +591,14 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   .relation-mode-btn{min-height:57px;font-size:15px;padding:5px 2px}
   .relation-mode-tabs{gap:6px}
 }
+/* 天格は三才配置の補助確認用。相性の関係線・採点には加えない。 */
+.side .heaven-caption{
+  position:absolute;top:-20px;left:0;width:100%;
+  font-size:12px;line-height:16px;font-weight:600;
+  color:#756d68;text-align:center;white-space:nowrap;
+  pointer-events:none;
+}
+@media(max-width:700px){.side .heaven-caption{top:-19px;font-size:11px;line-height:16px}}
 </style>
 </head>
 <body>
@@ -695,12 +703,14 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <svg id="lines"></svg>
     <div class="total-grid-divider" aria-hidden="true"></div>
     <div class="side a">
+      <div class="heaven-caption" id="aHeavenV" aria-label="あなたの天格"></div>
       <div class="layer total" data-side="a" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="aTotalV"></span><span class="kaku-stars" id="aTotalStars" aria-label="総格の吉凶評価"></span></div></div>
       <div class="layer main" data-side="a" data-key="main"><div class="meta"><span class="lab">主格</span><span class="desc">中心となる性質</span></div><div class="kaku-value"><span class="number" id="aMainV"></span><span class="kaku-stars" id="aMainStars" aria-label="主格の吉凶評価"></span></div></div>
       <div class="layer ground" data-side="a" data-key="ground"><div class="meta"><span class="lab">地格</span><span class="desc">内面・感情・基盤</span></div><div class="kaku-value"><span class="number" id="aGroundV"></span><span class="kaku-stars" id="aGroundStars" aria-label="地格の吉凶評価"></span></div></div>
       <div class="layer outer" data-side="a" data-key="outer"><div class="meta"><span class="lab">外格</span><span class="desc">対人関係・表面</span></div><div class="kaku-value"><span class="number" id="aOuterV"></span><span class="kaku-stars" id="aOuterStars" aria-label="外格の吉凶評価"></span></div></div>
     </div>
     <div class="side b">
+      <div class="heaven-caption" id="bHeavenV" aria-label="お相手の天格"></div>
       <div class="layer total" data-side="b" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="bTotalV"></span><span class="kaku-stars" id="bTotalStars" aria-label="総格の吉凶評価"></span></div></div>
       <div class="layer main" data-side="b" data-key="main"><div class="meta"><span class="lab">主格</span><span class="desc">中心となる性質</span></div><div class="kaku-value"><span class="number" id="bMainV"></span><span class="kaku-stars" id="bMainStars" aria-label="主格の吉凶評価"></span></div></div>
       <div class="layer ground" data-side="b" data-key="ground"><div class="meta"><span class="lab">地格</span><span class="desc">内面・感情・基盤</span></div><div class="kaku-value"><span class="number" id="bGroundV"></span><span class="kaku-stars" id="bGroundStars" aria-label="地格の吉凶評価"></span></div></div>
@@ -906,7 +916,7 @@ function calcGokaku(family,given){
   const heaven=fs.reduce((a,b)=>a+b,0)+(fs.length===1?1:0);
   const ground=gs.reduce((a,b)=>a+b,0)+(gs.length===1?1:0);
   const outer=heaven+ground-main;
-  return {total,main,ground,outer};
+  return {total,main,ground,outer,heaven};
 }
 function person(s,familyOverride=null){
   const family=cleanName(familyOverride!==null?familyOverride:document.getElementById(s+"Family").value);
@@ -1075,6 +1085,39 @@ function makeCoefficientFrictionAdvice(bondPairs){
   }
   const top=[...weights.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0];
   return top ? (COEFFICIENT_FRICTION_ADVICE[top[0]] || "") : "";
+}
+// 三才配置の注意候補：天格・主格（人格）・地格の順で数値を直接照合。
+// 「全」は0〜9の全系数。五行の文字ラベルへ変換して判定しない。
+// この12条件は重複を除くと125分類中34分類（数値の組合せ272通り）に対応。
+const TEN_GRID_ALL=[0,1,2,3,4,5,6,7,8,9];
+const TEN_GRID_CAUTION_RULES=[
+  [[7,8],[1,2],[7,8]],
+  [[7,8],[1,2],[9,0]],
+  [[9,0],[1,2],[3,4]],
+  [[3,4],[3,4],[5,6]],
+  [[7,8],[3,4],[7,8]],
+  [[9,0],[3,4],TEN_GRID_ALL],
+  [TEN_GRID_ALL,[5,6],[9,0]],
+  [[3,4],[7,8],TEN_GRID_ALL],
+  [[7,8],[7,8],[7,8]],
+  [TEN_GRID_ALL,[7,8],[3,4]],
+  [[9,0],[9,0],TEN_GRID_ALL],
+  [TEN_GRID_ALL,[9,0],[3,4]]
+];
+function hasTenGridCaution(p){
+  const t=coef(p.heaven),m=coef(p.main),g=coef(p.ground);
+  return TEN_GRID_CAUTION_RULES.some(([ts,ms,gs])=>ts.includes(t)&&ms.includes(m)&&gs.includes(g));
+}
+function appendPersonalCautions(advice,a,b){
+  const extra=[];
+  // お相手の三才配置に該当した場合のみ、V2.0での再確認を勧める。
+  if(hasTenGridCaution(b))extra.push("相手の運勢を御身札V2.0で再確認して、慎重に判断しましょう。");
+  // 相談者が女性で、お相手の表示中の格数に橙色の強い★または4系数がある場合。
+  // 判定理由は表示せず、独身かどうか事実確認を勧める一文のみ追加する。
+  if(a.sex==="female" && K.some(k=>getKakuStarInfo(b[k]).strong||coef(b[k])===4)){
+    extra.push("お相手が独身であるかどうか、交際を深める前に慎重に確認しましょう。");
+  }
+  return [advice,...extra].filter(Boolean).join(" ");
 }
 function makeOverallAdvice({a,b,same,sameCoeff,conflict,supportPoints,conflictPoints,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides}){
   const parts=[];
@@ -1464,6 +1507,7 @@ function render(){
   document.getElementById("map")?.classList.toggle("gender-flipped",genderFlipped);
   for(const s of ["a","b"]) {
     const p=s==="a"?a:b;
+    document.getElementById(s+"HeavenV").textContent=`天格 ${p.heaven}画`;
     for(const k of K){
       document.getElementById(s+k[0].toUpperCase()+k.slice(1)+"V").textContent=p[k];
       renderKakuStars(s,k,p[k]);
@@ -1648,7 +1692,9 @@ function render(){
   const nonTotalConflict=nonTotalConflictPairs.size;
   // 通常の共通関係は1、主格×外格の2方向は2の重み（同じ1組を二重計上しない）。
   const bondPower=same+sameCoeff+strongBond;
-  document.getElementById("overallAdvice").textContent=makeOverallAdvice({a,b,same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,strongBond,bondPower,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides]});
+  document.getElementById("overallAdvice").textContent=appendPersonalCautions(
+    makeOverallAdvice({a,b,same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,strongBond,bondPower,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides]}),a,b
+  );
   renderCompatibilityMeter(a,b,{same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,nonTotalConflict,bondPower});
   renderBirthSupplement();
 }
