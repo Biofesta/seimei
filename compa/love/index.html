@@ -1117,7 +1117,7 @@ function hasTenGridCaution(p){
 function appendPersonalCautions(advice,a,b){
   const extra=[];
   // お相手の三才配置に該当した場合のみ、V2.0での再確認を勧める。
-  if(hasTenGridCaution(b))extra.push("相手の運勢を御身札V2.0で再確認して、慎重に判断しましょう。");
+  if(hasTenGridCaution(b))extra.push("お相手の運勢には、身近な人を巻き込むような不安定さが表れる可能性があります。御身札V2.0で再確認し、相手の言動や感情の変化、心理状態などを十分に見極めたうえで、総合的に慎重な判断をしてください。");
   // 相談者が女性で、お相手の表示中の格数に橙色の強い★または4系数がある場合。
   // 判定理由は表示せず、独身かどうか事実確認を勧める一文のみ追加する。
   if(a.sex==="female" && K.some(k=>getKakuStarInfo(b[k]).strong||coef(b[k])===4)){
