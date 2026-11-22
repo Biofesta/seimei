@@ -1075,11 +1075,23 @@ function makeCoefficientFrictionAdvice(bondPairs){
   const top=[...weights.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0];
   return top ? (COEFFICIENT_FRICTION_ADVICE[top[0]] || "") : "";
 }
-function makeOverallAdvice({a,b,same,sameCoeff,supportPoints,conflictPoints,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides}){
+function makeOverallAdvice({a,b,same,sameCoeff,conflict,supportPoints,conflictPoints,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides}){
   const parts=[];
   const hasBond=same+sameCoeff>0;
   const aMain=coef(a.main), bMain=coef(b.main);
   const aGround=coef(a.ground), bGround=coef(b.ground);
+
+  // 主格同士を含む相剋が3配置以上ある場合は、関係維持を勧める定型文を表示しない。
+  // 相剋「件数」で判定し、主格同士の－2という加重点を件数に換算しない。
+  if(mainMainConflict && conflict>=3){
+    parts.push("お二人の関係性を見ると、基本的な考え方や意思が衝突しやすく、感情面や日常の接し方でも摩擦が重なりやすい相性と考えられます。親密になるほど、互いの負担が大きくなる可能性があるため、十分な注意が必要です。");
+    if(hasBond){
+      parts.push("互いに惹かれ合うところがあっても、それだけで考え方の衝突が解消されるわけではありません。");
+    }
+    parts.push("これから交際や同棲など親密な関係に進もうとしている場合は、いったん距離を置き、相手の言動や自分が感じる負担を冷静に確認してください。");
+    parts.push("すでに交際中であれば、周囲の雰囲気や反応に流されて、無理に関係を維持する必要はありません。ただし、大切な判断ですので、身近な親族や信頼できる友人にも相談しながら、今後の関係を慎重に考えましょう。");
+    return parts.join(" ");
+  }
 
   if(supportPoints>conflictPoints){
     parts.push(hasBond
