@@ -260,6 +260,7 @@ button{width:100%;border:0;border-radius:10px;padding:13px 16px;font-family:inhe
 .card.active-attraction{background:#fff3f7;border-color:#e9b4c8}
 .card.active-support{background:#f2fbf5;border-color:#a9d6b8}
 .card.active-conflict{background:#fff2f1;border-color:#e3a6a2}
+.card.active-harmony{background:#f0f5fd;border-color:#a9c4e5}
 svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .midnote{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:5;padding:6px 12px;border:1px solid #ded7cd;border-radius:999px;background:#fff;font-size:11px;color:#726a61;white-space:nowrap}
 .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}
@@ -418,6 +419,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .card.active-attraction .metric-box{border-color:#dda9bd;background:#fff0f5}
 .card.active-support .metric-box{border-color:#9acbaa;background:#effaf3}
 .card.active-conflict .metric-box{border-color:#dda09c;background:#fff0ef}
+.card.active-harmony .metric-box{border-color:#a9c4e5;background:#edf4ff}
 
 /* 結婚後に名乗る姓の比較 */
 .surname-option{margin:14px 0;border:1px solid #e3d7cb;border-radius:14px;background:#fffdf8;padding:13px 14px}
@@ -555,7 +557,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .map{min-height:480px}
 .side{top:24px}
 .layer{height:103px;margin-bottom:11px;padding:7px 10px 8px}
-.relation-mode-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0 9px}
+.relation-mode-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:6px 0 4px}
 .relation-mode-btn{
   width:100%;min-width:0;min-height:61px;padding:7px 4px 6px;
   display:flex;flex-direction:column;justify-content:center;align-items:center;
@@ -567,11 +569,12 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
 .relation-mode-btn[aria-pressed="true"]{background:var(--rel-bg);border-width:3px;box-shadow:0 0 0 1px var(--rel-color) inset,0 3px 10px rgba(45,42,38,.10);opacity:1}
 .relation-mode-btn[aria-pressed="false"]{opacity:.42;box-shadow:none}
 .relation-mode-btn:focus-visible{outline:3px solid #305cb8;outline-offset:2px}
-.relation-mode-status{margin:0 0 8px;text-align:center;font-size:14px;font-weight:700;line-height:1.6;color:#5c554d;min-height:24px;padding:6px 10px;border:1px solid transparent;border-radius:8px}
-.relation-mode-status.is-empty{padding:6px 10px;border:1px solid #ead4ca;border-radius:8px;background:#fff7f2;color:#8c4a38}
+.relation-mode-status{margin:0;text-align:center;font-size:14px;font-weight:700;line-height:1.6;color:#5c554d;padding:2px 0}
+.relation-map-empty{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);width:38%;z-index:4;text-align:center;font-size:14px;font-weight:700;line-height:1.6;color:#8c4a38;overflow-wrap:anywhere;pointer-events:none}
+.relation-map-empty[hidden]{display:none!important}
+@media(max-width:700px){.relation-map-empty{width:27%;font-size:12px}}
 /* 自動切替でカードの順序が変わっても、ブラウザがスクロール基準を移さない */
-.cards{overflow-anchor:none}
-@media(max-width:330px){.relation-mode-status{min-height:82px}}
+.cards{overflow-anchor:none;margin-top:4px}
 .cards .metric-card.selected-relation{border-color:var(--rel-highlight,#b7861e);box-shadow:0 0 0 1px var(--rel-highlight,#b7861e) inset}
 @media(max-width:700px){
   .names{grid-template-columns:minmax(0,1fr) minmax(82px,100px) minmax(0,1fr);gap:3px;margin-bottom:8px}
@@ -705,8 +708,9 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   </div>
 
   <div class="map" id="map">
-    <div class="midnote">総格1通り＋三格9通りの比較</div>
+    <div class="midnote">総格1通り＋三格7通りの比較</div>
     <svg id="lines"></svg>
+    <div class="relation-map-empty" id="relationMapEmpty" hidden></div>
     <div class="total-grid-divider" aria-hidden="true"></div>
     <div class="side a">
       <div class="layer total" data-side="a" data-key="total"><div class="meta"><span class="lab">総格</span><span class="desc">全体・長期的な流れ</span></div><div class="kaku-value"><span class="number" id="aTotalV"></span><span class="kaku-stars" id="aTotalStars" aria-label="総格の吉凶評価"></span></div></div>
@@ -727,16 +731,17 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
   <div class="relation-mode-tabs" role="group" aria-label="関係線の表示切替">
     <button type="button" class="relation-mode-btn" data-relation-mode="support" aria-pressed="true" style="--rel-color:#3f8f62;--rel-bg:#edf8f0"><span>相生</span><span>関係</span></button>
     <button type="button" class="relation-mode-btn" data-relation-mode="conflict" aria-pressed="false" style="--rel-color:#c34a46;--rel-bg:#fff0ef"><span>相剋</span><span>関係</span></button>
-    <button type="button" class="relation-mode-btn" data-relation-mode="common" aria-pressed="false" style="--rel-color:#b7861e;--rel-bg:#fff8e7"><span>共通</span><span>関係</span></button>
+    <button type="button" class="relation-mode-btn" data-relation-mode="harmony" aria-pressed="false" style="--rel-color:#487ab7;--rel-bg:#edf4ff"><span>比和</span><span>関係</span></button>
+    <button type="button" class="relation-mode-btn" data-relation-mode="common" aria-pressed="false" style="--rel-color:#b7861e;--rel-bg:#fff8e7"><span>引力</span><span>関係</span></button>
   </div>
-  <p class="relation-mode-status" id="relationModeStatus" aria-live="polite">5秒ごとに自動切替します。ボタン操作で停止します。</p>
 
   <div class="cards">
+    <p class="relation-mode-status" id="relationModeStatus" aria-live="polite"></p>
     <div class="card metric-card" id="sameCard">
       <div class="metric-box"><div class="metric-name">共通格数</div><div class="metric-value" id="sameN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#b7861e;border-width:2.5px"></i><span>金線＝同じ画数</span></div>
-        <p class="card-explain">主格・地格・外格の3格×3格（9通り）で、同じ画数が示す縁を数えます。同じ画数は互いを理解しやすい相生の要素でもありますが、数意によっては反発も生じます。</p>
+        <p class="card-explain">総格同士と三格の指定7通りで、同じ画数が示す縁を数えます。同じ画数は比和にも該当しますが、数意によっては反発も生じます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="sameValues"></div><div class="card-readings" id="sameReadings"></div></div>
     </div>
@@ -744,15 +749,15 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">同系格数</div><div class="metric-value" id="coeffN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#d4a33c;border-width:2px"></i><span>金線＝画数は違っても同じ系数</span></div>
-        <p class="card-explain">主格・地格・外格の9通りで、画数は異なっても同じ系数が示す縁を数えます。縁の性質や持続性は別に判断し、反発が生じる場合は系数ごとの数意にも目を向けます。</p>
+        <p class="card-explain">総格同士と三格の指定7通りで、画数は異なっても同じ系数が示す縁を数えます。縁の性質や持続性は別に判断し、反発が生じる場合は系数ごとの数意にも目を向けます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="coeffValues"></div><div class="card-readings" id="coeffReadings"></div></div>
     </div>
     <div class="card metric-card" id="attrCard">
-      <div class="metric-box"><div class="metric-name">引合力</div><div class="metric-value" id="attrN">0</div></div>
+      <div class="metric-box"><div class="metric-name">引力関係</div><div class="metric-value" id="attrN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#8c6517;border-width:7px"></i><span>太い金線＋矢印＝主格と外格の同数・同系数</span></div>
-        <p class="card-explain">三格間の共通（引合力）は格の位置にかかわらず働く縁の力です。そのうち主格と相手の外格（双方向）の一致は特に強く、通常の共通関係1に対して2の重みで数えます。強い縁でも、数意に応じた反発や距離が生じることがあります。</p>
+        <p class="card-explain">月が地球の周りを周回するように惹かれ合う関係です。主格と外格の系数（比和）が一致すると引力が強く、格数が一致する項目が多いと縁が強い関係となります。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="attrReadings"></div></div>
     </div>
@@ -760,7 +765,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">相生配置</div><div class="metric-value" id="suppN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#3f8f62;border-width:3px"></i><span>緑線＋矢印＝相生（主格同士は太線）</span></div>
-        <p class="card-explain">総格同士の1通りと三格同士の9通りで相生を確認します。主格同士の相生は心地よさの評価を＋2、その他は＋1として扱います。表示件数は実際の配置数です。</p>
+        <p class="card-explain">一緒にいて楽しい、心地よいと感じる、お互いを育みあう関係です。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="suppReadings"></div></div>
     </div>
@@ -768,9 +773,17 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">相剋配置</div><div class="metric-value" id="confN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#c34a46;border-width:3px;border-top-style:solid"></i><span>赤い実線＝相剋（重要な関係は太線）</span></div>
-        <p class="card-explain">総格同士の1通りと三格同士の9通りで相剋を確認します。主格同士・主格と相手の外格（双方向）の相剋は－2、その他は－1として扱います。表示件数は実際の配置数です。</p>
+        <p class="card-explain">強い立場にある側の主観と、弱い立場の主観は異なります。不満や精神的な負担が蓄積される関係です。<span id="conflictImportantExplanation" hidden>過度な要求や不満をお互いに持つ関係ですので受け入れる覚悟が必要です。慎重に考えてください。</span></p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="confReadings"></div></div>
+    </div>
+    <div class="card metric-card" id="harmonyCard">
+      <div class="metric-box"><div class="metric-name">比和配置</div><div class="metric-value" id="harmonyN">0</div></div>
+      <div class="metric-body">
+        <div class="card-key"><i class="sample" style="border-color:#487ab7;border-width:3px"></i><span>青い実線＝比和（同じ五行）</span></div>
+        <p class="card-explain">同質のエネルギーによる同調や増幅の関係です。<span id="harmonyImportantExplanation" hidden>意見の衝突や反発が生じたり、どちらかが自分の考えを抑えることで不満が蓄積される場合があります。お互いの考えを尊重し、相手への配慮が必要です。</span></p>
+      </div>
+      <div class="metric-detail-row"><div class="card-readings" id="harmonyReadings"></div></div>
     </div>
   </div>
 
@@ -799,7 +812,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
     <p class="birth-relation-text" id="birthRelationText"></p>
     <p class="data-note">四柱推命の相性は、日主・日支・天干・地支・五行補完を別々に確認します。出生時刻が空欄の場合は時柱を使わずに判定します。総合表示は5項目をまとめた簡易な傾向で、姓名相性の点数には加算しません。節入り時刻付近や23時台の出生は、詳細鑑定では時刻条件の確認が必要です。</p>
   </div>
-  <div class="detail compatibility-note"><h3>相性診断について</h3><p class="diagtext">相生・相剋は、一緒にいて楽しい・心地よいと感じやすいか、反発や負担が生じやすいかを示す五行の作用です。一方、共通数・同系数による引合力は、互いを引きつける「縁の強さ」を示します。主格と相手の外格（双方向）に生じる引合力は、特に強い縁として扱います。同じ画数には相手を理解しやすい面があり、相生にも含めます。ただし、共通する数理のエネルギーが強く働けば、その数意に応じた反発が生じる場合もあります。強く引き合うことと、一緒にいて心地よいことは別であり、強い縁が必ずしも良い縁とは限りません。縁が良い方向に働くかどうかは、本人とお相手それぞれの思考傾向や運勢、その相互作用によって変わります。個々の性質や運勢を詳しく理解するには、個別診断「御身札V2.0」も併せてご参照ください。また、恋愛や結婚は経済的条件、年齢、嗜好など現実の事情にも左右されます。思い込みに注意し、お相手の意思を尊重しましょう。なお、中央の点数は相生・相剋による心地よさの目安で、縁の善し悪しを表すものではありません。</p></div>
+  <div class="detail compatibility-note"><h3>相性診断について</h3><p class="diagtext">強い縁が必ずしも良い縁とは限りません。縁が良い方向に働くかどうかは、本人とお相手それぞれの思考傾向や運勢、その相互作用によって変わります。個々の性質や運勢を詳しく理解するには、個別診断「御身札V2.0」も併せてご参照ください。また、恋愛や結婚は経済的条件、年齢、嗜好など現実の事情にも左右されます。思い込みに注意し、お相手の意思を尊重しましょう。なお、中央の点数は相生・相剋による心地よさの目安で、縁の善し悪しを表すものではありません。</p></div>
   <div class="result-actions"><button class="secondary" id="another">リセット（名前の入力に戻る）</button></div>
 </section>
   </div>
@@ -815,6 +828,7 @@ function applyWeightedLineStyles(){
   const styles=DATA?.line_styles;
   if(!styles || !styles.support || !styles.conflict)return;
   styles.conflict={...styles.conflict,width:3,dash:""};
+  styles.harmony={label:"比和",color:"#487ab7",width:3,dash:"",priority:33};
   styles.main_main_support={...styles.support,label:"主格同士の強い相生",width:5,dash:"",priority:34};
   styles.main_main_conflict={...styles.conflict,label:"主格同士の強い相剋",width:6,dash:"",priority:38};
   styles.main_outer_conflict={...styles.conflict,label:"主格と外格の強い相剋",width:5,dash:"",priority:37};
@@ -871,11 +885,8 @@ function renderKakuStars(side,key,value){
   }
 }
 
-// 相生・相剋：総格同士1通り＋三格（主格・地格・外格）同士9通り。
-// 共通（同数・同系数）と主格×外格の特別な引合力：三格同士の9通りのみ。
-// 総格と三格の交差比較、および天格の比較はしない。
-const THREE_GRIDS = ["main","ground","outer"];
-const COMPARE_PAIRS = [["total","total"], ...THREE_GRIDS.flatMap(ka=>THREE_GRIDS.map(kb=>[ka,kb]))];
+// 全4項目共通：総格同士1通り＋三格7通り。天格、地格と外格、総格と他格の交差は除外。
+const COMPARE_PAIRS = [["total","total"],["main","main"],["main","ground"],["ground","main"],["main","outer"],["outer","main"],["ground","ground"],["outer","outer"]];
 
 // 五行の相生：木→火→土→金→水→木
 const SUPPORT_CYCLE = {
@@ -988,7 +999,7 @@ function showInputError(msg){
   const box=document.getElementById("inputError"); box.textContent=msg||""; box.classList.toggle("show",!!msg);
 }
 function pos(el,side){
-  const m=document.getElementById("map").getBoundingClientRect(), r=el.getBoundingClientRect();
+  const m=document.getElementById("lines").getBoundingClientRect(), r=el.getBoundingClientRect();
   const isLeft=(r.left+r.right)/2<(m.left+m.right)/2;
   // 画面上で左右を交換しても、矢印は元の本人・相手の格へ向かう。
   return {x:(isLeft?r.right:r.left)-m.left,y:r.top-m.top+r.height/2};
@@ -1001,17 +1012,19 @@ function se(tag,attrs={}){
 function draw(svg,p1,p2,type,title,bend=0,markerStartId="",markerEndId=""){
   const st=DATA.line_styles[type];
   const lineOpacity = (type==="conflict" || type==="main_main_conflict" || type==="main_outer_conflict") ? ".96" : (type==="same_coefficient" ? ".98" : ".92");
-  // 各矢印は細い線のときの大きさで固定する。
-  // 線幅が太くても軸線を矢印の内部へ伸ばさず、三角形の付け根で止める。
-  const arrowBaseInset={arrowRed:24,arrowGreen:24,arrowGold:12};
+  // 矢印の先端まで含め、左右の格カードから少し離して描画する。
+  const arrowBaseInset={arrowRed:27,arrowGreen:27,arrowGold:14};
   let start=p1, end=p2;
   const dx=p2.x-p1.x, dy=p2.y-p1.y, length=Math.hypot(dx,dy);
   if(length>0){
-    const startInset=arrowBaseInset[markerStartId]||0;
-    const endInset=arrowBaseInset[markerEndId]||0;
-    const totalInset=startInset+endInset;
-    const ratio=totalInset>length?length/totalInset:1;
     const ux=dx/length,uy=dy/length;
+    const startArrow=arrowBaseInset[markerStartId]||0;
+    const endArrow=arrowBaseInset[markerEndId]||0;
+    // 斜線でもカードとの水平方向の余白を約8px確保する。
+    // 狭い画面では軸線が消えない範囲で余白を縮める。
+    const gap=Math.min(8/Math.max(Math.abs(ux),0.01),Math.max(0,(length-startArrow-endArrow-8)/2));
+    const startInset=startArrow+gap, endInset=endArrow+gap;
+    const ratio=Math.min(1,Math.max(0,length-1)/Math.max(1,startInset+endInset));
     start={x:p1.x+ux*startInset*ratio,y:p1.y+uy*startInset*ratio};
     end={x:p2.x-ux*endInset*ratio,y:p2.y-uy*endInset*ratio};
   }
@@ -1030,14 +1043,14 @@ function elementOf(n){
 }
 function pairKey(a,b,key){ return elementOf(a[key])+elementOf(b[key]); }
 function addLineCandidate(list, pairMap, item){
-  // 同数の一組は相生にも共通にも属する。表示モードごとに線の候補を保持する。
-  const family=(item.type==="support"||item.type==="main_main_support")?"support":(["conflict","main_main_conflict","main_outer_conflict"].includes(item.type)?"conflict":"common");
+  // 比和と共通は重複し得るため、表示モード別に候補を保持する。
+  const family=(item.type==="support"||item.type==="main_main_support")?"support":(["conflict","main_main_conflict","main_outer_conflict"].includes(item.type)?"conflict":item.type==="harmony"?"harmony":"common");
   const ids=[`${item.s1}:${item.k1}`,`${item.s2}:${item.k2}`].sort().join("|")+"|"+family;
   const old=pairMap.get(ids);
   const pri=DATA.line_styles[item.type]?.priority||0;
   if(!old || pri>(DATA.line_styles[old.type]?.priority||0)) pairMap.set(ids,item);
 }
-function renderLegacySections(a,b){
+function renderLegacySections(a,b,details={}){
   const ref=DATA.legacy_pair_texts_reference||{};
   const maps=[
     ["success","main","考え方・性格の相性"],
@@ -1049,12 +1062,11 @@ function renderLegacySections(a,b){
   for(const [cat,key,title] of maps){
     const pk=pairKey(a,b,key), item=ref?.[cat]?.[pk];
     if(!item) continue;
-    html.push(`<section class="diagbox"><h3>${title}</h3><div class="diagmeta">${KL[key]}：${a[key]}（${elementOf(a[key])}） × ${b[key]}（${elementOf(b[key])}）</div><p class="diagtext"><span class="diagsymbol">${item.symbol||""}</span>${item.text||""}</p><p class="diagadvice">${item.advice||""}</p></section>`);
+    html.push(`<section class="diagbox"><h3>${title}</h3><div class="diagmeta">${KL[key]}：${a[key]}（${elementOf(a[key])}） × ${b[key]}（${elementOf(b[key])}）</div><p class="diagtext"><span class="diagsymbol">${item.symbol||""}</span>${item.text||""}${details[key]?.length?" "+details[key].join(" "):""}</p><p class="diagadvice">${item.advice||""}</p></section>`);
   }
   document.getElementById("diagnosisSections").innerHTML=html.join("");
 }
-// 二人の相性アドバイスは、計算結果や診断基準を繰り返さず、
-// 本人とお相手の数理上の傾向を恋愛関係の具体的な言葉に置き換える。
+// 個別診断欄では本人とお相手の数理上の傾向を恋愛関係の具体的な言葉に置き換える。
 // 数意は可能性として扱い、現実の性格・行動・関係の将来を断定しない。
 const MAIN_RELATION_TENDENCIES={
   1:"自分で判断して進めたい気持ち",
@@ -1083,14 +1095,14 @@ const COEFFICIENT_FRICTION_ADVICE={
   0:"感情的な対立が深まると、積み重ねた信頼や生活の土台を損ない、振り出しに戻るような事態につながる可能性も考えられます。"
 };
 function makeCoefficientFrictionAdvice(bondPairs){
-  if(!bondPairs.length)return "";
+  if(!bondPairs.length)return null;
   const weights=new Map();
   for(const pair of bondPairs){
     const key=pair.coefficient;
     weights.set(key,(weights.get(key)||0)+(pair.strong?2:1));
   }
   const top=[...weights.entries()].sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0];
-  return top ? (COEFFICIENT_FRICTION_ADVICE[top[0]] || "") : "";
+  return top ? {coefficient:top[0],text:COEFFICIENT_FRICTION_ADVICE[top[0]] || ""} : null;
 }
 // 三才配置の注意候補：天格・主格（人格）・地格の順で数値を直接照合。
 // 「全」は0〜9の全系数。五行の文字ラベルへ変換して判定しない。
@@ -1117,7 +1129,7 @@ function hasTenGridCaution(p){
 function appendPersonalCautions(advice,a,b){
   const extra=[];
   // お相手の三才配置に該当した場合のみ、V2.0での再確認を勧める。
-  if(hasTenGridCaution(b))extra.push("お相手の運勢には、身近な人を巻き込むような不安定さが表れる可能性があります。御身札V2.0で再確認し、相手の言動や感情の変化、心理状態などを十分に見極めたうえで、総合的に慎重な判断をしてください。");
+  if(hasTenGridCaution(b))extra.push("お相手の個別の運勢については、御身札V2.0で再確認してください。");
   // 相談者が女性で、お相手の表示中の格数に橙色の強い★または4系数がある場合。
   // 判定理由は表示せず、独身かどうか事実確認を勧める一文のみ追加する。
   if(a.sex==="female" && K.some(k=>getKakuStarInfo(b[k]).strong||coef(b[k])===4)){
@@ -1125,90 +1137,46 @@ function appendPersonalCautions(advice,a,b){
   }
   return [advice,...extra].filter(Boolean).join(" ");
 }
-function makeOverallAdvice({a,b,same,sameCoeff,conflict,supportPoints,conflictPoints,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides}){
-  const parts=[];
-  const hasBond=same+sameCoeff>0;
+// 個別の数意による説明は診断欄に表示し、総合アドバイスでは繰り返さない。
+function makeIndividualDetails({a,b,mainMainConflict,mainMainSupport,mainOuterConflictSides,mainMainHarmony}){
+  const details={main:[],ground:[]};
   const aMain=coef(a.main), bMain=coef(b.main);
   const aGround=coef(a.ground), bGround=coef(b.ground);
-
-  // 主格同士を含む相剋が3配置以上ある場合は、関係維持を勧める定型文を表示しない。
-  // 相剋「件数」で判定し、主格同士の－2という加重点を件数に換算しない。
-  if(mainMainConflict && conflict>=3){
-    parts.push("お二人の関係性を見ると、基本的な考え方や意思が衝突しやすく、感情面や日常の接し方でも摩擦が重なりやすい相性と考えられます。親密になるほど、互いの負担が大きくなる可能性があるため、十分な注意が必要です。");
-    if(hasBond){
-      parts.push("互いに惹かれ合うところがあっても、それだけで考え方の衝突が解消されるわけではありません。");
-    }
-    parts.push("これから交際や同棲など親密な関係に進もうとしている場合は、いったん距離を置き、相手の言動や自分が感じる負担を冷静に確認してください。");
-    parts.push("すでに交際中であれば、周囲の雰囲気や反応に流されて、無理に関係を維持する必要はありません。ただし、関係を見直す際には、感情的なトラブルに発展する可能性もあるため、身近な親族や信頼できる友人に相談しながら、慎重に進めましょう。");
-    return parts.join(" ");
-  }
-
-  if(supportPoints>conflictPoints){
-    parts.push(hasBond
-      ? "お二人の関係性を見ると、互いに親しみを感じ、自然に気持ちが通いやすい場面がありそうです。"
-      : "お二人の関係性を見ると、気持ちや行動のペースを合わせやすい場面がありそうです。");
-  }else if(conflictPoints>supportPoints){
-    parts.push(hasBond
-      ? "お二人の関係性を見ると、惹かれるところがあっても、近づくほど考え方の違いが気になりやすい面があります。"
-      : "お二人の関係性を見ると、気持ちの伝え方や日常のペースに違いを感じる場面がありそうです。");
-  }else{
-    parts.push(hasBond
-      ? "お二人の関係性を見ると、親しみやすさがある一方で、互いの望みが必ずしも一致するとは限りません。"
-      : "お二人の関係性を見ると、心地よく過ごせる場面もあれば、考え方の違いが表れる場面もありそうです。");
-  }
-
   // 主格から、あなたとお相手の振る舞いの違いを具体化する。
   if(aMain===bMain){
-    parts.push(`お二人には${MAIN_RELATION_TENDENCIES[aMain]}が共通して表れやすく、相手の考えを理解できても、細かな希望まで同じとは限りません。`);
+    details.main.push(`お二人には${MAIN_RELATION_TENDENCIES[aMain]}が共通して表れやすく、相手の考えを理解できても、細かな希望まで同じとは限りません。`);
   }else{
-    parts.push(`あなたには${MAIN_RELATION_TENDENCIES[aMain]}があり、お相手には${MAIN_RELATION_TENDENCIES[bMain]}が表れやすいと解釈されます。`);
-  }
-
-  // 重要な主格関係を、計算用語を並べず日常の関係に置き換えて伝える。
-  // 具体的な優先注意点がある場合は一般的な定型助言を重ねない。
-  if(mainMainConflict){
-    parts.push("基本的な考え方や意思がぶつかりやすく、親密になって生活を共にするほど、小さな判断の違いが負担になることがあります。結婚などで姓が変われば数理上の関係が変わる場合もありますが、今の姓名のままでは、互いの意見を確認して折り合いを探る姿勢が大切です。");
-  }else if(mainOuterConflictSides.length){
-    if(mainOuterConflictSides.length===2){
-      parts.push("互いの意思の示し方が相手には強い要求や否定と感じられることがあり、親しい間柄ほど言い方や受け止め方の違いに注意が必要です。");
-    }else if(mainOuterConflictSides[0]==="a_main"){
-      parts.push("あなたが自分の考えを伝えたつもりでも、お相手には強い要求や干渉として受け取られる場合があります。言い方だけでなく相手の受け止め方も確かめましょう。");
-    }else{
-      parts.push("お相手の考えや振る舞いが、あなたには負担や圧力として感じられる場面があるかもしれません。無理に受け入れず、気持ちを落ち着いて伝えることが大切です。");
-    }
-  }else if(mainMainSupport){
-    parts.push("大切な判断をするときにも、互いの考えを支え合い、自然に歩調を合わせやすい関係と解釈できます。");
+    details.main.push(`あなたには${MAIN_RELATION_TENDENCIES[aMain]}があり、お相手には${MAIN_RELATION_TENDENCIES[bMain]}が表れやすいと解釈されます。`);
   }
 
   // 双方の個別の性質が恋愛でどのようにすれ違うかを補足する。
   // 重要な主格関係がある場合は、この一般的な一段落を省く。
-  if(!(mainMainConflict || mainOuterConflictSides.length || mainMainSupport)){
+  if(!(mainMainConflict || mainOuterConflictSides.length || mainMainSupport || mainMainHarmony)){
   const independent=[1,7,8];
   const supportive=[2,5,6];
   const emotional=[3,4,9];
   const inGroup=(n,group)=>group.indexOf(n)!==-1;
   if(inGroup(aMain,independent) && inGroup(bMain,supportive)){
-    parts.push("お相手の気遣いが重なると、あなたには自分の判断に踏み込まれたように感じられるかもしれません。感謝と希望を分けて伝えることが大切です。");
+    details.main.push("お相手の気遣いが重なると、あなたには自分の判断に踏み込まれたように感じられるかもしれません。感謝と希望を分けて伝えることが大切です。");
   }else if(inGroup(aMain,supportive) && inGroup(bMain,independent)){
-    parts.push("あなたがよかれと思って勧めたことでも、お相手は自分で決めたいと感じるかもしれません。助ける前に相手の希望を聞くと、気持ちが伝わりやすくなります。");
+    details.main.push("あなたがよかれと思って勧めたことでも、お相手は自分で決めたいと感じるかもしれません。助ける前に相手の希望を聞くと、気持ちが伝わりやすくなります。");
   }else if(inGroup(aMain,independent) && inGroup(bMain,independent)){
-    parts.push("どちらも自分の考えを大切にする場面では、結論を急ぐほど折り合いをつけにくくなりそうです。大事なことほど相手の考えを聞く時間を取りましょう。");
+    details.main.push("どちらも自分の考えを大切にする場面では、結論を急ぐほど折り合いをつけにくくなりそうです。大事なことほど相手の考えを聞く時間を取りましょう。");
   }else if(inGroup(aGround,emotional) && inGroup(bGround,emotional)){
-    parts.push("気持ちが高ぶったときは、伝えるつもりのなかった言葉まで口にしてしまうことがあります。落ち着いてから話す時間も大切にしましょう。");
+    details.ground.push("気持ちが高ぶったときは、伝えるつもりのなかった言葉まで口にしてしまうことがあります。落ち着いてから話す時間も大切にしましょう。");
   }else if(aGround===2 || bGround===2){
-    parts.push("相手を大切に思っていても、一緒に過ごしたい時間や距離感が違う場合があります。愛情の大きさと過ごし方を同じものと考えないことが大切です。");
-  }else{
-    parts.push("気持ちがすれ違ったときには、相手も同じ受け止め方をしていると思い込まず、何を望んでいるのか確かめることが大切です。");
+    details.ground.push("相手を大切に思っていても、一緒に過ごしたい時間や距離感が違う場合があります。愛情の大きさと過ごし方を同じものと考えないことが大切です。");
   }
 
   }
 
-  // 同数・同系数の反発の傾向は、判定用語を出さず、重要な一要素のみ自然に織り込む。
-  const friction=makeCoefficientFrictionAdvice(bondPairs);
-  if(friction)parts.push(friction);
-
-  parts.push("お互いの意思を尊重し、相手の気持ちを確かめながら、良好な関係を保ちましょう。");
-  return parts.join(" ");
+  return details;
+}
+function makeOverallAdvice({a,b,mainMainConflict,mainOuterConflictSides,mainMainHarmony}){
+  if(mainMainHarmony || mainMainConflict || mainOuterConflictSides.length>0 || hasTenGridCaution(b)){
+    return "姓名判断の結果だけではなく、実際のお相手の言動やご自身の考えを整理して慎重に方向性を見極めてください。重要な判断をする際には、信頼できる方に相談し、客観的な意見も参考にされることをおすすめします。";
+  }
+  return "お互いの意思を尊重し、相手の気持ちを確かめながら、良好な関係を保ちましょう。";
 }
 function getLegacyCompatibilityScore(a,b){
   const ref=DATA.legacy_pair_texts_reference||{};
@@ -1222,10 +1190,10 @@ function getLegacyCompatibilityScore(a,b){
   return values.length?values.reduce((s,v)=>s+v,0)/values.length:5;
 }
 function calcOverallScore(a,b,{supportPoints,conflictPoints}){
-  // 心地よさの点数：総格1＋三格9の10組を比較。
+  // 心地よさの点数：総格1＋三格7の8組を比較。
   // 主格×主格の相生＋2、主格×主格・主格×外格の相剋－2、その他は各±1。
-  // 中立点5.5を維持し、加重ポイント差を10組で換算後、1〜10に収める。
-  // 共通数・同系数（主格×外格の強い引合力を含む）はこの点数に加えない。
+  // 中立点5.5を維持し、加重ポイント差を8組で換算後、1〜10に収める。
+  // 比和・共通数・同系数（主格×外格の強い引合力を含む）はこの点数に加えない。
   // 本人と相手の入力順を交換しても結果は一致する。
   const balance=(supportPoints-conflictPoints)/COMPARE_PAIRS.length;
   const score=5.5+4.5*balance;
@@ -1391,11 +1359,12 @@ function renderBirthSupplement(){
   document.getElementById("birthRelationText").textContent=`総合：${compat.summary.label}。${compat.summary.text}`;
 }
 
-/* 相生・相剋・共通：表示線と説明カードの並び順だけを切り替える。 */
-const RELATION_MODES=["support","conflict","common"];
+/* 相生・相剋・比和・共通：表示線と説明カードの並び順だけを切り替える。 */
+const RELATION_MODES=["support","conflict","harmony","common"];
 const RELATION_STYLES={
   support:["support","main_main_support"],
   conflict:["conflict","main_main_conflict","main_outer_conflict"],
+  harmony:["harmony"],
   common:["same_number","same_coefficient","main_outer_attraction"]
 };
 let ACTIVE_RELATION_MODE="support";
@@ -1407,13 +1376,15 @@ function applyRelationMode(mode){
   ACTIVE_RELATION_MODE=mode;
   const isTotalPair=item=>item.k1==="total" && item.k2==="total";
   const chosen=RELATION_LINE_DATA.filter(item=>!isTotalPair(item) && RELATION_STYLES[mode].includes(item.type));
-  // 総格同士の相生・相剋は上段の独立した結果として常に表示する。
-  const totalLines=RELATION_LINE_DATA.filter(item=>isTotalPair(item) && (item.type==="support"||item.type==="conflict"));
+  // 総格同士は従来どおり上段に常時表示。共通モードで重複時のみ金線を優先。
+  const totalCandidates=RELATION_LINE_DATA.filter(isTotalPair);
+  const totalCommon=totalCandidates.filter(item=>RELATION_STYLES.common.includes(item.type));
+  const totalLines=mode==="common" && totalCommon.length ? totalCommon : totalCandidates.filter(item=>["support","conflict","harmony"].includes(item.type));
   const svg=document.getElementById("lines");
   if(svg){
     // SVG内のdefsは保持し、線だけを選択中の種類に差し替える。
     for(const path of Array.from(svg.querySelectorAll(":scope > path")))path.remove();
-    const maxLines=COMPARE_PAIRS.length; // 総格1組＋三格9組。関係表示を件数で省略しない。
+    const maxLines=COMPARE_PAIRS.length; // 総格1組＋三格7組。関係表示を件数で省略しない。
     const visible=[...totalLines,...chosen].slice(0,maxLines).map(item=>({
       item,
       e1:document.querySelector(`.layer[data-side="${item.s1}"][data-key="${item.k1}"]`),
@@ -1434,17 +1405,26 @@ function applyRelationMode(mode){
     for(const [el,links] of endpoints){
       links.sort((a,b)=>a.otherY-b.otherY || (a.line.item.title||"").localeCompare(b.line.item.title||""));
       const height=el.getBoundingClientRect().height;
-      const step=links.length>1?Math.min(15,(height-22)/(links.length-1)):0;
+      const horizontalIndex=links.findIndex(link=>link.line.item.k1===link.line.item.k2);
+      // 同じ格同士の線は中央に固定。斜線はその上下に分散する。
+      const centerIndex=horizontalIndex>=0?horizontalIndex:(links.length-1)/2;
+      const maxOffset=Math.max(centerIndex,links.length-1-centerIndex);
+      const step=maxOffset>0?Math.min(15,Math.max(0,(height-22)/2)/maxOffset):0;
       links.forEach((link,i)=>{
         if(!pointOffsets.has(link.line))pointOffsets.set(link.line,{});
-        pointOffsets.get(link.line)[link.end]=(i-(links.length-1)/2)*step;
+        pointOffsets.get(link.line)[link.end]=(i-centerIndex)*step;
       });
     }
     for(const line of visible){
       const {item,e1,e2}=line;
       const p1=pos(e1,item.s1), p2=pos(e2,item.s2);
-      p1.y+=(pointOffsets.get(line)?.e1||0);
-      p2.y+=(pointOffsets.get(line)?.e2||0);
+      if(item.k1===item.k2){
+        // 同じ格同士は左右の接続点の高さを統一し、水平線にする。
+        p1.y=p2.y=(p1.y+p2.y)/2;
+      }else{
+        p1.y+=(pointOffsets.get(line)?.e1||0);
+        p2.y+=(pointOffsets.get(line)?.e2||0);
+      }
       const isConflict=["conflict","main_main_conflict","main_outer_conflict"].includes(item.type);
       const markerStartId=isConflict?"arrowRed":"";
       const markerEndId=isConflict?"arrowRed":(item.arrow?(["support","main_main_support"].includes(item.type)?"arrowGreen":"arrowGold"):"");
@@ -1452,26 +1432,29 @@ function applyRelationMode(mode){
     }
   }
   const priority={
-    support:["suppCard","sameCard","coeffCard","attrCard","confCard"],
-    conflict:["confCard","sameCard","coeffCard","attrCard","suppCard"],
-    common:["sameCard","coeffCard","attrCard","suppCard","confCard"]
+    support:["suppCard","sameCard","coeffCard","attrCard","confCard","harmonyCard"],
+    conflict:["confCard","sameCard","coeffCard","attrCard","suppCard","harmonyCard"],
+    harmony:["harmonyCard","sameCard","coeffCard","attrCard","suppCard","confCard"],
+    common:["sameCard","coeffCard","attrCard","suppCard","confCard","harmonyCard"]
   }[mode];
   for(const [index,id] of priority.entries()){
     const card=document.getElementById(id);
-    if(card){card.style.order=String(index);card.classList.toggle("selected-relation",mode==="common"?index<3:index===0);card.style.setProperty("--rel-highlight",mode==="support"?"#3f8f62":mode==="conflict"?"#c34a46":"#b7861e");}
+    if(card){card.style.order=String(index*2);card.classList.toggle("selected-relation",mode==="common"?index<3:index===0);card.style.setProperty("--rel-highlight",mode==="support"?"#3f8f62":mode==="conflict"?"#c34a46":mode==="harmony"?"#487ab7":"#b7861e");}
   }
   document.getElementById("map")?.setAttribute("data-relation-mode",mode);
   for(const btn of document.querySelectorAll(".relation-mode-btn")){
     btn.setAttribute("aria-pressed",String(btn.dataset.relationMode===mode));
   }
+  const relationName={support:"相生",conflict:"相剋",harmony:"比和",common:"引力"}[mode];
   const status=document.getElementById("relationModeStatus");
   if(status){
-    const relationName={support:"相生",conflict:"相剋",common:"共通"}[mode];
-    const autoNote=RELATION_MANUAL?"":" 5秒ごとに自動切替します。ボタン操作で停止します。";
-    status.textContent=chosen.length
-      ? `下段：${relationName}の関係を表示中（総格同士は上段に常時表示）。${autoNote}`
-      : `下段に${relationName}の関係はありません（総格同士は上段に常時表示）。${autoNote}`;
-    status.classList.toggle("is-empty",chosen.length===0);
+    status.style.order=mode==="common"?"5":"1";
+    status.textContent=`${relationName}の関係を表示中`;
+  }
+  const empty=document.getElementById("relationMapEmpty");
+  if(empty){
+    empty.hidden=chosen.length>0;
+    empty.textContent=chosen.length?"":`${relationName}の関係はありません。`;
   }
 }
 function stopRelationCycle(){
@@ -1538,29 +1521,27 @@ function render(){
     const numEl=el[s][k].querySelector(".number");
     numEl.classList.remove("bond-number","attraction-number","support-number","conflict-number");
   }
-  for(const id of ["sameCard","coeffCard","attrCard","suppCard","confCard"]){
-    document.getElementById(id)?.classList.remove("active-bond","active-attraction","active-support","active-conflict");
+  for(const id of ["sameCard","coeffCard","attrCard","suppCard","confCard","harmonyCard"]){
+    document.getElementById(id)?.classList.remove("active-bond","active-attraction","active-support","active-conflict","active-harmony");
   }
 
-  let same=0, sameCoeff=0, attraction=0, support=0, conflict=0;
+  let same=0, sameCoeff=0, attraction=0, support=0, conflict=0, harmony=0;
   let supportPoints=0, conflictPoints=0; // 表示件数と区別する重要配置の加重点。
-  let mainMainConflict=false, mainMainSupport=false;
+  let mainMainConflict=false, mainMainSupport=false, mainMainHarmony=false;
   const mainOuterConflictSides=new Set();
   let strongBond=0; // 主格×外格の共通関係。各2の縁の強さとして別集計する。
   const bondPairs=[]; // 共通する各系数を、反発の特徴に応じた助言へ渡す。
   const nonTotalConflictPairs=new Set();
   const sameValues=new Set(), coeffValues=new Set();
-  const sameReadings=[], coeffReadings=[], attrReadings=[], suppReadings=[], confReadings=[];
+  const sameReadings=[], coeffReadings=[], attrReadings=[], suppReadings=[], confReadings=[], harmonyReadings=[];
   const pairMap=new Map(), candidates=[];
   let bendIdx=0, cidx=0, sidx=0;
 
   /*
-    比較ルール：総格同士の1通りは相生・相剋のみ。三格×三格の9通りは相生・相剋・共通を判定。
-    総格と三格の交差比較はしない。共通の縁は三格同士に限り同数・同系数で各1。
-    同数は相生として含める。主格同士の相生は＋2、他は＋1。
-    主格同士・主格×外格の相剋は－2、他は－1。配置件数は加重せず表示。
-    主格⇔外格（双方向）の同数・同系数だけは縁の強さを各2とし、金色の太線を示す。
-    共通数の力を「良い相性」の点数へ直接加えない。
+    比較ルール：総格同士と三格7組の計8組。
+    相生・相剋・比和は排他的な五行関係。共通は別集計し、比和と重複し得る。
+    主格同士の相生＋2、主格同士・主格×外格の相剋－2、その他は各±1。
+    主格⇔外格の共通は各2の重み。比和・共通は心地よさに加減点しない。
   */
   for(const [ka,kb] of COMPARE_PAIRS){
     const va=a[ka], vb=b[kb];
@@ -1570,20 +1551,15 @@ function render(){
     const isMainMain=ka==="main"&&kb==="main";
     const isMainOuter=(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main");
 
+    if(cgroup(va) && cgroup(va)===cgroup(vb)){
+      harmony++;
+      if(isMainMain)mainMainHarmony=true;
+      harmonyReadings.push(`本人側の${KL[ka]}${va}（${elementOf(va)}） と 相手側の${KL[kb]}${vb}（${elementOf(vb)}）。`);
+      addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:"harmony",title:`比和：本人${KL[ka]}${va}－相手${KL[kb]}${vb}`,arrow:false,bend:0});
+    }
     if(exact){
-      support++; // 同数は相生として件数1。主格同士は点数だけ＋2。
-      supportPoints+=isMainMain?2:1;
-      if(isMainMain)mainMainSupport=true;
-      suppReadings.push(`本人側の${KL[ka]}${va} と 相手側の${KL[kb]}${vb} は同数。互いを理解しやすい相生の要素です。${isMainMain?"（心地よさ評価＋2）":""}`);
-      addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:isMainMain?"main_main_support":"support",title:`相生（同数）：本人${KL[ka]}${va}－相手${KL[kb]}${vb}${isMainMain?"（＋2）":""}`,arrow:false,bend:0});
-      if(ka==="total"){
-        // 総格同士は相生・相剋だけを表示し、共通（引合力）の件数には加えない。
-        el.a[ka].querySelector(".number").classList.add("support-number");
-        el.b[kb].querySelector(".number").classList.add("support-number");
-        continue;
-      }
       same++;
-      bondPairs.push({coefficient:coef(va),strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
+      bondPairs.push({exact:true,coefficient:coef(va),strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
       sameValues.add(va);
       el.a[ka].querySelector(".number").classList.add("bond-number");
       el.b[kb].querySelector(".number").classList.add("bond-number");
@@ -1596,21 +1572,20 @@ function render(){
         el.a[ka].querySelector(".number").classList.add("attraction-number");
         el.b[kb].querySelector(".number").classList.add("attraction-number");
         if(ka==="main"){
-          attrReadings.push(`相手側の外格${vb} と 本人側の主格${va} は同数。強い引合力があります。`);
-          addLineCandidate(candidates,pairMap,{s1:"b",k1:"outer",s2:"a",k2:"main",type:"main_outer_attraction",title:`引合力：同数${va}／相手外格 → 本人主格`,arrow:true,bend:0});
+          attrReadings.push(`相手側の外格${vb} と 本人側の主格${va} は同数。強い引力があります。`);
+          addLineCandidate(candidates,pairMap,{s1:"b",k1:"outer",s2:"a",k2:"main",type:"main_outer_attraction",title:`引力：同数${va}／相手外格 → 本人主格`,arrow:true,bend:0});
         }else{
-          attrReadings.push(`本人側の外格${va} と 相手側の主格${vb} は同数。強い引合力があります。`);
-          addLineCandidate(candidates,pairMap,{s1:"a",k1:"outer",s2:"b",k2:"main",type:"main_outer_attraction",title:`引合力：同数${va}／本人外格 → 相手主格`,arrow:true,bend:0});
+          attrReadings.push(`本人側の外格${va} と 相手側の主格${vb} は同数。強い引力があります。`);
+          addLineCandidate(candidates,pairMap,{s1:"a",k1:"outer",s2:"b",k2:"main",type:"main_outer_attraction",title:`引力：同数${va}／本人外格 → 相手主格`,arrow:true,bend:0});
         }
       }
       continue;
     }
 
     if(sameC){
-      if(ka==="total")continue; // 総格同士の共通判定はしない。
       const cg=coef(va);
       sameCoeff++;
-      bondPairs.push({coefficient:cg,strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
+      bondPairs.push({exact:false,coefficient:cg,strong:(ka==="main"&&kb==="outer")||(ka==="outer"&&kb==="main")});
       coeffValues.add(cg);
       el.a[ka].querySelector(".number").classList.add("bond-number");
       el.b[kb].querySelector(".number").classList.add("bond-number");
@@ -1623,11 +1598,11 @@ function render(){
         el.a[ka].querySelector(".number").classList.add("attraction-number");
         el.b[kb].querySelector(".number").classList.add("attraction-number");
         if(ka==="main"){
-          attrReadings.push(`相手側の外格${vb} と 本人側の主格${va} は${cg}系数。強い引合力があります。`);
-          addLineCandidate(candidates,pairMap,{s1:"b",k1:"outer",s2:"a",k2:"main",type:"main_outer_attraction",title:`引合力：${cg}系数／相手外格 → 本人主格`,arrow:true,bend:0});
+          attrReadings.push(`相手側の外格${vb} と 本人側の主格${va} は${cg}系数。強い引力があります。`);
+          addLineCandidate(candidates,pairMap,{s1:"b",k1:"outer",s2:"a",k2:"main",type:"main_outer_attraction",title:`引力：${cg}系数／相手外格 → 本人主格`,arrow:true,bend:0});
         }else{
-          attrReadings.push(`本人側の外格${va} と 相手側の主格${vb} は${cg}系数。強い引合力があります。`);
-          addLineCandidate(candidates,pairMap,{s1:"a",k1:"outer",s2:"b",k2:"main",type:"main_outer_attraction",title:`引合力：${cg}系数／本人外格 → 相手主格`,arrow:true,bend:0});
+          attrReadings.push(`本人側の外格${va} と 相手側の主格${vb} は${cg}系数。強い引力があります。`);
+          addLineCandidate(candidates,pairMap,{s1:"a",k1:"outer",s2:"b",k2:"main",type:"main_outer_attraction",title:`引力：${cg}系数／本人外格 → 相手主格`,arrow:true,bend:0});
         }
       }
       continue;
@@ -1641,11 +1616,11 @@ function render(){
       el.a[ka].querySelector(".number").classList.add("support-number");
       el.b[kb].querySelector(".number").classList.add("support-number");
       if(sdir==="a_to_b"){
-        suppReadings.push(`本人側の${KL[ka]}${va}（${elementOf(va)}） → 相手側の${KL[kb]}${vb}（${elementOf(vb)}）。${isMainMain?"（心地よさ評価＋2）":""}`);
-        addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:isMainMain?"main_main_support":"support",title:`相生：本人${KL[ka]}${va} → 相手${KL[kb]}${vb}${isMainMain?"（＋2）":""}`,arrow:true,bend:((sidx++%5)-2)*10});
+        suppReadings.push(`本人側の${KL[ka]}${va}（${elementOf(va)}） → 相手側の${KL[kb]}${vb}（${elementOf(vb)}）。`);
+        addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:isMainMain?"main_main_support":"support",title:`相生：本人${KL[ka]}${va} → 相手${KL[kb]}${vb}`,arrow:true,bend:((sidx++%5)-2)*10});
       }else{
-        suppReadings.push(`相手側の${KL[kb]}${vb}（${elementOf(vb)}） → 本人側の${KL[ka]}${va}（${elementOf(va)}）。${isMainMain?"（心地よさ評価＋2）":""}`);
-        addLineCandidate(candidates,pairMap,{s1:"b",k1:kb,s2:"a",k2:ka,type:isMainMain?"main_main_support":"support",title:`相生：相手${KL[kb]}${vb} → 本人${KL[ka]}${va}${isMainMain?"（＋2）":""}`,arrow:true,bend:((sidx++%5)-2)*10});
+        suppReadings.push(`相手側の${KL[kb]}${vb}（${elementOf(vb)}） → 本人側の${KL[ka]}${va}（${elementOf(va)}）。`);
+        addLineCandidate(candidates,pairMap,{s1:"b",k1:kb,s2:"a",k2:ka,type:isMainMain?"main_main_support":"support",title:`相生：相手${KL[kb]}${vb} → 本人${KL[ka]}${va}`,arrow:true,bend:((sidx++%5)-2)*10});
       }
       continue;
     }
@@ -1660,15 +1635,15 @@ function render(){
       if(!(ka==="total" && kb==="total")) nonTotalConflictPairs.add(`a:${ka}|b:${kb}`);
       el.a[ka].querySelector(".number").classList.add("conflict-number");
       el.b[kb].querySelector(".number").classList.add("conflict-number");
-      confReadings.push(`本人側の${KL[ka]}${va} と 相手側の${KL[kb]}${vb}。${severe?"（心地よさ評価－2）":""}`);
+      confReadings.push(`本人側の${KL[ka]}${va} と 相手側の${KL[kb]}${vb}。`);
       const conflictType=isMainMain?"main_main_conflict":(isMainOuter?"main_outer_conflict":"conflict");
-      addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:conflictType,title:`相剋：本人${KL[ka]}${va}－相手${KL[kb]}${vb}${severe?"（－2）":""}`,arrow:false,bend:((cidx++%5)-2)*14});
+      addLineCandidate(candidates,pairMap,{s1:"a",k1:ka,s2:"b",k2:kb,type:conflictType,title:`相剋：本人${KL[ka]}${va}－相手${KL[kb]}${vb}`,arrow:false,bend:((cidx++%5)-2)*14});
     }
   }
 
   // 同じ2格間に複数の関係がある場合は優先度が最も高い線だけを表示。
   const chosen=[...pairMap.values()].sort((x,y)=>(DATA.line_styles[y.type]?.priority||0)-(DATA.line_styles[x.type]?.priority||0));
-  // 総格の相生・相剋は上段に常時表示し、三格の9組のみを3つの切替ボタンで制御。
+  // 総格は上段に常時表示。三格7組を4つの切替ボタンで制御。
   RELATION_LINE_DATA=chosen;
   applyRelationMode(ACTIVE_RELATION_MODE);
 
@@ -1677,6 +1652,7 @@ function render(){
   document.getElementById("attrN").textContent=strongBond;
   document.getElementById("suppN").textContent=support;
   document.getElementById("confN").textContent=conflict;
+  document.getElementById("harmonyN").textContent=harmony;
   document.getElementById("sameValues").textContent=sameValues.size?`共通画数：${[...sameValues].sort((x,y)=>x-y).join("・")}`:"共通画数なし";
   document.getElementById("coeffValues").textContent=coeffValues.size?`共通系数：${[...coeffValues].sort((x,y)=>x-y).join("・")}`:"同系格なし";
   if(same>0) document.getElementById("sameCard")?.classList.add("active-bond");
@@ -1684,22 +1660,33 @@ function render(){
   if(strongBond>0) document.getElementById("attrCard")?.classList.add("active-attraction");
   if(support>0) document.getElementById("suppCard")?.classList.add("active-support");
   if(conflict>0) document.getElementById("confCard")?.classList.add("active-conflict");
+  if(harmony>0) document.getElementById("harmonyCard")?.classList.add("active-harmony");
     function renderReadings(id,items,emptyText){
     const box=document.getElementById(id);
     if(!box) return;
     box.innerHTML=items.length?items.map(x=>`<span class="reading-line">${x}</span>`).join(""):`<span class="empty-reading">${emptyText}</span>`;
   }
+  // 同数・同系数の反発説明は、該当する診断欄に一度だけ表示する。
+  const friction=makeCoefficientFrictionAdvice(bondPairs);
+  if(friction?.text){
+    const matches=bondPairs.filter(p=>p.coefficient===friction.coefficient);
+    const readings=matches.some(p=>p.strong)?attrReadings:matches.some(p=>p.exact)?sameReadings:coeffReadings;
+    readings.push(friction.text);
+  }
   renderReadings("sameReadings",sameReadings,"同じ画数による縁の接点はありません。");
   renderReadings("coeffReadings",coeffReadings,"同系数による共鳴の接点はありません。");
-  renderReadings("attrReadings",attrReadings,"主格と外格の引合力はありません。");
+  renderReadings("attrReadings",attrReadings,"主格と外格の引力はありません。");
   renderReadings("suppReadings",suppReadings,"相生配置はありません。");
   renderReadings("confReadings",confReadings,"相剋配置はありません。");
-  renderLegacySections(a,b);
+  renderReadings("harmonyReadings",harmonyReadings,"比和配置はありません。");
+  document.getElementById("harmonyImportantExplanation").hidden=!mainMainHarmony;
+  document.getElementById("conflictImportantExplanation").hidden=!(mainMainConflict||mainOuterConflictSides.size>0);
+  renderLegacySections(a,b,makeIndividualDetails({a,b,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides],mainMainHarmony}));
   const nonTotalConflict=nonTotalConflictPairs.size;
   // 通常の共通関係は1、主格×外格の2方向は2の重み（同じ1組を二重計上しない）。
   const bondPower=same+sameCoeff+strongBond;
   document.getElementById("overallAdvice").textContent=appendPersonalCautions(
-    makeOverallAdvice({a,b,same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,strongBond,bondPower,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides]}),a,b
+    makeOverallAdvice({a,b,same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,strongBond,bondPower,bondPairs,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides],mainMainHarmony}),a,b
   );
   renderCompatibilityMeter(a,b,{same,sameCoeff,attraction,support,conflict,supportPoints,conflictPoints,nonTotalConflict,bondPower});
   renderBirthSupplement();
