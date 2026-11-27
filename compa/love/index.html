@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+<!-- OMIFUDA-LOVE-WEB-20261127-FINAL -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>恋愛・結婚相性診断</title>
@@ -741,7 +742,6 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">共通格数</div><div class="metric-value" id="sameN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#b7861e;border-width:2.5px"></i><span>金線＝同じ画数</span></div>
-        <p class="card-explain">総格同士と三格の指定7通りで、同じ画数が示す縁を数えます。同じ画数は比和にも該当しますが、数意によっては反発も生じます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="sameValues"></div><div class="card-readings" id="sameReadings"></div></div>
     </div>
@@ -749,7 +749,6 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">同系格数</div><div class="metric-value" id="coeffN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#d4a33c;border-width:2px"></i><span>金線＝画数は違っても同じ系数</span></div>
-        <p class="card-explain">総格同士と三格の指定7通りで、画数は異なっても同じ系数が示す縁を数えます。縁の性質や持続性は別に判断し、反発が生じる場合は系数ごとの数意にも目を向けます。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="coeffValues"></div><div class="card-readings" id="coeffReadings"></div></div>
     </div>
@@ -773,7 +772,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">相剋配置</div><div class="metric-value" id="confN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#c34a46;border-width:3px;border-top-style:solid"></i><span>赤い実線＝相剋（重要な関係は太線）</span></div>
-        <p class="card-explain">強い立場にある側の主観と、弱い立場の主観は異なります。不満や精神的な負担が蓄積される関係です。<span id="conflictImportantExplanation" hidden>過度な要求や不満をお互いに持つ関係ですので受け入れる覚悟が必要です。慎重に考えてください。</span></p>
+        <p class="card-explain">強い立場にある側の主観と、弱い立場の主観は異なります。不満や精神的な負担が蓄積される関係です。過度な要求や不満をお互いに持つ関係ですので受け入れる覚悟が必要です。慎重に考えてください。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="confReadings"></div></div>
     </div>
@@ -781,7 +780,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">比和配置</div><div class="metric-value" id="harmonyN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#487ab7;border-width:3px"></i><span>青い実線＝比和（同じ五行）</span></div>
-        <p class="card-explain">同質のエネルギーによる同調や増幅の関係です。<span id="harmonyImportantExplanation" hidden>意見の衝突や反発が生じたり、どちらかが自分の考えを抑えることで不満が蓄積される場合があります。お互いの考えを尊重し、相手への配慮が必要です。</span></p>
+        <p class="card-explain">同質のエネルギーによる同調や増幅の関係です。意見の衝突や反発が生じたり、どちらかが自分の考えを抑えることで不満が蓄積される場合があります。お互いの考えを尊重し、相手への配慮が必要です。</p>
       </div>
       <div class="metric-detail-row"><div class="card-readings" id="harmonyReadings"></div></div>
     </div>
@@ -1435,7 +1434,7 @@ function applyRelationMode(mode){
     support:["suppCard","sameCard","coeffCard","attrCard","confCard","harmonyCard"],
     conflict:["confCard","sameCard","coeffCard","attrCard","suppCard","harmonyCard"],
     harmony:["harmonyCard","sameCard","coeffCard","attrCard","suppCard","confCard"],
-    common:["sameCard","coeffCard","attrCard","suppCard","confCard","harmonyCard"]
+    common:["attrCard","sameCard","coeffCard","suppCard","confCard","harmonyCard"]
   }[mode];
   for(const [index,id] of priority.entries()){
     const card=document.getElementById(id);
@@ -1448,7 +1447,7 @@ function applyRelationMode(mode){
   const relationName={support:"相生",conflict:"相剋",harmony:"比和",common:"引力"}[mode];
   const status=document.getElementById("relationModeStatus");
   if(status){
-    status.style.order=mode==="common"?"5":"1";
+    status.style.order="1";
     status.textContent=`${relationName}の関係を表示中`;
   }
   const empty=document.getElementById("relationMapEmpty");
@@ -1679,8 +1678,6 @@ function render(){
   renderReadings("suppReadings",suppReadings,"相生配置はありません。");
   renderReadings("confReadings",confReadings,"相剋配置はありません。");
   renderReadings("harmonyReadings",harmonyReadings,"比和配置はありません。");
-  document.getElementById("harmonyImportantExplanation").hidden=!mainMainHarmony;
-  document.getElementById("conflictImportantExplanation").hidden=!(mainMainConflict||mainOuterConflictSides.size>0);
   renderLegacySections(a,b,makeIndividualDetails({a,b,mainMainConflict,mainMainSupport,mainOuterConflictSides:[...mainOuterConflictSides],mainMainHarmony}));
   const nonTotalConflict=nonTotalConflictPairs.size;
   // 通常の共通関係は1、主格×外格の2方向は2の重み（同じ1組を二重計上しない）。
