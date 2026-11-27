@@ -10,6 +10,7 @@
   const state = {
     dict:new Map(),
     triad:null,
+    patternKeywords:null,
     selected:null,
     nameRecords:[],
     selectedPattern:null,
@@ -127,6 +128,7 @@
       $("loadError").classList.add("hidden");
 
       if(code==="GUARDIAN"){
+        state.patternKeywords=await window.NamingPatternKeywords?.load() || null;
         const nameMaster=await fetchJSON("../name/name-master.json",false);
         state.nameRecords=Array.isArray(nameMaster?.records) ? nameMaster.records : [];
       }
@@ -440,13 +442,13 @@
     return `<div class="card">
       ${code==="GUARDIAN"?`<div class="guardian-pattern-rank">第${i+1}候補</div>`:""}
       <div class="score">${p.strokes.join(" ＋ ")}画</div>
-      <div class="pills">
+      ${code==="GUARDIAN" && window.NamingPatternKeywords ? window.NamingPatternKeywords.render(s,state.patternKeywords,scoreStars) : `<div class="pills">
         <span class="pill">主 ${s.jin} ${scoreStars(s.jin)}</span>
         <span class="pill">地 ${s.chi} ${scoreStars(s.chi)}</span>
         <span class="pill">外 ${s.gai} ${scoreStars(s.gai)}</span>
         <span class="pill">総 ${s.sou} ${scoreStars(s.sou)}</span>
-      </div>
-      <div class="small"><span>${harmony}</span><span style="margin-left:14px">${sociability}</span></div>
+      </div>`}
+      <div class="small"><span>${harmony}</span>${code==="GUARDIAN"?"":`<span style="margin-left:14px">${sociability}</span>`}</div>
       <div class="actions"><button class="btn secondary" data-pattern="${i}">この画数配置を選ぶ</button></div>
     </div>`;
   }

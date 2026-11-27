@@ -7,6 +7,7 @@
   const state = {
     dict:new Map(),
     triad:null,
+    patternKeywords:null,
     nameRecords:[],
     nameMeta:{},
     rankingBest20:null,
@@ -170,6 +171,7 @@
 
   async function loadData(){
     try{
+      state.patternKeywords=await window.NamingPatternKeywords?.load() || null;
       const raw=await fetchJSON("../data/kanjidic-naming.json",true);
       state.dict=E.normalizeDictionary(raw);
       state.triad=await fetchJSON("../data/sansai.json",true);
@@ -917,17 +919,16 @@
       const harmony=triadRating
         ? `陰陽五行：${triadStars(triadRating)}`
         : "陰陽五行：データ未取得";
-      const sociability=`適応性：${esc(patternSociabilityLabel(s))}`;
 
       return `<div class="pattern-card" data-pcard="${i}">
         <div class="pattern-strokes">${p.strokes.join(" ＋ ")}画</div>
-        <div class="stroke-pills">
+        ${window.NamingPatternKeywords ? window.NamingPatternKeywords.render(s,state.patternKeywords,stars) : `<div class="stroke-pills">
           <span class="pill">主 ${s.jin} ${stars(s.jin)}</span>
           <span class="pill">地 ${s.chi} ${stars(s.chi)}</span>
           <span class="pill">外 ${s.gai} ${stars(s.gai)}</span>
           <span class="pill">総 ${s.sou} ${stars(s.sou)}</span>
-        </div>
-        <div class="small"><span>${harmony}</span><span style="margin-left:14px">${sociability}</span></div>
+        </div>`}
+        <div class="small"><span>${harmony}</span></div>
         <div class="actions">
           <button class="btn secondary choose-pattern" data-p="${i}">この画数配置を選ぶ</button>
         </div>

@@ -1,0 +1,29 @@
+/* BABY / GUARDIAN: 画数配置候補カード内だけの数意表示 */
+body[data-product="BABY"] #patternGrid .naming-pattern-meanings,
+body[data-product="GUARDIAN"] #patterns .naming-pattern-meanings{
+  display:grid;
+  gap:0;
+  margin:8px 0;
+  font-size:.88rem;
+  line-height:1.45;
+  color:var(--text);
+}
+.naming-pattern-meanings .naming-pattern-meaning-row{
+  display:grid;
+  grid-template-columns:5.2em minmax(0,1fr);
+  align-items:start;
+  column-gap:6px;
+  padding:6px 0;
+  border-bottom:1px solid var(--line);
+}
+.naming-pattern-meanings .naming-pattern-meaning-label{white-space:nowrap;font-weight:700;}
+.naming-pattern-meanings .naming-pattern-meaning-detail{min-width:0;}
+.naming-pattern-meanings .naming-pattern-meaning-stars{line-height:1.25;margin-bottom:3px;}
+.naming-pattern-meanings .naming-pattern-meaning-text{overflow-wrap:anywhere;word-break:normal;}
+.naming-pattern-meanings + .small{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:3px 12px;
+}
+.naming-pattern-meanings + .small > span{white-space:nowrap;margin-left:0 !important;}
