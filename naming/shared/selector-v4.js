@@ -85,6 +85,10 @@
     return shifted===gaiLast ? "やや不調和" : "普通";
   }
 
+  function patternSociabilityLabel(scores){
+    return E.outerOvercomesMain(scores) ? "要注意" : "普通";
+  }
+
   function directTriadRating(scores){
     if(!scores || !state.triad) return null;
     if(typeof E.pickTriadRating==="function"){
@@ -528,7 +532,7 @@
         <div class="mode-title">画数（姓名判断）から探す</div>
         <div class="mode-description">姓に合わせて、陰陽五行と五格が調和する画数配置を出し、その画数の漢字を選びます。</div>
         <div class="selector-intro">
-          名前の地格が31以上になる構成、五格の低評価、陰陽五行の【要注意】は候補から除外します。
+          名前の地格が31以上になる構成、五格の低評価、陰陽五行の【要注意】、外格が主格を剋する構成は候補から除外します。
         </div>
         <div class="stroke-mode-controls">
           <div>
@@ -900,7 +904,7 @@
     $("patternSummary").innerHTML=
       `候補画数配置 <strong>${state.patterns.length}</strong>件。`+
       (state.patterns.length>12 ? ` 評価上位<strong>12件</strong>を表示しています。` : "")+
-      (excluded?` 低評価・要注意・地格31以上を ${excluded.toLocaleString()}構成除外しました。`:"")+
+      (excluded?` 低評価・要注意・地格31以上・外格から主格への相剋を ${excluded.toLocaleString()}構成除外しました。`:"")+
       ` <strong>ここでは名前は自動生成しません。</strong>`;
 
     host.innerHTML=state.patterns.slice(0,12).map((p,i)=>{
@@ -913,7 +917,7 @@
       const harmony=triadRating
         ? `陰陽五行：${triadStars(triadRating)}`
         : "陰陽五行：データ未取得";
-      const sociability=`適応性：${esc(sociabilityLabel(s))}`;
+      const sociability=`適応性：${esc(patternSociabilityLabel(s))}`;
 
       return `<div class="pattern-card" data-pcard="${i}">
         <div class="pattern-strokes">${p.strokes.join(" ＋ ")}画</div>
@@ -1153,7 +1157,7 @@
     const triadHTML=finalTriadRating
       ? `<div class="stroke-pills">
           <span class="pill">陰陽五行 ${triadStars(finalTriadRating)}</span>
-          <span class="pill">適応性 ${esc(sociabilityLabel(calc))}</span>
+          <span class="pill">適応性 ${esc(patternSociabilityLabel(calc))}</span>
         </div>`
       : `<div class="small">陰陽五行データを取得できません</div>`;
 

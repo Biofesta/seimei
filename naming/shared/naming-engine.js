@@ -263,6 +263,12 @@
       .map(e=>e.strokes))].sort((a,b)=>a-b);
   }
 
+  // 赤ちゃんの画数配置候補：外格から主格への相剋だけを除外する。
+  function outerOvercomesMain(scores){
+    const blockedOuter = {"1_2":"7_8","3_4":"9_10","5_6":"1_2","7_8":"3_4","9_10":"5_6"};
+    return blockedOuter[getKeisuGroup(scores.jin)] === getKeisuGroup(scores.gai);
+  }
+
   function generatePersonalPatterns(surname,dict,triad,nameLength,opts={}){
     const s = strokesForText(surname,dict);
     if(!s.ok) return {ok:false,missing:s.missing,patterns:[]};
@@ -273,7 +279,8 @@
     const cur = [];
     const filterStats = {
       examined:0,accepted:0,rejectedTotal:0,rejectedJin:0,
-      rejectedChi:0,rejectedGai:0,rejectedChi31:0,rejectedTriad:0
+      rejectedChi:0,rejectedGai:0,rejectedChi31:0,rejectedTriad:0,
+      ...(opts.product==="BABY" ? {rejectedOuterConflict:0} : {})
     };
 
     function rec(pos){
@@ -289,6 +296,11 @@
           if(gate.reasons.includes("外格が★1〜2")) filterStats.rejectedGai++;
           if(gate.reasons.includes("地格が31以上")) filterStats.rejectedChi31++;
           if(gate.reasons.includes("三才に要注意判定あり")) filterStats.rejectedTriad++;
+          return;
+        }
+
+        if(opts.product==="BABY" && outerOvercomesMain(scores)){
+          filterStats.rejectedOuterConflict++;
           return;
         }
 
@@ -594,7 +606,7 @@
     SCORE_TABLE,STRONG,scoreInfo,normalizeDictionary,isCJK,allReadings,primaryReading,
     readingNorm,strokesForText,calcPersonalFromStrokes,calcPersonal,getKeisuGroup,pickTriad,
     pickTriadRating,triadSummary,personalPatternScore,passesPersonalPattern,generatePersonalPatterns,
-    personalNanoriVariants,charsByStroke,bestReadingForEntries,
+    outerOvercomesMain,personalNanoriVariants,charsByStroke,bestReadingForEntries,
     diversifyByFirstChar,buildCandidatesForPattern,
     generateBusinessPatterns,evaluateBusiness
   };
