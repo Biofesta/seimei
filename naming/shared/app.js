@@ -375,7 +375,7 @@
     $("summary").innerHTML=
       `候補画数配置 <strong>${patterns.length}</strong>件。`+
       (patterns.length>9 ? ` 評価上位<strong>9件</strong>を表示しています。` : "")+
-      (excluded?` 低評価・要注意・地格31以上を ${excluded.toLocaleString()}構成除外しました。`:"")+
+      (excluded?` 低評価・要注意・地格31以上${code==="GUARDIAN"?"・外格から主格への相剋":""}を ${excluded.toLocaleString()}構成除外しました。`:"")+
       ` <strong>ここでは名前は自動生成しません。</strong>`;
 
     $("patterns").innerHTML=patterns.slice(0,9).map((p,i)=>personalPatternCard(p,i)).join("");
@@ -431,6 +431,7 @@
       :"";
     const harmony=`陰陽五行：${triadStars(triadRating)}`;
     const sociability=(()=>{
+      if(code==="GUARDIAN") return `社交性：${E.outerOvercomesMain(s) ? "要注意" : "普通"}`;
       const jinLast=Math.abs(Number(s.jin)||0)%10;
       const gaiLast=Math.abs(Number(s.gai)||0)%10;
       return `社交性：${((jinLast+4)%10)===gaiLast ? "やや不調和" : "普通"}`;
@@ -787,11 +788,7 @@
       "";
 
     
-    const sociability=(()=>{
-      const jinLast=Math.abs(Number(calc.jin)||0)%10;
-      const gaiLast=Math.abs(Number(calc.gai)||0)%10;
-      return ((jinLast+4)%10)===gaiLast ? "やや不調和" : "普通";
-    })();
+    const sociability=E.outerOvercomesMain(calc) ? "要注意" : "普通";
 
     $("finalPanel").classList.remove("hidden");
     $("finalName").textContent=input.surname+given;

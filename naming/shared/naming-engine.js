@@ -263,7 +263,7 @@
       .map(e=>e.strokes))].sort((a,b)=>a-b);
   }
 
-  // 赤ちゃんの画数配置候補：外格から主格への相剋だけを除外する。
+  // 赤ちゃん・守護名／改名の画数配置候補：外格から主格への相剋だけを除外する。
   function outerOvercomesMain(scores){
     const blockedOuter = {"1_2":"7_8","3_4":"9_10","5_6":"1_2","7_8":"3_4","9_10":"5_6"};
     return blockedOuter[getKeisuGroup(scores.jin)] === getKeisuGroup(scores.gai);
@@ -280,7 +280,7 @@
     const filterStats = {
       examined:0,accepted:0,rejectedTotal:0,rejectedJin:0,
       rejectedChi:0,rejectedGai:0,rejectedChi31:0,rejectedTriad:0,
-      ...(opts.product==="BABY" ? {rejectedOuterConflict:0} : {})
+      ...((opts.product==="BABY" || opts.product==="GUARDIAN") ? {rejectedOuterConflict:0} : {})
     };
 
     function rec(pos){
@@ -299,7 +299,7 @@
           return;
         }
 
-        if(opts.product==="BABY" && outerOvercomesMain(scores)){
+        if((opts.product==="BABY" || opts.product==="GUARDIAN") && outerOvercomesMain(scores)){
           filterStats.rejectedOuterConflict++;
           return;
         }
