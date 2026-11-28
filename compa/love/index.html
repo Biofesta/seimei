@@ -741,6 +741,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">共通格数</div><div class="metric-value" id="sameN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#b7861e;border-width:2.5px"></i><span>金線＝同じ画数</span></div>
+        <p class="card-explain">比和の中でもお互いの同調や増幅の関係が特に強く、お互いを引き寄せる縁がありますが、ひとたび対立や反発を招くと大きな痛手となる可能性を秘めた関係です、特に主格同士にある場合は気配りを怠りなく。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="sameValues"></div><div class="card-readings" id="sameReadings"></div></div>
     </div>
@@ -748,6 +749,7 @@ svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:no
       <div class="metric-box"><div class="metric-name">同系格数</div><div class="metric-value" id="coeffN">0</div></div>
       <div class="metric-body">
         <div class="card-key"><i class="sample" style="border-color:#d4a33c;border-width:2px"></i><span>金線＝画数は違っても同じ系数</span></div>
+        <p class="card-explain">本質的には共通格数と同じ要素を持ちます。微妙な違いは同系の数意には強弱があり、その微妙な影響を受ける要素があると言うことです。</p>
       </div>
       <div class="metric-detail-row"><div class="common-values" id="coeffValues"></div><div class="card-readings" id="coeffReadings"></div></div>
     </div>
@@ -1446,8 +1448,8 @@ function applyRelationMode(mode){
   const relationName={support:"相生",conflict:"相剋",harmony:"比和",common:"引力"}[mode];
   const status=document.getElementById("relationModeStatus");
   if(status){
-    status.style.order="1";
-    status.textContent=`${relationName}の関係を表示中`;
+    status.style.order="-1";
+    status.textContent=mode==="common"?"引力の関係を表示中（共通格数・同系格数・引力関係）":`${relationName}の関係を表示中`;
   }
   const empty=document.getElementById("relationMapEmpty");
   if(empty){
